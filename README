@@ -1,0 +1,5 @@
+tintamp - The Integer Amplifier
+===============================
+
+tintamp is a guitar amp. modeller suitable to low power devices whose
+main CPU has not FPU. It is based purely on fixed point arithmetic.

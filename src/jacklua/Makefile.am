@@ -1,0 +1,3 @@
+bin_PROGRAMS=tintamp_jacklua
+
+tintamp_jacklua_SOURCES=jacklua.c
