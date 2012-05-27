@@ -1,7 +1,7 @@
 /*
- * jackhost.c
+ * jacklua.c
  *
- * Jack driver program for tintamp.
+ * Part of tintamp (the integer amplifier)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *

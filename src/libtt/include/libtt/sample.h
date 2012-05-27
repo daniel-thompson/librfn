@@ -1,7 +1,7 @@
 /*
- * fops.h
+ * sample.h
  *
- * Fixed/floating point operations
+ * Part of libtt (the integer amplifier library)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *

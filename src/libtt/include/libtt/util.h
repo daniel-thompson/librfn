@@ -1,7 +1,7 @@
 /*
  * util.h
  *
- * Utility library for libtt (tintamp)
+ * Part of libtt (the integer amplifier library)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *

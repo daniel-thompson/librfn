@@ -1,7 +1,7 @@
 /*
  * librfn.h
  *
- * Red Feline Ninja General Library.
+ * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *

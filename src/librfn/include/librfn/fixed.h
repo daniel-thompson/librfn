@@ -1,7 +1,7 @@
 /*
  * fixed.h
  *
- * <one line to give the file's description>
+ * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *

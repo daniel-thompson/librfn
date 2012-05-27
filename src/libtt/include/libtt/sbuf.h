@@ -1,7 +1,7 @@
 /*
  * sbuf.h
  *
- * Sample buffer operations.
+ * Part of libtt (the integer amplifier library)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *
@@ -20,6 +20,7 @@
 
 #define TT_SBUF_PREBUF 4
 
+/*! Sample buffer */
 typedef struct {
 	ttspl_t *p;
 	unsigned sz;

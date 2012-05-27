@@ -1,7 +1,7 @@
 /*
- * <filename>
+ * cabsim.c
  *
- * <one line to give the file's description>
+ * Part of libtt (the integer amplifier library)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
  *
