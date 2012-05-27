@@ -20,6 +20,7 @@
 
 // building blocks
 #include "libtt/biquad.h"
+#include "libtt/siggen.h"
 
 // high level processing
 #include "libtt/cabsim.h"

@@ -24,3 +24,11 @@ void tt_generic_process(
 	for (unsigned i=0; i<inbuf->sz; i++)
 		TTAT(inbuf, i) = step(arg, TTAT(outbuf, i));
 }
+
+void tt_generic_output(
+		ttspl_t (*step)(void *), void *arg,
+		tt_sbuf_t *outbuf)
+{
+	for (unsigned i=0; i<outbuf->sz; i++)
+		TTAT(outbuf, i) = step(arg);
+}

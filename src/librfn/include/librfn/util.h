@@ -15,6 +15,9 @@
 #define RF_UTIL_H_
 
 #include <stdarg.h>
+#include <stdlib.h>
+
+void *xmalloc(size_t sz);
 
 char *strdup_printf(const char *format, ...);
 char *strdup_vprintf(const char *format, va_list ap);

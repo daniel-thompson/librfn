@@ -16,6 +16,23 @@
 
 #include "librfn.h"
 
+/*! Out of memory hook.
+ *
+ * \todo Currently out_of_memory cannot actually be hooked
+ */
+static void out_of_memory(void)
+{
+	abort();
+}
+
+void *xmalloc(size_t sz)
+{
+	void *p = malloc(sz);
+	if (!p)
+		out_of_memory();
+	return p;
+}
+
 char *strdup_printf(const char *fmt, ...)
 {
 	char *str;
