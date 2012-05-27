@@ -50,7 +50,7 @@ void tt_sbuf_to_s16le(tt_sbuf_t *sbuf, int16_t *p, unsigned len)
 	assert(sbuf->sz == len);
 	
 	for (unsigned i=0; i<len; i++)
-		p[i] = TT_SPL_TO_S16LE(sbuf->p[i]);
+		p[i] = TTASS16LE(sbuf->p[i]);
 }
 
 void tt_s16le_to_sbuf(int16_t *p, unsigned len, tt_sbuf_t *sbuf)
@@ -58,7 +58,7 @@ void tt_s16le_to_sbuf(int16_t *p, unsigned len, tt_sbuf_t *sbuf)
 	assert(sbuf->sz == len);
 
 	for (unsigned i=0; i<len; i++)
-		sbuf->p[i] = TT_S16LE_TO_SPL(p[i]);
+		sbuf->p[i] = TTS16LE(p[i]);
 }
 
 void tt_sbuf_to_float(tt_sbuf_t *sbuf, float *p, unsigned len)
@@ -66,7 +66,7 @@ void tt_sbuf_to_float(tt_sbuf_t *sbuf, float *p, unsigned len)
 	assert(sbuf->sz == len);
 	
 	for (unsigned i=0; i<len; i++)
-		p[i] = TT_SPL_TO_FLOAT(sbuf->p[i]);
+		p[i] = TTASFLOAT(sbuf->p[i]);
 }
 
 void tt_float_to_sbuf(float *p, unsigned len, tt_sbuf_t *sbuf)
@@ -74,5 +74,5 @@ void tt_float_to_sbuf(float *p, unsigned len, tt_sbuf_t *sbuf)
 	assert(sbuf->sz == len);
 
 	for (unsigned i=0; i<len; i++)
-		sbuf->p[i] = TT_FLOAT_TO_SPL(p[i]);
+		sbuf->p[i] = TTFLOAT(p[i]);
 }
