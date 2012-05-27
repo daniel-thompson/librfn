@@ -22,3 +22,5 @@ missing
 *.o
 
 src/jacklua/tintamp_jacklua
+tests/biquadtest
+tests/siggentest
