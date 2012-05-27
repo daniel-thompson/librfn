@@ -1,5 +1,5 @@
 /*
- * libtt.h
+ * util.h
  *
  * Part of libtt (the integer amplifier library)
  *
@@ -11,17 +11,16 @@
  * (at your option) any later version.
  */
 
-#ifndef TT_LIBTT_H_
-#define TT_LIBTT_H_
+#include <assert.h>
 
-// fundamentals
-#include "libtt/sbuf.h"
-#include "libtt/util.h"
+#include "libtt.h"
 
-// building blocks
-#include "libtt/biquad.h"
+void tt_generic_process(
+		ttspl_t (*step)(void *, ttspl_t spl), void *arg,
+		tt_sbuf_t *inbuf, tt_sbuf_t *outbuf)
+{
+	assert(inbuf->sz == outbuf->sz);
 
-// high level processing
-#include "libtt/cabsim.h"
-
-#endif // TT_LIBTT_H_
+	for (unsigned i=0; i<inbuf->sz; i++)
+		TTAT(inbuf, i) = step(arg, TTAT(outbuf, i));
+}

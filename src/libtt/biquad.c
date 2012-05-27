@@ -20,7 +20,11 @@
 
 tt_biquad_t *tt_biquad_new()
 {
-	return calloc(1, sizeof(tt_biquad_t));
+	tt_biquad_t *bq = calloc(1, sizeof(tt_biquad_t));
+
+	bq->x[0] = TTINT(1);
+
+	return bq;
 }
 
 void tt_biquad_free(tt_biquad_t *bq)
@@ -56,9 +60,14 @@ ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 	return y;
 }
 
+static ttspl_t process_step(void *bq, ttspl_t spl)
+{
+	return tt_biquad_step(bq, spl);
+}
+
 void tt_biquad_process(tt_biquad_t *bq, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf)
 {
-	tt_generic_mono_process(tt_biquad_step, bq, inbuf, outbuf);
+	tt_generic_process(process_step, bq, inbuf, outbuf);
 }
 
 
@@ -171,7 +180,7 @@ void tt_biquad_highshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, tts
 char *tt_biquad_tostring(tt_biquad_t *bq)
 {
 	return strdup_printf(
-		"y[n] = %f x[n]  +  %f x[n-1]  +  %f x[n-2]  +  %f y[n-1]  +  %f y[n-2]\n",
+		"y[n] = %9.6f x[n]  + %9.6f x[n-1]  + %9.6f x[n-2]  + %9.6f y[n-1]  + %9.6f y[n-2]\n",
 		TTASFLOAT(bq->x[0]),
 		TTASFLOAT(bq->x[1]),
 		TTASFLOAT(bq->x[2]),

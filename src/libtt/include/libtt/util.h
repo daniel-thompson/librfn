@@ -14,7 +14,8 @@
 #ifndef TT_UTIL_H_
 #define TT_UTIL_H_
 
-#error ARSE
-void tt_generic_mono_process(void (*step)(), void *arg, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
+void tt_generic_process(
+		ttspl_t (*step)(void *, ttspl_t spl), void *arg,
+		tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
 
 #endif // TT_UTIL_H_

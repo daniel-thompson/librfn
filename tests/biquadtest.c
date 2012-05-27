@@ -1,5 +1,5 @@
 /*
- * libtt.h
+ * biquadtest.c
  *
  * Part of libtt (the integer amplifier library)
  *
@@ -11,17 +11,31 @@
  * (at your option) any later version.
  */
 
-#ifndef TT_LIBTT_H_
-#define TT_LIBTT_H_
+#undef NDEBUG
 
-// fundamentals
-#include "libtt/sbuf.h"
-#include "libtt/util.h"
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-// building blocks
-#include "libtt/biquad.h"
+#include <libtt.h>
 
-// high level processing
-#include "libtt/cabsim.h"
+int main()
+{
+	char *s;
 
-#endif // TT_LIBTT_H_
+	tt_biquad_t *bq = tt_biquad_new();
+	assert(bq);
+
+	s = tt_biquad_tostring(bq);
+	assert(s);
+	printf("%s\n", s);
+	free(s);
+
+	tt_biquad_lowpass(bq, 48000, 4000, TTFLOAT(0.7));
+	s = tt_biquad_tostring(bq);
+	assert(s);
+	printf("%s\n", s);
+	free(s);
+
+	return 0;
+}

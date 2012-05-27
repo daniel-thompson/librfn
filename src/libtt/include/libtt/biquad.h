@@ -47,4 +47,6 @@ void tt_biquad_peakingeq(tt_biquad_t *bq, int sfreq, int cfreq, int dbgain, ttsp
 void tt_biquad_lowshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttspl_t q);
 void tt_biquad_highshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttspl_t q);
 
+char *tt_biquad_tostring(tt_biquad_t *bq);
+
 #endif // TT_BIQUAD_H_

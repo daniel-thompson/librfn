@@ -32,7 +32,7 @@ void tt_sbuf_delete(tt_sbuf_t *sbuf);
 ttspl_t *tt_sbuf_at_rangechecked(tt_sbuf_t *sbuf, int at);
 
 #ifndef TT_SBUF_CHECKING
-#define TTAT(sbuf, at) ((sbuf)->p[(at)]
+#define TTAT(sbuf, at) ((sbuf)->p[(at)])
 #else
 #define TTAT(sbuf, at) *(tt_sbuf_at_rangechecked(sbuf, at))
 #endif

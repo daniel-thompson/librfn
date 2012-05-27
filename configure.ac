@@ -14,7 +14,8 @@ AC_PROG_RANLIB
 
 AC_DEFINE([_POSIX_C_SOURCE], [199309L])
 AC_DEFINE([_XOPEN_SOURCE], [500])
-AC_SEARCH_LIBS([clock_gettime], [rt])  
+AC_SEARCH_LIBS([clock_gettime], [rt])
+AC_SEARCH_LIBS([sqrtf], [m])
 
 AC_CONFIG_FILES(Makefile src/Makefile src/librfn/Makefile src/libtt/Makefile src/jacklua/Makefile tests/Makefile)
 AC_OUTPUT
