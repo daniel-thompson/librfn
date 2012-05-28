@@ -1,5 +1,5 @@
 /*
- * librfn.h
+ * fuzz.h
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
@@ -11,11 +11,13 @@
  * (at your option) any later version.
  */
 
-#ifndef RF_LIBRFN_H_
-#define RF_LIBRFN_H_
+#ifndef RF_FUZZ_H_
+#define RF_FUZZ_H_
 
-#include "librfn/fixed.h"
-#include "librfn/fuzz.h"
-#include "librfn/util.h"
+int fuzzcmp(double a, double b, double delta);
+int fuzzcmpf(float a, float b, float delta);
 
-#endif // RF_LIBRFN_H_
+int fuzzcmpb(double a, double b, int bits);
+int fuzzcmpbf(float a, float b, int bits);
+
+#endif // RF_FUZZ_H_
