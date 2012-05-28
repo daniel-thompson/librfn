@@ -44,7 +44,10 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 
 #define TTPI ((ttspl_t) (M_PI))
 
+#define TTABS(x) fabsf(x)
 #define TTCOS(x) cosf(x)
+#define TTLOG2(x) log2(x)
+#define TTLOG10(x) log10(x)
 #define TTPOW(a, b) powf(a, b)
 #define TTSIN(x) sinf(x)
 #define TTSQRT(x) sqrtf(x)
@@ -56,7 +59,11 @@ typedef float tlspl_t;
 
 #define TLLOWER(x) (x)				//!< Conversion to normal precision
 
+#define TLADD(a, b) ((a) + (b))			//!< Add operation (long precision)
+#define TLSUB(a, b) ((a) + (b))			//!< Subtract operation (long precision)
 #define TLDIV(a, b) (a) / (b)			//!< Divide. \arg b is normal precision
+#define TLDINT(a, b) ((a) / (b))		//!< Divide long precision number by integer
+						//   \return Long precision result
 
 #else // HAVE_FPU
 
@@ -71,5 +78,8 @@ typedef float tlspl_t;
 #define TSADD(a, b) FADD(a, b)
 
 #endif // HAVE_FPU
+
+#define TTDB2LINEAR(x) TTPOW(TTINT(10), TTDINT((x), 20))
+#define TTLINEAR2DB(x) TTMINT(TTLOG10(x), 20)
 
 #endif // TT_SAMPLE_H_

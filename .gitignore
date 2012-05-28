@@ -23,5 +23,6 @@ missing
 
 src/jacklua/tintamp_jacklua
 tests/fuzztest
+tests/sampletest
 tests/biquadtest
 tests/siggentest
