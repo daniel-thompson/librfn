@@ -1,5 +1,5 @@
 /*
- * libtt.h
+ * analyse.h
  *
  * Part of libtt (the integer amplifier library)
  *
@@ -11,19 +11,12 @@
  * (at your option) any later version.
  */
 
-#ifndef TT_LIBTT_H_
-#define TT_LIBTT_H_
+#ifndef TT_ANALYSE_H_
+#define TT_ANALYSE_H_
 
-// fundamentals
-#include "libtt/sbuf.h"
-#include "libtt/util.h"
+#include "sbuf.h"
 
-// building blocks
-#include "libtt/analyse.h"
-#include "libtt/biquad.h"
-#include "libtt/siggen.h"
+ttspl_t tt_analyse_peak(tt_sbuf_t *sbuf);
+ttspl_t tt_analyse_rectify(tt_sbuf_t *sbuf);
 
-// high level processing
-#include "libtt/cabsim.h"
-
-#endif // TT_LIBTT_H_
+#endif // TT_ANALYSE_H_
