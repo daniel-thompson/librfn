@@ -31,7 +31,7 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTRAISE(x) (x)				//!< Conversion to long precision
 
 #define TTADD(a, b) ((a) + (b))			//!< Add operation (normal precision)
-#define TTSUB(a, b) ((a) + (b))			//!< Subtract operation (normal precision)
+#define TTSUB(a, b) ((a) - (b))			//!< Subtract operation (normal precision)
 #define TTNEGATE(x) (-(x))			//!< Negate operation (normal precision)
 #define TTMUL(a, b) ((a) * (b))			//!< Multiply \returns Long precision
 #define TTMAL(a, b) ((a) * (b))			//!< Multiply and lower \returns Normal precision

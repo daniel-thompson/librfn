@@ -22,7 +22,7 @@ void tt_generic_process(
 	assert(inbuf->sz == outbuf->sz);
 
 	for (unsigned i=0; i<inbuf->sz; i++)
-		TTAT(inbuf, i) = step(arg, TTAT(outbuf, i));
+		TTAT(outbuf, i) = step(arg, TTAT(inbuf, i));
 }
 
 void tt_generic_output(

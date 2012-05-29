@@ -12,6 +12,7 @@
  */
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -123,6 +124,29 @@ static void biquad_applydesign(tt_biquad_t *bq, biquad_design_t *bd)
 	bq->x[2] = TTRAD(bd->b[2], bd->a[0]);
 	bq->y[0] = TTNEGATE(TTRAD(bd->a[1], bd->a[0]));
 	bq->y[1] = TTNEGATE(TTRAD(bd->a[2], bd->a[0]));
+
+#ifdef BIQUAD_DEBUG
+#define P(x) printf("%s = %12.6f\n", #x, (double) x)
+	P(bd->A);
+	P(bd->G);
+	P(bd->w0);
+	P(bd->sinw0);
+	P(bd->cosw0);
+	P(bd->alpha);
+
+	P(bd->b[0]);
+	P(bd->b[1]);
+	P(bd->b[2]);
+	P(bd->a[0]);
+	P(bd->a[1]);
+	P(bd->a[2]);
+
+	P(bq->x[0]);
+	P(bq->x[1]);
+	P(bq->x[2]);
+	P(bq->y[0]);
+	P(bq->y[1]);
+#endif
 }
 
 void tt_biquad_lowpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
