@@ -20,18 +20,50 @@
 #include <librfn.h>
 #include <libtt.h>
 
+static ttspl_t biquad_stimulate(
+		tt_biquad_t *bq, int sfreq, int gfreq)
+{
+	tt_sbuf_t *inbuf = tt_sbuf_new(1024);
+	assert(inbuf);
+
+	tt_sbuf_t *outbuf = tt_sbuf_new(1024);
+	assert(outbuf);
+
+	tt_siggen_t *sg = tt_siggen_new();
+	assert(sg);
+	tt_siggen_setup(sg, sfreq, gfreq, 1.570793, TT_SIGGEN_SIN);
+
+	// precheck that we are outputing at the right level
+	tt_siggen_process(sg, inbuf);
+	ttspl_t precheck = tt_analyse_rectify(inbuf);
+	assert(fuzzcmpf(1, TTASFLOAT(precheck), 1.01));
+
+	// stimulate the filter
+	for (int i=0; i<10; i++) {
+		tt_siggen_process(sg, inbuf);
+		tt_biquad_process(bq, inbuf, outbuf);
+	}
+
+	// check the result
+	ttspl_t result = tt_analyse_rectify(outbuf);
+
+	// clean up
+	tt_siggen_delete(sg);
+	tt_sbuf_delete(outbuf);
+	tt_sbuf_delete(inbuf);
+
+	return result;
+}
+
 int main()
 {
 	char *s;
+	float minus3, minus12, unity;
 
+	// SETUP: 400Hz low pass filter
+	printf("Low-pass filter\n");
 	tt_biquad_t *bq = tt_biquad_new();
 	assert(bq);
-
-	s = tt_biquad_tostring(bq);
-	assert(s);
-	printf("%s\n", s);
-	free(s);
-
 	tt_biquad_lowpass(bq, 48000, 400, TTFLOAT(0.7));
 	s = tt_biquad_tostring(bq);
 	assert(s);
@@ -63,47 +95,38 @@ int main()
 	assert(y0 == tt_biquad_step(bq, TTINT(1)));
 	assert(y1 == tt_biquad_step(bq, TTINT(0)));
 
-	// PRETEST: Setup some stuff and check the input signal averages unity (0dB)
-	tt_sbuf_t *inbuf = tt_sbuf_new(1024);
-	assert(inbuf);
-	tt_sbuf_t *outbuf = tt_sbuf_new(1024);
-	assert(outbuf);
-	tt_siggen_t *sg = tt_siggen_new();
-	assert(sg);
-	tt_siggen_setup(sg, 48000, 400, 1.570793, TT_SIGGEN_SIN);
-	tt_siggen_process(sg, inbuf);
-	ttspl_t precheck = tt_analyse_rectify(inbuf);
-	assert(fuzzcmpf(1, TTASFLOAT(precheck), 1.01));
-
 	// TEST: Check the shoulder frequency is -3dB
-	for (int i=0; i<10; i++) {
-		tt_siggen_process(sg, inbuf);
-		tt_biquad_process(bq, inbuf, outbuf);
-	}
-	float minus3 = TTASFLOAT(TTLINEAR2DB(tt_analyse_rectify(outbuf)));
-	printf("minus3 = %5.2fdB\n", minus3);
+	minus3 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 400)));
+	printf("  minus3 = %5.2fdB\n", minus3);
 	assert(fuzzcmpf(-3, minus3, 1.05));
 
 	// TEST: Check for rolloff at ~12dB per octave
-	tt_siggen_setup(sg, 48000, 800, 1.570793, TT_SIGGEN_SIN);
-	tt_siggen_reset(sg);
-	for (int i=0; i<10; i++) {
-		tt_siggen_process(sg, inbuf);
-		tt_biquad_process(bq, inbuf, outbuf);
-	}
-	float minus12 = TTASFLOAT(TTLINEAR2DB(tt_analyse_rectify(outbuf)));
-	printf("minus12 = %5.2fdB\n", minus12);
+	minus12 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 800)));
+	printf("  minus12 = %5.2fdB\n", minus12);
 	assert(fuzzcmpf(-12, minus12, 1.05));
 
 	// TEST: Check for full signal in passband
-	tt_siggen_setup(sg, 48000, 200, 1.570793, TT_SIGGEN_SIN);
-	tt_siggen_reset(sg);
-	for (int i=0; i<10; i++) {
-		tt_siggen_process(sg, inbuf);
-		tt_biquad_process(bq, inbuf, outbuf);
-	}
-	float unity = TTASFLOAT(tt_analyse_rectify(outbuf));
-	printf("unity = %9.6f\n", unity);
+	unity = TTASFLOAT(biquad_stimulate(bq, 48000, 200));
+	printf("  unity = %9.6f\n", unity);
+	assert(fuzzcmpf(1, unity, 1.05));
+
+	// SETUP: 600Hz high pass filter
+	printf("High-pass filter\n");
+	tt_biquad_highpass(bq, 48000, 600, TTFLOAT(0.7));
+
+	// TEST: Check the shoulder frequency is -3dB
+	minus3 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 600)));
+	printf("  minus3 = %5.2fdB\n", minus3);
+	assert(fuzzcmpf(-3, minus3, 1.05));
+
+	// TEST: Check for rolloff at ~12dB per octave
+	minus12 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 300)));
+	printf("  minus12 = %5.2fdB\n", minus12);
+	assert(fuzzcmpf(-12, minus12, 1.05));
+
+	// TEST: Check for full signal in passband
+	unity = TTASFLOAT(biquad_stimulate(bq, 48000, 1200));
+	printf("  unity = %9.6f\n", unity);
 	assert(fuzzcmpf(1, unity, 1.05));
 
 	return 0;

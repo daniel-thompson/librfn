@@ -155,12 +155,13 @@ void tt_biquad_lowpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
 
 	biquad_predesign(&bd, sfreq, shfreq, 0, q);
 
-	bd.b[1] = TTSUB(TTINT(1), bd.cosw0);
-	bd.b[0] = TTRAD(bd.b[1], TTINT(2));
+	ttspl_t common = TTSUB(TTINT(1), bd.cosw0);
+	bd.b[0] = TTDINT(common, 2);
+	bd.b[1] = common;
 	bd.b[2] = bd.b[0];
 
 	bd.a[0] = TTADD(TTINT(1), bd.alpha);
-	bd.a[1] = TTMAL(TTINT(-2), bd.cosw0);
+	bd.a[1] = TTMINT(bd.cosw0, -2);
 	bd.a[2] = TTSUB(TTINT(1), bd.alpha);
 
 	biquad_applydesign(bq, &bd);
@@ -168,7 +169,20 @@ void tt_biquad_lowpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
 
 void tt_biquad_highpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
 {
-	assert(0);
+	biquad_design_t bd;
+
+	biquad_predesign(&bd, sfreq, shfreq, 0, q);
+
+        ttspl_t common = TTADD(1, bd.cosw0);
+        bd.b[0] = TTDINT(common, 2);
+        bd.b[1] = TTNEGATE(common);
+        bd.b[2] = bd.b[0];
+
+	bd.a[0] = TTADD(TTINT(1), bd.alpha);
+	bd.a[1] = TTMINT(bd.cosw0, -2);
+	bd.a[2] = TTSUB(TTINT(1), bd.alpha);
+
+	biquad_applydesign(bq, &bd);
 }
 
 void tt_biquad_bandpass(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q)
