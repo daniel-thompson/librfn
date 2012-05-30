@@ -14,10 +14,19 @@
 #ifndef RF_FUZZ_H_
 #define RF_FUZZ_H_
 
+#include <assert.h>
+
 int fuzzcmp(double a, double b, double delta);
 int fuzzcmpf(float a, float b, float delta);
 
 int fuzzcmpb(double a, double b, int bits);
 int fuzzcmpbf(float a, float b, int bits);
+
+/*! Assert two values are approximately equal.
+ *
+ * Currently this checks the values differ by no more than 10 parts
+ * per million.
+ */
+#define asserteq(a, b) assert(fuzzcmp(a, b, 1.000010))
 
 #endif // RF_FUZZ_H_
