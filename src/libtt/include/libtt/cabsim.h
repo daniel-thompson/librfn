@@ -17,6 +17,9 @@
 #include "biquad.h"
 
 typedef struct {
+	tt_biquad_t notch;
+	tt_biquad_t shelf;
+	tt_biquad_t hpf;
 	tt_biquad_t lpf0;
 	tt_biquad_t lpf1;
 } tt_cabsim_t;
@@ -25,7 +28,5 @@ tt_cabsim_t *tt_cabsim_new();
 void tt_cabsim_delete(tt_cabsim_t *cabsim);
 
 void tt_cabsim_process(tt_cabsim_t *cabsim, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
-
-void tt_cabsim_tune(tt_cabsim_t *cabsim);
 
 #endif // CABSIM_H_
