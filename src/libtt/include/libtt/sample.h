@@ -40,6 +40,11 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTRAD(a, b) ((a) / (b))			//!< Raise and divide.
 #define TTDINT(a, b) ((a) / (b))		//!< Divide by integer
 
+#define TTADDI(a, b) ((a) + (b))
+#define TTSUBI(a, b) ((a) - (b))
+#define TTISUB(a, b) ((a) - (b))
+
+
 #define TTMAC(acc, a, b) ((acc) += (a) * (b))	//!< Multiply and accumulate (acc is long precision)
 
 #define TTPI ((ttspl_t) (M_PI))

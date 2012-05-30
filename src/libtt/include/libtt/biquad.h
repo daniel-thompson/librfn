@@ -33,6 +33,7 @@ typedef struct {
 
 tt_biquad_t *tt_biquad_new();
 void tt_biquad_free(tt_biquad_t *bq);
+void tt_biquad_init(tt_biquad_t *bq);
 
 ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl);
 void tt_biquad_process(tt_biquad_t *bq, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
@@ -42,7 +43,7 @@ void tt_biquad_lowpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q);
 void tt_biquad_highpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q);
 void tt_biquad_bandpass(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q);
 void tt_biquad_bandstop(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q);
-void tt_biquad_allpass(tt_biquad_t *bq, int csfreq, ttspl_t q);
+void tt_biquad_allpass(tt_biquad_t *bq, int sfreq, int csfreq, ttspl_t q);
 void tt_biquad_peakingeq(tt_biquad_t *bq, int sfreq, int cfreq, int dbgain, ttspl_t q);
 void tt_biquad_lowshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttspl_t q);
 void tt_biquad_highshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttspl_t q);

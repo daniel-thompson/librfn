@@ -55,19 +55,50 @@ static ttspl_t biquad_stimulate(
 	return result;
 }
 
+static bool test_response_at(tt_biquad_t *bq, int sfreq, int gfreq, float db)
+{
+	ttspl_t level = biquad_stimulate(bq, sfreq, gfreq);
+	bool ok;
+
+	if (0 == db) {
+		float levelf = TTASFLOAT(level);
+
+		ok = fuzzcmpf(levelf, 1, 1.05);
+
+		printf("    %4dHz@%dHz    %6.2f   %c=    1.00             [ %s ]\n",
+				gfreq, sfreq, levelf,
+				ok ? '~' : '!', ok ? " OK " : "FAIL");
+	} else {
+		float levelf = TTASFLOAT(TTLINEAR2DB(level));
+
+		/* special case for very quiet signals */
+		if (db <= -96)
+			ok = levelf <= db;
+		else
+			ok = fuzzcmpf(levelf, db, 1.05);
+
+		printf("    %4dHz@%dHz    %6.2fdB %c= %6.2fdB            [ %s ]\n",
+				gfreq, sfreq, levelf,
+				ok ? '~' : '!', db, ok ? " OK " : "FAIL");
+	}
+
+	return ok;
+}
+
 int main()
 {
 	char *s;
-	float minus3, minus12, unity;
 
 	// SETUP: 400Hz low pass filter
-	printf("Low-pass filter\n");
+	printf("Low-pass filter (400Hz@48000Hz):\n");
 	tt_biquad_t *bq = tt_biquad_new();
 	assert(bq);
 	tt_biquad_lowpass(bq, 48000, 400, TTFLOAT(0.7));
+
+	// TEST: Very basic test of tostring
 	s = tt_biquad_tostring(bq);
 	assert(s);
-	printf("%s\n", s);
+	assert(s[0] == 'y');
 	free(s);
 
 	// TEST: Stays at zero without stimulus
@@ -95,39 +126,71 @@ int main()
 	assert(y0 == tt_biquad_step(bq, TTINT(1)));
 	assert(y1 == tt_biquad_step(bq, TTINT(0)));
 
-	// TEST: Check the shoulder frequency is -3dB
-	minus3 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 400)));
-	printf("  minus3 = %5.2fdB\n", minus3);
-	assert(fuzzcmpf(-3, minus3, 1.05));
+	// TEST: Should response is -3dB, rolloff at ~12dB per octave and
+	//       full signal in passband,
+	assert(test_response_at(bq, 48000, 400, -3));
+	assert(test_response_at(bq, 48000, 800, -12));
+	assert(test_response_at(bq, 48000, 200, 0));
 
-	// TEST: Check for rolloff at ~12dB per octave
-	minus12 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 800)));
-	printf("  minus12 = %5.2fdB\n", minus12);
-	assert(fuzzcmpf(-12, minus12, 1.05));
-
-	// TEST: Check for full signal in passband
-	unity = TTASFLOAT(biquad_stimulate(bq, 48000, 200));
-	printf("  unity = %9.6f\n", unity);
-	assert(fuzzcmpf(1, unity, 1.05));
-
-	// SETUP: 600Hz high pass filter
-	printf("High-pass filter\n");
+	// TEST: High pass filter
+	printf("High-pass filter (600Hz@48000Hz):\n");
 	tt_biquad_highpass(bq, 48000, 600, TTFLOAT(0.7));
+	assert(test_response_at(bq, 48000, 600, -3));
+	assert(test_response_at(bq, 48000, 300, -12));
+	assert(test_response_at(bq, 48000, 1200, 0));
 
-	// TEST: Check the shoulder frequency is -3dB
-	minus3 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 600)));
-	printf("  minus3 = %5.2fdB\n", minus3);
-	assert(fuzzcmpf(-3, minus3, 1.05));
+	// TEST: Band pass filter
+	printf("Band-pass filter (1000Hz@48000Hz):\n");
+	tt_biquad_bandpass(bq, 48000, 1000, TTFLOAT(0.7));
+	assert(test_response_at(bq, 48000, 1000, 0));
+	assert(test_response_at(bq, 48000, 500, -3.2));
+	assert(test_response_at(bq, 48000, 2000, -3.2));
 
-	// TEST: Check for rolloff at ~12dB per octave
-	minus12 = TTASFLOAT(TTLINEAR2DB(biquad_stimulate(bq, 48000, 300)));
-	printf("  minus12 = %5.2fdB\n", minus12);
-	assert(fuzzcmpf(-12, minus12, 1.05));
+	// TEST: Band stop filter
+	printf("Band-stop filter (1000Hz@48000Hz):\n");
+	tt_biquad_bandstop(bq, 48000, 1000, TTFLOAT(0.7));
+	assert(test_response_at(bq, 48000, 1000, -96));
+	assert(test_response_at(bq, 48000, 500, -2.8));
+	assert(test_response_at(bq, 48000, 2000, -2.8));
 
-	// TEST: Check for full signal in passband
-	unity = TTASFLOAT(biquad_stimulate(bq, 48000, 1200));
-	printf("  unity = %9.6f\n", unity);
-	assert(fuzzcmpf(1, unity, 1.05));
+	// TEST: All pass
+	printf("All pass filter (440Hz@48000Hz):\n");
+	tt_biquad_allpass(bq, 48000, 400, TTFLOAT(0.7));
+	for (int f = 200; f < 10000; f *= 2) {
+		assert(test_response_at(bq, 48000, f, 0));
+	}
+
+	// TEST: Peaking EQ
+	printf("Peaking EQ filter (400Hz@48000Hz with -16dB):\n");
+	tt_biquad_peakingeq(bq, 48000, 400, -16, TTFLOAT(8.0));
+	assert(test_response_at(bq, 48000, 400, -16));
+	assert(test_response_at(bq, 48000, 200, 0));
+	assert(test_response_at(bq, 48000, 800, 0));
+	assert(test_response_at(bq, 48000, 1600, 0));
+
+	// TEST: Peaking EQ
+	printf("Peaking EQ filter (400Hz@48000Hz with 6dB):\n");
+	tt_biquad_peakingeq(bq, 48000, 400, 6, TTFLOAT(2.0));
+	assert(test_response_at(bq, 48000, 400, 6));
+	assert(test_response_at(bq, 48000, 1600, 0));
+
+	// TEST: 750Hz high shelf filter
+	printf("High-shelf filter (750Hz@48000Hz):\n");
+	tt_biquad_highshelf(bq, 48000, 750, -6, TTFLOAT(0.7));
+	assert(test_response_at(bq, 48000, 300, 0));
+	assert(test_response_at(bq, 48000, 2000, -6));
+
+	// TEST: 750Hz high boost filter
+	printf("High-boost filter (750Hz@48000Hz):\n");
+	tt_biquad_highshelf(bq, 48000, 750, 6, TTFLOAT(0.7));
+	assert(test_response_at(bq, 48000, 300, 0));
+	assert(test_response_at(bq, 48000, 2000, 6));
+
+	// TEST: 750Hz low shelf filter
+	printf("Low-shelf filter (750Hz@48000Hz):\n");
+	tt_biquad_lowshelf(bq, 48000, 750, -6, TTFLOAT(0.7));
+	assert(test_response_at(bq, 48000, 2000, 0));
+	assert(test_response_at(bq, 48000, 300, -6));
 
 	return 0;
 }
