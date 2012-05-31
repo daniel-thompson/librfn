@@ -22,6 +22,7 @@
 #include "libtt/analyse.h"
 #include "libtt/biquad.h"
 #include "libtt/siggen.h"
+#include "libtt/waveshaper.h"
 
 // high level processing
 #include "libtt/cabsim.h"

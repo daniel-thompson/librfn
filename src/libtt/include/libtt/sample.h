@@ -17,6 +17,22 @@
 #include <stdint.h>
 #include <math.h>
 
+//
+// The fixed point limits are useful even when operating in floating point
+// mode because that way the runtime asserts are still meaningful.
+//
+
+#define TTQ 19			//!< Fractional bits for normal precision (Q19)
+#define TTSPL_MAX ((1 << (32-TTQ)) - 1)
+#define TTSPL_MIN (-TTSPL_MAX)
+
+#define TLQ 38			//!< Fractional bits for "long" precision (Q38)
+#define TLSPL_MAX ((1 << (32-TTL)) - 1)
+#define TLSPL_MIN (-TLSPL_MAX)
+
+#define TSQ 15			//!< Fractional bits for "short" precision (Q15)
+
+
 #ifdef HAVE_FPU
 
 typedef float ttspl_t;				//!< Sample in normal precision samples
@@ -74,15 +90,14 @@ typedef float tlspl_t;
 
 #error Fixed point support is incomplete
 
-#define TTQ 19			//!< Fractional bits for normal precision (Q19)
 #define TTADD(a, b) FADD(a, b)
 
-#define TLQ 38			//!< Fractional bits for "long" precision (Q38)
-#define TSQ 15			//!< Fractional bits for "short" precision (Q15)
 #define TLADD(a, b) FADD(a, b)
 #define TSADD(a, b) FADD(a, b)
 
 #endif // HAVE_FPU
+
+#define TTFRACTION(x) TTSUB((x), TTINT(TTASINT(x))) 
 
 #define TTDB2LINEAR(x) TTPOW(TTINT(10), TTDINT((x), 20))
 #define TTLINEAR2DB(x) TTMINT(TTLOG10(x), 20)
