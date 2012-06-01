@@ -12,9 +12,11 @@
  */
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
-#include "libtt/sbuf.h"
+#include "librfn.h"
+#include "libtt.h"
 
 tt_sbuf_t *tt_sbuf_new(unsigned sz)
 {
@@ -75,4 +77,37 @@ void tt_float_to_sbuf(float *p, unsigned len, tt_sbuf_t *sbuf)
 
 	for (unsigned i=0; i<len; i++)
 		sbuf->p[i] = TTFLOAT(p[i]);
+}
+
+char *tt_sbuf_tostring(tt_sbuf_t *sbuf, unsigned int lines)
+{
+	char *p = xstrdup_printf("");
+
+	if ((sbuf->sz / 7) < lines)
+		lines = sbuf->sz / 7;
+
+	for (unsigned int i=0; i<lines; i++) {
+		bool last_line = i && (i == lines - 1);
+		bool penultimate_line = (i == lines - 2);
+		int offset = (last_line ? sbuf->sz - 7 : i*7);
+
+		char *q = xstrdup_printf(
+				"%s%s%9.3f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f%s",
+				p,
+				(last_line ? " ... " : "     "),
+				TTAT(sbuf, offset + 0),
+				TTAT(sbuf, offset + 1),
+				TTAT(sbuf, offset + 2),
+				TTAT(sbuf, offset + 3),
+				TTAT(sbuf, offset + 4),
+				TTAT(sbuf, offset + 5),
+				TTAT(sbuf, offset + 6),
+				(penultimate_line ? " ...\n" :
+				 last_line        ? "" :
+						    "\n"));
+		free(p);
+		p = q;
+	}
+
+	return p;
 }

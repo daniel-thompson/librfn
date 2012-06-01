@@ -42,4 +42,6 @@ void tt_s16le_to_sbuf(int16_t *p, unsigned len, tt_sbuf_t *sbuf);
 void tt_sbuf_to_float(tt_sbuf_t *sbuf, float *p, unsigned len);
 void tt_float_to_sbuf(float *p, unsigned len, tt_sbuf_t *sbuf);
 
+char *tt_sbuf_tostring(tt_sbuf_t *sbuf, unsigned int lines);
+
 #endif // TT_SBUF_H_
