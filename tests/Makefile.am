@@ -1,7 +1,7 @@
 AM_CPPFLAGS = -I../src/librfn/include -I../src/libtt/include
 AM_LDADD = ../src/libtt/libtt.a ../src/librfn/librfn.a
 
-noinst_PROGRAMS=fuzztest sampletest analysetest siggentest biquadtest 
+noinst_PROGRAMS=fuzztest sampletest analysetest siggentest biquadtest waveshapertest
 
 #
 # librfn tests
@@ -25,5 +25,8 @@ siggentest_LDADD = $(AM_LDADD)
 
 biquadtest_SOURCES=biquadtest.c
 biquadtest_LDADD = $(AM_LDADD)
+
+waveshapertest_SOURCES=waveshapertest.c
+waveshapertest_LDADD = $(AM_LDADD)
 
 TESTS = $(noinst_PROGRAMS)

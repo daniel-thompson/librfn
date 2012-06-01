@@ -28,3 +28,4 @@ tests/sampletest
 tests/analysetest
 tests/biquadtest
 tests/siggentest
+tests/waveshapertest
