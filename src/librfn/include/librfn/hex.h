@@ -1,5 +1,5 @@
 /*
- * librfn.h
+ * hex.h
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
@@ -11,12 +11,13 @@
  * (at your option) any later version.
  */
 
-#ifndef RF_LIBRFN_H_
-#define RF_LIBRFN_H_
+#ifndef RF_HEX_H_
+#define RF_HEX_H_
 
-#include "librfn/fixed.h"
-#include "librfn/fuzz.h"
-#include "librfn/hex.h"
-#include "librfn/util.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-#endif // RF_LIBRFN_H_
+int rf_hexdump(unsigned char *p, size_t sz);
+int rf_fhexdump(FILE *f, unsigned char *p, size_t sz);
+
+#endif // RF_HEX_H_
