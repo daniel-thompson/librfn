@@ -61,3 +61,32 @@ char *strdup_vprintf(const char *fmt, va_list ap)
 
 	return str;
 }
+
+char *xstrdup_printf(const char *fmt, ...)
+{
+	char *str;
+	va_list ap;
+
+	va_start(ap, fmt);
+	str = xstrdup_vprintf(fmt, ap);
+	va_end(ap);
+
+	return str;
+}
+
+char *xstrdup_vprintf(const char *fmt, va_list ap)
+{
+	char *str;
+	int len;
+	va_list nap;
+
+	va_copy(nap, ap);
+	len = vsnprintf(NULL, 0, fmt, nap);
+	va_end(nap);
+
+	str = xmalloc(len+1);
+	if (str)
+		vsprintf(str, fmt, ap);
+
+	return str;
+}
