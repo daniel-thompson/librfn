@@ -14,6 +14,31 @@
 #ifndef TT_UTIL_H_
 #define TT_UTIL_H_
 
+typedef struct {
+	unsigned int sampling_frequency;
+	unsigned int grain_size;
+} tt_context_t;
+
+void tt_context_init(tt_context_t *ctx);
+static inline void tt_context_finalize(tt_context_t *ctx) {}
+tt_context_t *tt_context_new();
+void tt_context_delete(tt_context_t *ctx);
+
+#define tt_generic_new(type) \
+tt_##type##_t *tt_##type##_new(tt_context_t *ctx) \
+{ \
+	tt_##type##_t *p = xmalloc(sizeof(*p)); \
+	tt_##type##_init(p, ctx); \
+	return p; \
+}
+
+#define tt_generic_delete(type) \
+void tt_##type##_delete(tt_##type##_t *p) \
+{ \
+	tt_##type##_finalize(p); \
+	free(p); \
+}
+
 /*!
  * Generate a 1-in/1-out process function from an appropriate step
  * function.

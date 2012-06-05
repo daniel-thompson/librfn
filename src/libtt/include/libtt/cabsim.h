@@ -24,9 +24,12 @@ typedef struct {
 	tt_biquad_t lpf1;
 } tt_cabsim_t;
 
-tt_cabsim_t *tt_cabsim_new();
+void tt_cabsim_init(tt_cabsim_t *cabsim, tt_context_t *ctx);
+static inline void tt_cabsim_finalize(tt_cabsim_t *cabsim) {}
+tt_cabsim_t *tt_cabsim_new(tt_context_t *ctx);
 void tt_cabsim_delete(tt_cabsim_t *cabsim);
 
+ttspl_t tt_cabsim_step(tt_cabsim_t *cabsim, ttspl_t spl);
 void tt_cabsim_process(tt_cabsim_t *cabsim, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
 
 #endif // CABSIM_H_

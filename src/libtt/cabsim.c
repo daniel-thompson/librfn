@@ -33,15 +33,13 @@
  *   LpBq/0.7/4000 x LpBq/0.7/4000
  *
  */
-tt_cabsim_t *tt_cabsim_new()
+void tt_cabsim_init(tt_cabsim_t *cabsim, tt_context_t *ctx)
 {
-	tt_cabsim_t *cabsim = xmalloc(sizeof(*cabsim));
-
-	tt_biquad_init(&cabsim->notch);
-	tt_biquad_init(&cabsim->shelf);
-	tt_biquad_init(&cabsim->hpf);
-	tt_biquad_init(&cabsim->lpf0);
-	tt_biquad_init(&cabsim->lpf1);
+	tt_biquad_init(&cabsim->notch, ctx);
+	tt_biquad_init(&cabsim->shelf, ctx);
+	tt_biquad_init(&cabsim->hpf, ctx);
+	tt_biquad_init(&cabsim->lpf0, ctx);
+	tt_biquad_init(&cabsim->lpf1, ctx);
 
 	// TODO: Needs to move to setup function (and 48k needs to be parameterized)
 	tt_biquad_peakingeq(&cabsim->notch, 48000, 400, -16, TTFLOAT(0.7));
@@ -49,13 +47,20 @@ tt_cabsim_t *tt_cabsim_new()
 	tt_biquad_highpass(&cabsim->hpf, 48000, 60, TTFLOAT(0.7));
 	tt_biquad_lowpass(&cabsim->lpf0, 48000, 4000, TTFLOAT(0.7));
 	tt_biquad_lowpass(&cabsim->lpf1, 48000, 4000, TTFLOAT(0.7));
-
-	return cabsim;
 }
 
-void tt_cabsim_delete(tt_cabsim_t *cabsim)
+tt_generic_new(cabsim);
+tt_generic_delete(cabsim);
+
+ttspl_t tt_cabsim_step(tt_cabsim_t *cabsim, ttspl_t spl)
 {
-	free(cabsim);
+	spl = tt_biquad_step(&cabsim->notch, spl);
+	spl = tt_biquad_step(&cabsim->shelf, spl);
+	spl = tt_biquad_step(&cabsim->hpf, spl);
+	spl = tt_biquad_step(&cabsim->lpf0, spl);
+	spl = tt_biquad_step(&cabsim->lpf1, spl);
+
+	return spl;
 }
 
 void tt_cabsim_process(tt_cabsim_t *cabsim, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf)

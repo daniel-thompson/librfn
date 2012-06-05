@@ -30,27 +30,14 @@
  *     "Cookbook formulae for audio EQ biquad filter coefficients"
  */
 
-/*! Allocate a new biquad filter
- *
- */
-tt_biquad_t *tt_biquad_new()
-{
-	tt_biquad_t *bq = xmalloc(sizeof(*bq));
-	tt_biquad_init(bq);
-	return bq;
-}
-
-void tt_biquad_free(tt_biquad_t *bq)
-{
-	free(bq);
-}
-
-void tt_biquad_init(tt_biquad_t *bq)
+void tt_biquad_init(tt_biquad_t *bq, tt_context_t *ctx)
 {
 	memset(bq, 0, sizeof(*bq));
-
-	bq->x[0] = TTINT(1);
+	bq->ctx = ctx;
 }
+
+tt_generic_new(biquad);
+tt_generic_delete(biquad);
 
 inline ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 {
@@ -81,7 +68,6 @@ inline ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 }
 
 tt_generic_process(biquad);
-
 
 void tt_biquad_flush(tt_biquad_t *bq)
 {

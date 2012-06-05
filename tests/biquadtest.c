@@ -89,9 +89,11 @@ int main()
 {
 	char *s;
 
+	tt_context_t *ctx = tt_context_new();
+
 	// SETUP: 400Hz low pass filter
 	printf("Low-pass filter (400Hz@48000Hz):\n");
-	tt_biquad_t *bq = tt_biquad_new();
+	tt_biquad_t *bq = tt_biquad_new(ctx);
 	assert(bq);
 	tt_biquad_lowpass(bq, 48000, 400, TTFLOAT(0.7));
 
