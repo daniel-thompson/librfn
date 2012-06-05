@@ -194,5 +194,9 @@ int main()
 	assert(test_response_at(bq, 48000, 2000, 0));
 	assert(test_response_at(bq, 48000, 300, -6));
 
+	// TIDY
+	tt_biquad_delete(bq);
+	tt_context_delete(ctx);
+
 	return 0;
 }

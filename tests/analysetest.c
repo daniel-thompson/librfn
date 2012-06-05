@@ -41,5 +41,8 @@ int main()
 	printf("rect %9.6f (%5.2fdB)\n", TTASFLOAT(avg), TTASFLOAT(TTLINEAR2DB(avg)));
 	assert(fuzzcmpf(TTASFLOAT(avg), 1.27, 1.01));
 
+	tt_sbuf_delete(sbuf);
+	tt_siggen_delete(sg);
+
 	return 0;
 }

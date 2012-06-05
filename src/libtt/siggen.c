@@ -13,6 +13,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "librfn.h"
 #include "libtt.h"
@@ -30,7 +31,7 @@ static ttspl_t generate_sin(ttspl_t phase)
 tt_siggen_t *tt_siggen_new()
 {
 	tt_siggen_t *sg = xmalloc(sizeof(tt_siggen_t));
-
+	memset(sg, 0, sizeof(*sg));
 	tt_siggen_setup(sg, 0, 0, TTINT(0), TT_SIGGEN_DC);
 
 	return sg;

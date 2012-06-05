@@ -54,5 +54,9 @@ int main()
 	for (int i=0; i<21; i++)
 		assert(phase[i] == TTAT(sbuf, i));
 
+	// TIDY
+	tt_siggen_delete(sg);
+	tt_sbuf_delete(sbuf);
+
 	return 0;
 }

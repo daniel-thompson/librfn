@@ -127,5 +127,10 @@ int main()
 		assert(ok);
 	}
 
+	tt_siggen_delete(sg);
+	tt_sbuf_delete(inbuf);
+	tt_sbuf_delete(outbuf);
+	free(ws);
+
 	return 0;
 }

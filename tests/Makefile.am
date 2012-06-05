@@ -1,5 +1,6 @@
 AM_CPPFLAGS = -I../src/librfn/include -I../src/libtt/include
 AM_LDADD = ../src/libtt/libtt.a ../src/librfn/librfn.a
+TESTS_ENVIRONMENT=$(VALGRIND)
 
 noinst_PROGRAMS=fuzztest sampletest analysetest siggentest biquadtest waveshapertest
 

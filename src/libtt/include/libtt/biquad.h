@@ -37,7 +37,7 @@ typedef struct {
 void tt_biquad_init(tt_biquad_t *bq, tt_context_t *ctx);
 static inline void tt_biquad_finalize(tt_biquad_t *bq) {}
 tt_biquad_t *tt_biquad_new(tt_context_t *ctx);
-void tt_biquad_free(tt_biquad_t *bq);
+void tt_biquad_delete(tt_biquad_t *bq);
 
 ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl);
 void tt_biquad_process(tt_biquad_t *bq, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
