@@ -42,11 +42,11 @@ void tt_cabsim_init(tt_cabsim_t *cabsim, tt_context_t *ctx)
 	tt_biquad_init(&cabsim->lpf1, ctx);
 
 	// TODO: Needs to move to setup function (and 48k needs to be parameterized)
-	tt_biquad_peakingeq(&cabsim->notch, 48000, 400, -16, TTFLOAT(0.7));
-	tt_biquad_highshelf(&cabsim->shelf, 48000, 400, 6, TTFLOAT(0.7));
-	tt_biquad_highpass(&cabsim->hpf, 48000, 60, TTFLOAT(0.7));
-	tt_biquad_lowpass(&cabsim->lpf0, 48000, 4000, TTFLOAT(0.7));
-	tt_biquad_lowpass(&cabsim->lpf1, 48000, 4000, TTFLOAT(0.7));
+	tt_biquad_peakingeq(&cabsim->notch, 400, -16, TTFLOAT(0.7));
+	tt_biquad_highshelf(&cabsim->shelf, 400, 6, TTFLOAT(0.7));
+	tt_biquad_highpass(&cabsim->hpf, 60, TTFLOAT(0.7));
+	tt_biquad_lowpass(&cabsim->lpf0, 4000, TTFLOAT(0.7));
+	tt_biquad_lowpass(&cabsim->lpf1, 4000, TTFLOAT(0.7));
 }
 
 tt_generic_new(cabsim);

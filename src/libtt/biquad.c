@@ -94,8 +94,10 @@ typedef struct biquad_design {
 /*!
  * Pre-compute a few intermediate variables common to all filters.
  */
-static void biquad_predesign(biquad_design_t *bd, int sfreq, int freq, int dbgain, ttspl_t q)
+static void biquad_predesign(tt_biquad_t *bq, biquad_design_t *bd, int freq, int dbgain, ttspl_t q)
 {
+	int sfreq = bq->ctx->sampling_frequency;
+
 	ttspl_t gain = TTINT(dbgain);
 	ttspl_t f0 = TTINT(freq);
 
@@ -146,11 +148,11 @@ static void biquad_applydesign(tt_biquad_t *bq, biquad_design_t *bd)
 #endif
 }
 
-void tt_biquad_lowpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
+void tt_biquad_lowpass(tt_biquad_t *bq, int shfreq, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, shfreq, 0, q);
+	biquad_predesign(bq, &bd, shfreq, 0, q);
 
 	ttspl_t common = TTSUB(TTINT(1), bd.cosw0);
 	bd.b[0] = TTDINT(common, 2);
@@ -164,11 +166,11 @@ void tt_biquad_lowpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_highpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
+void tt_biquad_highpass(tt_biquad_t *bq, int shfreq, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, shfreq, 0, q);
+	biquad_predesign(bq, &bd, shfreq, 0, q);
 
         ttspl_t common = TTADD(1, bd.cosw0);
         bd.b[0] = TTDINT(common, 2);
@@ -182,11 +184,11 @@ void tt_biquad_highpass(tt_biquad_t *bq, int sfreq, int shfreq, ttspl_t q)
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_bandpass(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q)
+void tt_biquad_bandpass(tt_biquad_t *bq, int cfreq, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, cfreq, 0, q);
+	biquad_predesign(bq, &bd, cfreq, 0, q);
 
         bd.b[0] = bd.alpha;
         bd.b[1] = 0;
@@ -199,11 +201,11 @@ void tt_biquad_bandpass(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q)
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_bandstop(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q)
+void tt_biquad_bandstop(tt_biquad_t *bq, int cfreq, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, cfreq, 0, q);
+	biquad_predesign(bq, &bd, cfreq, 0, q);
 
         bd.b[0] = TTINT(1);
         bd.b[1] = TTMINT(bd.cosw0, -2);;
@@ -216,11 +218,11 @@ void tt_biquad_bandstop(tt_biquad_t *bq, int sfreq, int cfreq, ttspl_t q)
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_allpass(tt_biquad_t *bq, int sfreq, int csfreq, ttspl_t q)
+void tt_biquad_allpass(tt_biquad_t *bq, int csfreq, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, csfreq, 0, q);
+	biquad_predesign(bq, &bd, csfreq, 0, q);
 
         bd.b[0] = TTSUB(TTINT(1), bd.alpha);
         bd.b[1] = TTMINT(bd.cosw0, -2);
@@ -233,11 +235,11 @@ void tt_biquad_allpass(tt_biquad_t *bq, int sfreq, int csfreq, ttspl_t q)
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_peakingeq(tt_biquad_t *bq, int sfreq, int cfreq, int dbgain, ttspl_t q)
+void tt_biquad_peakingeq(tt_biquad_t *bq, int cfreq, int dbgain, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, cfreq, dbgain, q);
+	biquad_predesign(bq, &bd, cfreq, dbgain, q);
 
 	ttspl_t ama = TTMAL(bd.alpha, bd.A);
         bd.b[0] = TTADD(TTINT(1), ama);
@@ -252,11 +254,11 @@ void tt_biquad_peakingeq(tt_biquad_t *bq, int sfreq, int cfreq, int dbgain, ttsp
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_lowshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttspl_t q)
+void tt_biquad_lowshelf(tt_biquad_t *bq, int shfreq, int dbgain, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, shfreq, dbgain, q);
+	biquad_predesign(bq, &bd, shfreq, dbgain, q);
 
 	ttspl_t handi = TTMAL(TTMINT(TTSQRT(bd.A), 2), bd.alpha);
 	ttspl_t apone = TTADDI(bd.A, 1);
@@ -289,11 +291,11 @@ void tt_biquad_lowshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttsp
 	biquad_applydesign(bq, &bd);
 }
 
-void tt_biquad_highshelf(tt_biquad_t *bq, int sfreq, int shfreq, int dbgain, ttspl_t q)
+void tt_biquad_highshelf(tt_biquad_t *bq, int shfreq, int dbgain, ttspl_t q)
 {
 	biquad_design_t bd;
 
-	biquad_predesign(&bd, sfreq, shfreq, dbgain, q);
+	biquad_predesign(bq, &bd, shfreq, dbgain, q);
 
 	ttspl_t handi = TTMAL(TTMINT(TTSQRT(bd.A), 2), bd.alpha);
 	ttspl_t apone = TTADDI(bd.A, 1);
