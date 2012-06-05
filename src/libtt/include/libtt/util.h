@@ -14,12 +14,31 @@
 #ifndef TT_UTIL_H_
 #define TT_UTIL_H_
 
-void tt_generic_process(
-		ttspl_t (*step)(void *, ttspl_t), void *arg,
-		tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
+/*!
+ * Generate a 1-in/1-out process function from an appropriate step
+ * function.
+ *
+ * This macro is designed to take advantage of an inlined step function
+ * giving the compiler all the information it needs to work hard at
+ * optimizing the loop.
+ */
+#define tt_generic_process(type) \
+void tt_##type##_process(tt_##type##_t *p, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf) \
+{ \
+	assert(inbuf->sz <= outbuf->sz); \
+	for (unsigned i=0; i<inbuf->sz; i++) \
+		TTAT(outbuf, i) = tt_##type##_step(p, TTAT(inbuf, i)); \
+}
 
-void tt_generic_output(
-		ttspl_t (*step)(void *), void *arg,
-		tt_sbuf_t *outbuf);
+/*!
+ * Generate a 0-in/1-out process function from an appropriate step
+ * function.
+ */
+#define tt_generic_output(type) \
+void tt_##type##_process(tt_##type##_t *p, tt_sbuf_t *outbuf) \
+{ \
+	for (unsigned i=0; i<outbuf->sz; i++) \
+		TTAT(outbuf, i) = tt_##type##_step(p); \
+}
 
 #endif // TT_UTIL_H_

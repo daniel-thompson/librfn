@@ -69,14 +69,5 @@ inline ttspl_t tt_waveshaper_step(tt_waveshaper_t *ws, ttspl_t in)
 	
 	return TLLOWER(acc);
 }
-
-#define tt_generic_process(type) \
-void tt_##type##_process(tt_##type##_t *p, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf) \
-{ \
-	assert(inbuf->sz <= outbuf->sz); \
-	for (unsigned i=0; i<inbuf->sz; i++) \
-		TTAT(outbuf, i) = tt_##type##_step(p, TTAT(inbuf, i)); \
-}
-
 tt_generic_process(waveshaper);
 

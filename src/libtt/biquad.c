@@ -52,7 +52,7 @@ void tt_biquad_init(tt_biquad_t *bq)
 	bq->x[0] = TTINT(1);
 }
 
-ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
+inline ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 {
 #ifdef HAVE_FPU
 	tlspl_t acc = 0.0;
@@ -80,15 +80,7 @@ ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 	return y;
 }
 
-static ttspl_t process_step(void *bq, ttspl_t spl)
-{
-	return tt_biquad_step(bq, spl);
-}
-
-void tt_biquad_process(tt_biquad_t *bq, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf)
-{
-	tt_generic_process(process_step, bq, inbuf, outbuf);
-}
+tt_generic_process(biquad);
 
 
 void tt_biquad_flush(tt_biquad_t *bq)

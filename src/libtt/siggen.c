@@ -41,7 +41,7 @@ void tt_siggen_delete(tt_siggen_t *sg)
 	free(sg);
 }
 
-ttspl_t tt_siggen_step(tt_siggen_t *sg)
+inline ttspl_t tt_siggen_step(tt_siggen_t *sg)
 {
 	ttspl_t phase = sg->phase;
 
@@ -52,15 +52,7 @@ ttspl_t tt_siggen_step(tt_siggen_t *sg)
 	return TTMAL(sg->fn(phase), sg->amplitude);
 }
 
-static ttspl_t process_step(void *sg)
-{
-	return tt_siggen_step(sg);
-}
-
-void tt_siggen_process(tt_siggen_t *sg, tt_sbuf_t *outbuf)
-{
-	tt_generic_output(process_step, sg, outbuf);
-}
+tt_generic_output(siggen);
 
 void tt_siggen_reset(tt_siggen_t *sg)
 {
