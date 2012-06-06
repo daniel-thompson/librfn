@@ -15,6 +15,7 @@ AC_PROG_RANLIB
 gl_VALGRIND_TESTS
  
 AC_SEARCH_LIBS([cos], [m])
+PKG_CHECK_MODULES([jack], [jack >= 0.9])
 
 dnl Currently the floating point build is on by default.
 AC_ARG_WITH([fpu],
