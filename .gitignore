@@ -21,6 +21,7 @@ missing
 *.swp
 *.Po
 *.o
+*#
 
 src/jacklua/tintamp_jacklua
 tests/fuzztest
@@ -29,3 +30,5 @@ tests/analysetest
 tests/biquadtest
 tests/siggentest
 tests/waveshapertest
+tests/cabsimtest
+tests/tintamptest

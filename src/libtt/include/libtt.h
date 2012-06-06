@@ -26,5 +26,6 @@
 
 // high level processing
 #include "libtt/cabsim.h"
+#include "libtt/tintamp.h"
 
 #endif // TT_LIBTT_H_
