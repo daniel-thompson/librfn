@@ -1,1 +1,1 @@
-SUBDIRS=librfn libtt jacklua
+SUBDIRS=librfn libtt jacklab jacklua

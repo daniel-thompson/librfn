@@ -23,6 +23,7 @@ missing
 *.o
 *#
 
+src/jacklab/jacklab
 src/jacklua/tintamp_jacklua
 tests/fuzztest
 tests/sampletest
