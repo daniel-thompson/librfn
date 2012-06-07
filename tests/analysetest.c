@@ -22,9 +22,10 @@
 
 int main()
 {
-	tt_siggen_t *sg = tt_siggen_new();
+	tt_context_t *ctx = tt_context_new();
+	tt_siggen_t *sg = tt_siggen_new(ctx);
 	assert(sg);
-	tt_siggen_setup(sg, 48000, 440, TTINT(2), TT_SIGGEN_SIN);
+	tt_siggen_setup(sg, 440, TTINT(2), TT_SIGGEN_SIN);
 
 	tt_sbuf_t *sbuf = tt_sbuf_new(48000);
 	assert(sbuf);
@@ -43,6 +44,7 @@ int main()
 
 	tt_sbuf_delete(sbuf);
 	tt_siggen_delete(sg);
+	tt_context_delete(ctx);
 
 	return 0;
 }

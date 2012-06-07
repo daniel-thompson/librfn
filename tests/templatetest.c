@@ -26,9 +26,9 @@ int main()
 	tt_context_t *ctx = tt_context_new();
 	tt_sbuf_t *inbuf = tt_sbuf_new(ctx->grain_size);
 	tt_sbuf_t *outbuf = tt_sbuf_new(ctx->grain_size);
-	tt_siggen_t *sg = tt_siggen_new();
+	tt_siggen_t *sg = tt_siggen_new(ctx);
 
-	tt_siggen_setup(sg, ctx->sampling_frequency, 400, 1.570793, TT_SIGGEN_SIN);
+	tt_siggen_setup(sg, 400, 1.570793, TT_SIGGEN_SIN);
 
 	// TIDY
 	tt_siggen_delete(sg);

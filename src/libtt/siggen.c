@@ -28,19 +28,19 @@ static ttspl_t generate_sin(ttspl_t phase)
 	return TTSIN(phase);
 }
 
-tt_siggen_t *tt_siggen_new()
+void tt_siggen_init(tt_siggen_t *sg, tt_context_t *ctx)
 {
-	tt_siggen_t *sg = xmalloc(sizeof(tt_siggen_t));
 	memset(sg, 0, sizeof(*sg));
-	tt_siggen_setup(sg, 0, 0, TTINT(0), TT_SIGGEN_DC);
-
-	return sg;
+	sg->ctx = ctx;
+	tt_siggen_setup(sg, 0, TTINT(0), TT_SIGGEN_DC);
 }
 
-void tt_siggen_delete(tt_siggen_t *sg)
+void tt_siggen_finalize(tt_siggen_t *sg)
 {
-	free(sg);
 }
+
+tt_generic_new(siggen);
+tt_generic_delete(siggen);
 
 inline ttspl_t tt_siggen_step(tt_siggen_t *sg)
 {
@@ -62,14 +62,15 @@ void tt_siggen_reset(tt_siggen_t *sg)
 
 void tt_siggen_setup(
 		tt_siggen_t *sg,
-		int sfreq, int gfreq, ttspl_t amplitude, tt_siggen_fn_t fn)
+		int gfreq, ttspl_t amplitude, tt_siggen_fn_t fn)
 {
+	int sfreq = sg->ctx->sampling_frequency;
 	ttspl_t limit = TTMINT(TTPI, 2);
 
 	// TODO: For triangle wave it is easier to set limit to 1.0
 
 	tlspl_t numerator = TTMUL(limit, TTINT(gfreq));
-	if (sfreq) {
+	if (gfreq) {
 		sg->step = TLDIV(numerator, TTINT(sfreq));
 		sg->limit = limit;
 	} else {

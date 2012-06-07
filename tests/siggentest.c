@@ -21,7 +21,8 @@
 
 int main()
 {
-	tt_siggen_t *sg = tt_siggen_new();
+	tt_context_t *ctx = tt_context_new();
+	tt_siggen_t *sg = tt_siggen_new(ctx);
 	assert(sg);
 
 	// TEST: muted by default
@@ -29,7 +30,7 @@ int main()
 	assert(TTINT(0) == tt_siggen_step(sg));
 
 	// CFG: 2400Hz, amplitude of 2
-	tt_siggen_setup(sg, 48000, 2400, TTINT(2), TT_SIGGEN_SIN);
+	tt_siggen_setup(sg, 2400, TTINT(2), TT_SIGGEN_SIN);
 
 	// TEST: phase is 0 at reset
 	tt_siggen_reset(sg);
@@ -57,6 +58,7 @@ int main()
 	// TIDY
 	tt_siggen_delete(sg);
 	tt_sbuf_delete(sbuf);
+	tt_context_delete(ctx);
 
 	return 0;
 }

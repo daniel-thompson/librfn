@@ -19,6 +19,8 @@
 /*! Signal generator based on periodic mathematical functions.
  */
 typedef struct {
+	tt_context_t *ctx;
+
 	ttspl_t phase;
 	ttspl_t step;
 	ttspl_t limit;
@@ -31,7 +33,9 @@ typedef enum {
 	TT_SIGGEN_SIN
 } tt_siggen_fn_t;
 
-tt_siggen_t *tt_siggen_new();
+void tt_siggen_init(tt_siggen_t *sg, tt_context_t *ctx);
+void tt_siggen_finalize(tt_siggen_t *sg);
+tt_siggen_t *tt_siggen_new(tt_context_t *ctx);
 void tt_siggen_delete(tt_siggen_t *sg);
 
 ttspl_t tt_siggen_step(tt_siggen_t *sg);
@@ -40,6 +44,6 @@ void tt_siggen_reset(tt_siggen_t *sg);
 
 void tt_siggen_setup(
 		tt_siggen_t *sg,
-		int sfreq, int gfreq, ttspl_t amplitude, tt_siggen_fn_t fn);
+		int gfreq, ttspl_t amplitude, tt_siggen_fn_t fn);
 
 #endif // TT_SIGGEN_H_

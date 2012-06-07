@@ -29,9 +29,9 @@ static ttspl_t biquad_stimulate(
 	tt_sbuf_t *outbuf = tt_sbuf_new(1024);
 	assert(outbuf);
 
-	tt_siggen_t *sg = tt_siggen_new();
+	tt_siggen_t *sg = tt_siggen_new(bq->ctx); // use the same context as the biquad
 	assert(sg);
-	tt_siggen_setup(sg, sfreq, gfreq, 1.570793, TT_SIGGEN_SIN);
+	tt_siggen_setup(sg, gfreq, 1.570793, TT_SIGGEN_SIN);
 
 	// precheck that we are outputing at the right level
 	tt_siggen_process(sg, inbuf);
