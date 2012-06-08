@@ -10,6 +10,7 @@ noinst_PROGRAMS=\
 	biquadtest \
 	waveshapertest \
 	tubestagetest \
+	preamptest \
 	cabsimtest \
 	tintamptest
 
@@ -41,6 +42,9 @@ waveshapertest_LDADD = $(AM_LDADD)
 
 tubestagetest_SOURCES=tubestagetest.c
 tubestagetest_LDADD = $(AM_LDADD)
+
+preamptest_SOURCES=preamptest.c
+preamptest_LDADD = $(AM_LDADD)
 
 cabsimtest_SOURCES=cabsimtest.c
 cabsimtest_LDADD = $(AM_LDADD)

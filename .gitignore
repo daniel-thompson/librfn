@@ -32,5 +32,6 @@ tests/biquadtest
 tests/siggentest
 tests/waveshapertest
 tests/tubestagetest
+tests/preamptest
 tests/cabsimtest
 tests/tintamptest

@@ -8,5 +8,6 @@ libtt_a_SOURCES=\
 	siggen.c \
 	waveshaper.c \
 	tubestage.c \
+	preamp.c \
 	cabsim.c \
 	tintamp.c

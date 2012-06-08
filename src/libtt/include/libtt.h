@@ -26,6 +26,7 @@
 
 // high level processing
 #include "libtt/tubestage.h"
+#include "libtt/preamp.h"
 #include "libtt/cabsim.h"
 #include "libtt/tintamp.h"
 
