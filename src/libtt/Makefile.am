@@ -7,5 +7,6 @@ libtt_a_SOURCES=\
 	biquad.c \
 	siggen.c \
 	waveshaper.c \
+	tubestage.c \
 	cabsim.c \
 	tintamp.c

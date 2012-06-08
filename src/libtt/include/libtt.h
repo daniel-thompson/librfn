@@ -25,6 +25,7 @@
 #include "libtt/waveshaper.h"
 
 // high level processing
+#include "libtt/tubestage.h"
 #include "libtt/cabsim.h"
 #include "libtt/tintamp.h"
 
