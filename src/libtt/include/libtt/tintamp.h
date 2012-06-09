@@ -18,7 +18,11 @@
 #include "cabsim.h"
 
 typedef struct {
+	tt_context_t *ctx;
+	tt_preamp_t preamp;
 	tt_cabsim_t cabsim;
+
+	tt_sbuf_t *tmpbuf;
 } tt_tintamp_t;
 
 void tt_tintamp_init(tt_tintamp_t *tt, tt_context_t *ctx);
