@@ -73,6 +73,7 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTSIN(x) sinf(x)
 #define TTSQRT(x) sqrtf(x)
 
+#define TTVALID(x) isfinite(x)
 typedef float tlspl_t;
 
 #define TLFLOAT(a) (a)               		//!< Conversion from float

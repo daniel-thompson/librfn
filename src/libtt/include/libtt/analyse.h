@@ -14,9 +14,13 @@
 #ifndef TT_ANALYSE_H_
 #define TT_ANALYSE_H_
 
+#include <stdbool.h>
+
 #include "sbuf.h"
 
 ttspl_t tt_analyse_peak(tt_sbuf_t *sbuf);
 ttspl_t tt_analyse_rectify(tt_sbuf_t *sbuf);
+bool tt_analyse_valid(tt_sbuf_t *sbuf);
+
 
 #endif // TT_ANALYSE_H_

@@ -46,3 +46,15 @@ ttspl_t tt_analyse_rectify(tt_sbuf_t *sbuf)
 
 	return TLLOWER(TLDINT(acc, sbuf->sz));
 }
+
+/*! Check a buffer for any illegal values.
+ */
+bool tt_analyse_valid(tt_sbuf_t *sbuf)
+{
+	bool valid = true;
+
+	for (unsigned i=0; i<sbuf->sz; i++)
+		valid = valid && TTVALID(TTAT(sbuf, i));
+
+	return valid;
+}
