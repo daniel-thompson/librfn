@@ -19,6 +19,7 @@
 void tt_template_init(tt_template_t *p, tt_context_t *ctx)
 {
 	memset(p, 0, sizeof(*p));
+	p->ctx = ctx;
 }
 
 void tt_template_finalize(tt_template_t *p)
