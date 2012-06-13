@@ -41,8 +41,10 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTASFLOAT(a) (a)              		//!< Conversion to float
 #define TTINT(a) ((ttspl_t) (a))		//!< Conversion from integer
 #define TTASINT(a) ((uint32_t) (a))		//!< Conversion to integer
-#define TTS16LE(a) ((a) * 32767.0)		//!< Conversion from S16LE
+#define TTS16LE(a) ((a) / 32767.0)		//!< Conversion from S16LE
 #define TTASS16LE(a) ((a) * 32767.0)		//!< Conversion to S16LE
+#define TTS32LE(a) ((a) / 2147483647.0)		//!< Conversion from S32LE
+#define TTASS32LE(a) ((a) * 2147483647.0)	//!< Conversion to S32LE
 
 #define TTRAISE(x) (x)				//!< Conversion to long precision
 

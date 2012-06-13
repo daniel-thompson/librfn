@@ -68,4 +68,15 @@ void tt_##type##_process(tt_##type##_t *p, tt_sbuf_t *outbuf) \
 		TTAT(outbuf, i) = tt_##type##_step(p); \
 }
 
+/*!
+ * Generate a 1-in/0-out process function from an appropriate step
+ * function.
+ */
+#define tt_generic_input(type) \
+void tt_##type##_process(tt_##type##_t *p, tt_sbuf_t *inbuf) \
+{ \
+	for (unsigned i=0; i<inbuf->sz; i++) \
+		tt_##type##_step(p, TTAT(inbuf, i)); \
+}
+
 #endif // TT_UTIL_H_

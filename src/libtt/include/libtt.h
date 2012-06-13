@@ -23,6 +23,8 @@
 #include "libtt/biquad.h"
 #include "libtt/siggen.h"
 #include "libtt/waveshaper.h"
+#include "libtt/wavreader.h"
+#include "libtt/wavwriter.h"
 
 // high level processing
 #include "libtt/tubestage.h"
