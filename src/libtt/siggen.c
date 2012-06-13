@@ -28,6 +28,11 @@ static ttspl_t generate_sin(ttspl_t phase)
 	return TTSIN(phase);
 }
 
+static ttspl_t generate_white_noise(ttspl_t phase)
+{
+	return TTFLOAT((float) (2 * drand48()) - 1);
+}
+
 void tt_siggen_init(tt_siggen_t *sg, tt_context_t *ctx)
 {
 	memset(sg, 0, sizeof(*sg));
@@ -86,6 +91,9 @@ void tt_siggen_setup(
 		break;
 	case TT_SIGGEN_SIN:
 		sg->fn = generate_sin;
+		break;
+	case TT_SIGGEN_WHITE_NOISE:
+		sg->fn = generate_white_noise;
 		break;
 	default:
 		assert(0);

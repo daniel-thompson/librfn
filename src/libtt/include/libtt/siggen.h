@@ -30,7 +30,8 @@ typedef struct {
 
 typedef enum {
 	TT_SIGGEN_DC,
-	TT_SIGGEN_SIN
+	TT_SIGGEN_SIN,
+	TT_SIGGEN_WHITE_NOISE
 } tt_siggen_fn_t;
 
 void tt_siggen_init(tt_siggen_t *sg, tt_context_t *ctx);
