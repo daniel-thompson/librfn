@@ -107,6 +107,25 @@ int main()
 	assert((rectify - input) < -12.0); // no clipping
 	assert((rectify - input) > -18.0); // not much volume loss
 
+	// TEST: Assault with white noise at different volumes
+	for (int i=-100; i<1; i++) {
+		tt_siggen_setup(sg, 0, TTDB2LINEAR(TTINT(i)), TT_SIGGEN_WHITE_NOISE);
+		tt_siggen_process(sg, inbuf);
+		tt_tintamp_process(tt, inbuf, outbuf);
+		peak = TTASFLOAT(TTLINEAR2DB(tt_analyse_peak(outbuf)));
+		printf("Noise peaking at %4d.00dB -> %7.2fdB  (gain %7.2fdB)\n",
+				i, peak, peak - i);
+		assert(peak <= 0);
+	}
+	for (int i=0; i>-101; i--) {
+		tt_siggen_setup(sg, 0, TTDB2LINEAR(TTINT(i)), TT_SIGGEN_WHITE_NOISE);
+		tt_siggen_process(sg, inbuf);
+		tt_tintamp_process(tt, inbuf, outbuf);
+		peak = TTASFLOAT(TTLINEAR2DB(tt_analyse_peak(outbuf)));
+		printf("Noise peaking at %4d.00dB -> %7.2fdB  (gain %7.2fdB)\n",
+				i, peak, peak - i);		assert(peak <= 0);
+	}
+
 	// TIDY
 	tt_tintamp_delete(tt);
 	tt_siggen_delete(sg);
