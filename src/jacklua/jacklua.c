@@ -11,6 +11,7 @@
  * (at your option) any later version.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -41,6 +42,8 @@ appctx_t appctx;
 static int process (jack_nframes_t nframes, void *arg)
 {
 	appctx_t *ctx = arg;
+
+	assert(nframes == ctx->tt_ctx.grain_size);
 
 	jack_default_audio_sample_t *in = jack_port_get_buffer (ctx->input_port, nframes);
 	jack_default_audio_sample_t *out = jack_port_get_buffer (ctx->output_port, nframes);
