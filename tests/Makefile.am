@@ -4,6 +4,7 @@ TESTS_ENVIRONMENT=$(VALGRIND)
 
 noinst_PROGRAMS=\
 	fuzztest \
+	wavheadertest \
 	sampletest \
 	analysetest \
 	siggentest \
@@ -20,6 +21,9 @@ noinst_PROGRAMS=\
 
 fuzztest_SOURCES=fuzztest.c
 fuzztest_LDADD = $(AM_LDADD)
+
+wavheadertest_SOURCES=wavheadertest.c
+wavheadertest_LDADD = $(AM_LDADD)
 
 #
 # libtt tests

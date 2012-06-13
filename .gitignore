@@ -26,6 +26,7 @@ missing
 src/jacklab/jacklab
 src/jacklua/tintamp_jacklua
 tests/fuzztest
+tests/wavheadertest
 tests/sampletest
 tests/analysetest
 tests/biquadtest

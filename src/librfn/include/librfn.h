@@ -18,6 +18,7 @@
 #include "librfn/fuzz.h"
 #include "librfn/hex.h"
 #include "librfn/pack.h"
+#include "librfn/wavheader.h"
 #include "librfn/util.h"
 
 #endif // RF_LIBRFN_H_
