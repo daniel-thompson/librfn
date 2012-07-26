@@ -32,7 +32,11 @@ tests/analysetest
 tests/biquadtest
 tests/siggentest
 tests/waveshapertest
+tests/wavreadertest
+tests/wavwritertest.wav
 tests/tubestagetest
 tests/preamptest
 tests/cabsimtest
 tests/tintamptest
+
+tests/media/
