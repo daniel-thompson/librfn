@@ -22,6 +22,7 @@
 #include "libtt/analyse.h"
 #include "libtt/biquad.h"
 #include "libtt/siggen.h"
+#include "libtt/quantizer.h"
 #include "libtt/waveshaper.h"
 #include "libtt/wavreader.h"
 #include "libtt/wavwriter.h"

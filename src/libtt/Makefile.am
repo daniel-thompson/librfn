@@ -6,6 +6,7 @@ libtt_a_SOURCES=\
 	analyse.c \
 	biquad.c \
 	siggen.c \
+	quantizer.c \
 	waveshaper.c \
 	wavreader.c \
 	wavwriter.c \
