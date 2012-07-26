@@ -19,6 +19,7 @@
 #include "librfn.h"
 #include "libtt.h"
 
+//#define BIQUAD_DEBUG
 
 /*! \group biquad Biquad filters
  *
@@ -56,6 +57,8 @@ inline ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 	TTMAC(acc, bq->y[1], bq->zy[nextzi]);
 
 	ttspl_t y = TLLOWER(acc);
+
+	assert(TTSPL_MIN <= TTASFLOAT(y) && TTASFLOAT(y) < TTSPL_MAX);
 	
 	bq->zx[nextzi] = spl;
 	bq->zy[nextzi] = y;
@@ -97,6 +100,14 @@ typedef struct biquad_design {
 static void biquad_predesign(tt_biquad_t *bq, biquad_design_t *bd, int freq, int dbgain, ttspl_t q)
 {
 	int sfreq = bq->ctx->sampling_frequency;
+
+	/* HACK: Many of the filters are numerically unstable when designed
+	 *       for 44.1K. This is a grotty workaround (and insufficient
+	 *       to properly clear the test suite) but it stops tintamp being
+	 *       a total lemon...
+	 */
+	if (sfreq == 44100)
+		sfreq = 44000;
 
 	ttspl_t gain = TTINT(dbgain);
 	ttspl_t f0 = TTINT(freq);
