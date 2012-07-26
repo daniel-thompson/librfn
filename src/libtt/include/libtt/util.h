@@ -14,6 +14,8 @@
 #ifndef TT_UTIL_H_
 #define TT_UTIL_H_
 
+#include <assert.h>
+
 #include "librfn/util.h" // for xmalloc (used by generic macros)
 
 typedef struct {
