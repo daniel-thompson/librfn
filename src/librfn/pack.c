@@ -41,7 +41,7 @@ void rf_pack_bytes(rf_pack_t *pack, void *p, unsigned int sz)
 		if (p)
 			memcpy(q, p, sz);
 		else
-			memset(p, 0, sz);
+			memset(q, 0, sz);
 	}
 }
 
