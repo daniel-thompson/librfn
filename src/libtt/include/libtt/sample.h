@@ -84,8 +84,8 @@ typedef float tlspl_t;
 #define TLLOWER(x) (x)				//!< Conversion to normal precision
 
 #define TLADD(a, b) ((a) + (b))			//!< Add operation (long precision)
-#define TLSUB(a, b) ((a) + (b))			//!< Subtract operation (long precision)
-#define TLDIV(a, b) (a) / (b)			//!< Divide. \arg b is normal precision
+#define TLSUB(a, b) ((a) - (b))			//!< Subtract operation (long precision)
+#define TLDIV(a, b) ((a) / (b))			//!< Divide. \arg b is normal precision
 #define TLDINT(a, b) ((a) / (b))		//!< Divide long precision number by integer
 						//   \return Long precision result
 
