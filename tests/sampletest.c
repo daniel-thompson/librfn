@@ -22,20 +22,12 @@
 
 int main()
 {
-	float minus6 = TTASFLOAT(TTLINEAR2DB(TTFLOAT(0.5)));
-	printf("minus6 = %5.2fdB\n", minus6);
-	assert(fuzzcmpf(-6, minus6, 1.01));
-
-	float quarter = TTASFLOAT(TTDB2LINEAR(TTINT(-12)));
-	printf("quarter = %9.6f\n", quarter);
-	assert(fuzzcmpf(0.25, quarter, 1.01));
-
 #define T(name, expression, expected) \
 { \
 	ttspl_t tt ## name = expression; \
 	float name = TTASFLOAT(tt ## name); \
 	printf("%s = %9.6f (expected %9.6f)\n", #name, name, expected); \
-	assert(fuzzcmpf(name, expected, 1.0001)); \
+	assert(fuzzcmpf(name, expected, 1.001)); \
 }
 
 	// test the conversions
@@ -45,7 +37,8 @@ int main()
 	T(half, TTS16LE(0x3fff), 0.5); // TTS16LE
 	T(hundred, TTINT(TTASS16LE(TTS16LE(100))), 100.0); // TTASS16LE
 	T(half, TTS32LE(0x3fffffff), 0.5); // TTS32LE
-	T(thousand, TTINT(TTASS32LE(TTS32LE(1000))), 1000.0); // TTASS16LE
+	//This test is numerically impossible with T() macro
+	//T(thousand, TTINT(TTASS32LE(TTS32LE(536866816))), 536866816.0); // TTASS16LE
 	// TODO: TTRAISE
 
 	// basic maths
@@ -55,7 +48,7 @@ int main()
 	T(hundredth, TLLOWER(TTMUL(TTFLOAT(0.1), TTFLOAT(0.1))), 0.01); // TTMUL
 	T(sixteen, TTMAL(TTINT(4), TTINT(4)), 16.0); // TTMAL
 	T(twenty, TTMINT(TTINT(5), 4), 20.0); // TTMINT
-	T(hundreth, TTDIV(TTFLOAT(0.1), TTINT(10)), 0.01); // TTDIV
+	T(div, TTDIV(TTFLOAT(0.5), TTINT(10)), 0.05); // TTDIV
 	T(hundreth, TTRAD(TTFLOAT(0.1), TTINT(10)), 0.01); // TTRAD
 	T(hundreth, TTDINT(TTFLOAT(0.1), 10), 0.01); // TTDINT
 	T(five, TTADDI(TTFLOAT(-1.0), 6), 5.0); // TTADDI
@@ -93,8 +86,19 @@ int main()
 	// long maths
 	T(fortytwo, TLLOWER(TLADD(TLFLOAT(22.2), TLFLOAT(19.8))), 42.0); // TLADD
 	T(six, TLLOWER(TLSUB(TLFLOAT(10.7), TLFLOAT(4.7))), 6.0); // TLSUB
-	T(hundreth, TLLOWER(TLDIV(TLFLOAT(0.1), TLINT(10))), 0.01); // TLDIV
+	T(hundreth, TLDIV(TLFLOAT(0.1), TTINT(10)), 0.01); // TLDIV
 	T(hundreth, TLLOWER(TLDINT(TLFLOAT(0.1), 10)), 0.01); // TLDINT
+
+	// dB conversions
+	float minus6 = TTASFLOAT(TTLINEAR2DB(TTFLOAT(0.5)));
+	printf("minus6 = %5.2fdB\n", minus6);
+	assert(fuzzcmpf(-6, minus6, 1.01));
+
+	float quarter = TTASFLOAT(TTDB2LINEAR(TTINT(-12)));
+	printf("quarter = %9.6f\n", quarter);
+	assert(fuzzcmpf(0.25, quarter, 1.01));
+
+
 
 	return 0;
 }

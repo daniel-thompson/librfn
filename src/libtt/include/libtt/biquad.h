@@ -29,7 +29,7 @@ typedef struct {
 	ttspl_t zy[2];
 	int zi;
 
-#ifdef HAVE_FPU
+#ifndef HAVE_FPU
 	ttspl_t error_feedback; //!< First order error feedback
 #endif
 } tt_biquad_t;

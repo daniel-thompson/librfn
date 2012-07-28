@@ -32,7 +32,7 @@ bool compare_shape(tt_waveshaper_t *ws, float in, float expected)
 	bool ok = fuzzcmpf(out, expected, 1.001f);
 
 	printf("    %7.3f -> waveshaper -> %7.3f (expected %7.3f)  [ %s ]\n",
-			in, TTFLOAT(out), expected, ok ? " OK " : "FAIL");
+			in, TTASFLOAT(out), expected, ok ? " OK " : "FAIL");
 
 	return ok;
 }
@@ -67,7 +67,7 @@ int main()
 	assert(compare_shape(ws, 3, 0.3));
 
 	printf("Multiply by 10:\n");
-	tt_waveshaper_setup(ws, TTINT(-0.1), TTINT(0.1), line, lengthof(line));
+	tt_waveshaper_setup(ws, TTFLOAT(-0.1), TTFLOAT(0.1), line, lengthof(line));
 	assert(compare_shape(ws, -5, -1));
 	assert(compare_shape(ws, 3, 1));
 	assert(compare_shape(ws, 0.01, 0.1));
