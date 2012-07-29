@@ -46,6 +46,7 @@ int main()
 	T(six, TTSUB(TTFLOAT(10.7), TTFLOAT(4.7)), 6.0); // TTSUB
 	T(minus4, TTNEGATE(TTFLOAT(4.2)), -4.2); // TTNEGATE
 	T(hundredth, TLLOWER(TTMUL(TTFLOAT(0.1), TTFLOAT(0.1))), 0.01); // TTMUL
+	T(thousand, TLLOWER(TTMULI(TTFLOAT(0.01), 100000)), 1000.0); // TTMULI
 	T(sixteen, TTMAL(TTINT(4), TTINT(4)), 16.0); // TTMAL
 	T(twenty, TTMINT(TTINT(5), 4), 20.0); // TTMINT
 	T(div, TTDIV(TTFLOAT(0.5), TTINT(10)), 0.05); // TTDIV
@@ -59,8 +60,8 @@ int main()
 	tlspl_t acc = TLINT(0);
 	TTMAC(acc, TTINT(1), TTINT(1));
 	TTMAC(acc, TTINT(2), TTINT(2));
-	TTMAC(acc, TTINT(3), TTINT(3));
-	TTMAC(acc, TTINT(4), TTINT(4));
+	TTMACI(acc, TTINT(3), 3);
+	TTMACI(acc, TTINT(4), 4);
 	T(sum, TLLOWER(acc), 1.0 + 4.0 + 9.0 + 16.0); // TTMAC
 
 	// constants

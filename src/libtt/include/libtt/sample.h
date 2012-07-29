@@ -52,6 +52,7 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTSUB(a, b) ((a) - (b))			//!< Subtract operation (normal precision)
 #define TTNEGATE(x) (-(x))			//!< Negate operation (normal precision)
 #define TTMUL(a, b) ((a) * (b))			//!< Multiply \returns Long precision
+#define TTMULI(a, b) ((a) * (b))			//!< Multiply by integer \returns Long precision
 #define TTMAL(a, b) ((a) * (b))			//!< Multiply and lower \returns Normal precision
 #define TTMINT(a, b) ((a) * (b))		//!< Multiply by integer
 #define TTDIV(a, b) ((a) / (b))			//!< Divide. Will overflow if a is large.
@@ -62,8 +63,8 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTSUBI(a, b) ((a) - (b))
 #define TTISUB(a, b) ((a) - (b))
 
-
 #define TTMAC(acc, a, b) ((acc) += (a) * (b))	//!< Multiply and accumulate (acc is long precision)
+#define TTMACI(acc, a, b) ((acc) += (a) * (b))	//!< Multiple by integer and accumulate
 
 #define TTPI ((ttspl_t) (M_PI))
 
@@ -108,6 +109,8 @@ typedef int32_t ttspl_t;				//!< Sample in normal precision samples
 #define TTSUB(a, b) ((a) - (b))			//!< Subtract operation (normal precision)
 #define TTNEGATE(x) (-(x))			//!< Negate operation (normal precision)
 #define TTMUL(a, b) ((tlspl_t) (a) * (tlspl_t) (b)) //!< Multiply \returns Long precision
+#define TTMULI(a, b) (TTMUL((a), (b)) << (TLQ - TTQ))	//!< Multiple by integer \returns Long precision
+
 #define TTMAL(a, b) TLLOWER(TTMUL((a), (b)))	//!< Multiply and lower \returns Normal precision
 #define TTMINT(a, b) ((a) * (b))		//!< Multiply by integer
 #define TTDIV(a, b) ((((a) << (31-TTQ)) / ((b) >> (TTQ-15))) << (TTQ + 15 - 31)) //!< Divide. Looses precision and will overflow if a is larger than one.
@@ -118,8 +121,8 @@ typedef int32_t ttspl_t;				//!< Sample in normal precision samples
 #define TTSUBI(a, b) ((a) - TTINT(b))
 #define TTISUB(a, b) (TTINT(a) - (b))
 
-
 #define TTMAC(acc, a, b) ((acc) += TTMUL((a), (b)))	//!< Multiply and accumulate (acc is long precision)
+#define TTMACI(acc, a, b) ((acc) += TTMULI((a), (b)))	//!< Multiple by integer and accumulate
 
 #define TTPI TTFLOAT(M_PI)
 

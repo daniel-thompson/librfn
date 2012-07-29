@@ -74,9 +74,9 @@ void tt_siggen_setup(
 
 	// TODO: For triangle wave it is easier to set limit to 1.0
 
-	tlspl_t numerator = TTMUL(limit, TTINT(gfreq));
+	tlspl_t numerator = TTMULI(limit, gfreq);
 	if (gfreq) {
-		sg->step = TLDIV(numerator, TTINT(sfreq));
+		sg->step = TLLOWER(TLDINT(numerator, sfreq));
 		sg->limit = limit;
 	} else {
 		sg->step = 0;
