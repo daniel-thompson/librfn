@@ -55,7 +55,7 @@ inline ttspl_t tt_waveshaper_step(tt_waveshaper_t *ws, ttspl_t in)
 		in = TTRAD(in, ws->limit);
 
 	// in must now be in the range 0..1)	
-	assert(TTINT(0) <= in && TTINT(in <= 1));
+	assert(TTINT(0) <= in && in <= TTINT(1));
 
 	ttspl_t index = TTMINT(in, ws->shape.sz-1);
 	unsigned int i = TTINT(index);
