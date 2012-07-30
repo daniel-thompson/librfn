@@ -27,7 +27,7 @@
 #define TTSPL_MIN (-TTSPL_MAX)
 
 #define TLQ 38			//!< Fractional bits for "long" precision (Q38)
-#define TLSPL_MAX ((1 << (32-TTL)) - 1)
+#define TLSPL_MAX ((1ll << (64-TLQ)) - 1)
 #define TLSPL_MIN (-TLSPL_MAX)
 
 #define TSQ 15			//!< Fractional bits for "short" precision (Q15)
@@ -36,6 +36,20 @@
 #ifdef HAVE_FPU
 
 typedef float ttspl_t;				//!< Sample in normal precision samples
+#define TTVALID(x) (isfinite(x) && (TTSPL_MIN <= (x)) && ((x) < TTSPL_MAX))
+
+typedef float tlspl_t;
+#define TLVALID(x) (isfinite(x) && (TLSPL_MIN <= (x)) && ((x) < TLSPL_MAX))
+
+#ifdef ENABLE_RANGE_CHECK
+ttspl_t ttvalidate(ttspl_t spl, const char *fname, int lineno);
+#define TTVALIDATE(x) ttvalidate(x, __FILE__, __LINE__)
+tlspl_t tlvalidate(tlspl_t spl, const char *fname, int lineno);
+#define TLVALIDATE(x) tlvalidate(x, __FILE__, __LINE__)
+#else
+#define TTVALIDATE(x) (x)
+#define TLVALIDATE(x) (x)
+#endif
 
 #define TTFLOAT(a) (a)               		//!< Conversion from float
 #define TTASFLOAT(a) (a)              		//!< Conversion to float
@@ -46,48 +60,46 @@ typedef float ttspl_t;				//!< Sample in normal precision samples
 #define TTS32LE(a) ((a) / 2147483647.0)		//!< Conversion from S32LE
 #define TTASS32LE(a) ((a) * 2147483647.0)	//!< Conversion to S32LE
 
-#define TTRAISE(x) (x)				//!< Conversion to long precision
+#define TTRAISE(x) TLVALIDATE(TTVALIDATE(x))				//!< Conversion to long precision
 
-#define TTADD(a, b) ((a) + (b))			//!< Add operation (normal precision)
-#define TTSUB(a, b) ((a) - (b))			//!< Subtract operation (normal precision)
-#define TTNEGATE(x) (-(x))			//!< Negate operation (normal precision)
-#define TTMUL(a, b) ((a) * (b))			//!< Multiply \returns Long precision
-#define TTMULI(a, b) ((a) * (b))			//!< Multiply by integer \returns Long precision
-#define TTMAL(a, b) ((a) * (b))			//!< Multiply and lower \returns Normal precision
-#define TTMINT(a, b) ((a) * (b))		//!< Multiply by integer
-#define TTDIV(a, b) ((a) / (b))			//!< Divide. Will overflow if a is large.
-#define TTRAD(a, b) ((a) / (b))			//!< Raise and divide.
-#define TTDINT(a, b) ((a) / (b))		//!< Divide by integer
+#define TTADD(a, b) TTVALIDATE(TTVALIDATE(a) + TTVALIDATE(b))			//!< Add operation (normal precision)
+#define TTSUB(a, b) TTVALIDATE(TTVALIDATE(a) - TTVALIDATE(b))			//!< Subtract operation (normal precision)
+#define TTNEGATE(x) TTVALIDATE(-TTVALIDATE(x))			//!< Negate operation (normal precision)
+#define TTMUL(a, b) TLVALIDATE(TTVALIDATE(a) * TTVALIDATE(b))			//!< Multiply \returns Long precision
+#define TTMULI(a, b) TLVALIDATE(TTVALIDATE(a) * (b))			//!< Multiply by integer \returns Long precision
+#define TTMAL(a, b) TTVALIDATE(TTVALIDATE(a) * TTVALIDATE(b))			//!< Multiply and lower \returns Normal precision
+#define TTMINT(a, b) TTVALIDATE(TTVALIDATE(a) * (b))		//!< Multiply by integer
+#define TTDIV(a, b) TTVALIDATE(TTVALIDATE(a) / TTVALIDATE(b))			//!< Divide. Will overflow if a is large.
+#define TTRAD(a, b) TTVALIDATE(TTVALIDATE(a) / TTVALIDATE(b))			//!< Raise and divide.
+#define TTDINT(a, b) TTVALIDATE(TTVALIDATE(a) / (b))		//!< Divide by integer
 
-#define TTADDI(a, b) ((a) + (b))
-#define TTSUBI(a, b) ((a) - (b))
-#define TTISUB(a, b) ((a) - (b))
+#define TTADDI(a, b) TTVALIDATE(TTVALIDATE(a) + (b))
+#define TTSUBI(a, b) TTVALIDATE(TTVALIDATE(a) - (b))
+#define TTISUB(a, b) TTVALIDATE((a) - TTVALIDATE(b))
 
-#define TTMAC(acc, a, b) ((acc) += (a) * (b))	//!< Multiply and accumulate (acc is long precision)
-#define TTMACI(acc, a, b) ((acc) += (a) * (b))	//!< Multiple by integer and accumulate
+#define TTMAC(acc, a, b) TLVALIDATE((acc) += TTVALIDATE(a) * TTVALIDATE(b))	//!< Multiply and accumulate (acc is long precision)
+#define TTMACI(acc, a, b) TLVALIDATE((acc) += TTVALIDATE(a) * (b))	//!< Multiple by integer and accumulate
 
 #define TTPI ((ttspl_t) (M_PI))
 
-#define TTABS(x) fabsf(x)
-#define TTCOS(x) cosf(x)
-#define TTLOG2(x) log2(x)
-#define TTLOG10(x) log10(x)
-#define TTPOW(a, b) powf(a, b)
-#define TTSIN(x) sinf(x)
-#define TTSQRT(x) sqrtf(x)
+#define TTABS(x) TTVALIDATE(fabsf(TTVALIDATE(x)))
+#define TTCOS(x) TTVALIDATE(cosf(TTVALIDATE(x)))
+#define TTLOG2(x) TTVALIDATE(log2(TTVALIDATE(x)))
+#define TTLOG10(x) TTVALIDATE(log10(TTVALIDATE(x)))
+#define TTPOW(a, b) TTVALIDATE(powf(TTVALIDATE(a), TTVALIDATE(b)))
+#define TTSIN(x) TTVALIDATE(sinf(TTVALIDATE(x)))
+#define TTSQRT(x) TTVALIDATE(sqrtf(TTVALIDATE(x)))
 
-#define TTVALID(x) isfinite(x)
-typedef float tlspl_t;
 
 #define TLFLOAT(a) (a)               		//!< Conversion from float
 #define TLINT(a) ((ttspl_t) (a))		//!< Conversion from integer
 
-#define TLLOWER(x) (x)				//!< Conversion to normal precision
+#define TLLOWER(x) TTVALIDATE(TLVALIDATE(x))				//!< Conversion to normal precision
 
-#define TLADD(a, b) ((a) + (b))			//!< Add operation (long precision)
-#define TLSUB(a, b) ((a) - (b))			//!< Subtract operation (long precision)
-#define TLDIV(a, b) ((a) / (b))			//!< Divide. \arg b is normal precision
-#define TLDINT(a, b) ((a) / (b))		//!< Divide long precision number by integer
+#define TLADD(a, b) TLVALIDATE(TLVALIDATE(a) + TLVALIDATE(b))			//!< Add operation (long precision)
+#define TLSUB(a, b) TLVALIDATE(TLVALIDATE(a) - TLVALIDATE(b))			//!< Subtract operation (long precision)
+#define TLDIV(a, b) TTVALIDATE(TLVALIDATE(a) / TTVALIDATE(b))			//!< Divide. \arg b is normal precision
+#define TLDINT(a, b) TLVALIDATE(TLVALIDATE(a) / (b))		//!< Divide long precision number by integer
 						//   \return Long precision result
 
 #else // HAVE_FPU

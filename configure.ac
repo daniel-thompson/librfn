@@ -25,6 +25,14 @@ AS_IF([test "x$with_fpu" != "xno"], [
 	AC_DEFINE([HAVE_FPU])
 ])
 
+dnl Currently the floating point build is on by default.
+AC_ARG_ENABLE([range-check],
+    AS_HELP_STRING([--enable-range-check], [Enable range checking (check for potential fixed point overflow)]))
+AS_IF([test "x$enable_range_check" == "xyes"], [
+	AC_DEFINE([ENABLE_RANGE_CHECK])
+])
+
+
 dnl Keep these near the bottom - adding -Werror breaks various tests
 AX_CFLAGS_WARN_ALL
 AX_APPEND_COMPILE_FLAGS([-Werror])

@@ -1,6 +1,7 @@
 noinst_LIBRARIES=libtt.a
 libtt_a_CPPFLAGS=-I../librfn/include -Iinclude
 libtt_a_SOURCES=\
+	sample.c \
 	sbuf.c \
 	util.c \
 	analyse.c \
