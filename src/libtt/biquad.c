@@ -110,7 +110,6 @@ static void biquad_predesign(tt_biquad_t *bq, biquad_design_t *bd, int freq, int
 		sfreq = 44000;
 
 	ttspl_t gain = TTINT(dbgain);
-	ttspl_t f0 = TTINT(freq);
 
 	gain = TTDINT(gain, 20);
 	bd->A = TTSQRT(TTPOW(TTINT(10), gain));
@@ -118,8 +117,8 @@ static void biquad_predesign(tt_biquad_t *bq, biquad_design_t *bd, int freq, int
 	gain = TTDINT(gain, 2); // gain = dbgain / 40
 	bd->G = TTPOW(TTINT(10), gain);
 
-	tlspl_t numerator = TTMUL(TTMINT(TTPI, 2), f0);
-	bd->w0 = TLDIV(numerator, TTINT(sfreq));
+	tlspl_t numerator = TTMULI(TTMINT(TTPI, 2), freq);
+	bd->w0 = TLLOWER(TLDINT(numerator, sfreq));
 
 	bd->cosw0 = TTCOS(bd->w0);
 	bd->sinw0 = TTSIN(bd->w0);
