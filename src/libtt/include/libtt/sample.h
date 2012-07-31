@@ -22,11 +22,11 @@
 // mode because that way the runtime asserts are still meaningful.
 //
 
-#define TTQ 19			//!< Fractional bits for normal precision (Q19)
+#define TTQ 20			//!< Fractional bits for normal precision (Q19)
 #define TTSPL_MAX ((1 << (32-TTQ)) - 1)
 #define TTSPL_MIN (-TTSPL_MAX)
 
-#define TLQ 38			//!< Fractional bits for "long" precision (Q38)
+#define TLQ (2*TTQ)		//!< Fractional bits for "long" precision (Q38)
 #define TLSPL_MAX ((1ll << (64-TLQ)) - 1)
 #define TLSPL_MIN (-TLSPL_MAX)
 
