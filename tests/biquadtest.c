@@ -31,7 +31,7 @@ static ttspl_t biquad_stimulate(
 
 	tt_siggen_t *sg = tt_siggen_new(bq->ctx); // use the same context as the biquad
 	assert(sg);
-	tt_siggen_setup(sg, gfreq, 1.570793, TT_SIGGEN_SIN);
+	tt_siggen_setup(sg, gfreq, TTFLOAT(1.570793), TT_SIGGEN_SIN);
 
 	// precheck that we are outputing at the right level
 	tt_siggen_process(sg, inbuf);
@@ -73,7 +73,7 @@ static bool test_response_at(tt_biquad_t *bq, int gfreq, float db)
 
 		/* special case for very quiet signals */
 		if (db <= -96)
-			ok = levelf <= db;
+			ok = levelf <= (db + 6);
 		else
 			ok = fuzzcmpf(levelf, db, 1.05);
 

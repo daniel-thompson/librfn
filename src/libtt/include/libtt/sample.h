@@ -154,7 +154,7 @@ typedef int64_t tlspl_t;
 #define TLINT(a) ((tlspl_t) (a) << TLQ)		//!< Conversion from integer
 
 #define TLLOWER(x) ((ttspl_t) (x >> (TLQ - TTQ))) //!< Conversion to normal precision
-#define TLERROR(x) 0
+#define TLERROR(x) ((x) & ((1 << (TLQ-TTQ)) - 1)) //!< Lost precision due to truncation
 
 #define TLADD(a, b) ((a) + (b))			//!< Add operation (long precision)
 #define TLSUB(a, b) ((a) - (b))			//!< Subtract operation (long precision)

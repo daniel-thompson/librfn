@@ -57,8 +57,6 @@ inline ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 	TTMAC(acc, bq->y[1], bq->zy[nextzi]);
 
 	ttspl_t y = TLLOWER(acc);
-
-	assert(TTSPL_MIN <= TTASFLOAT(y) && TTASFLOAT(y) < TTSPL_MAX);
 	
 	bq->zx[nextzi] = spl;
 	bq->zy[nextzi] = y;
@@ -135,7 +133,8 @@ static void biquad_applydesign(tt_biquad_t *bq, biquad_design_t *bd)
 	bq->y[1] = TTNEGATE(TTRAD(bd->a[2], bd->a[0]));
 
 #ifdef BIQUAD_DEBUG
-#define P(x) printf("%s = %12.6f\n", #x, (double) x)
+#define P(x) printf("%s = %12.6f\n", #x, (double) TTASFLOAT(x))
+
 	P(bd->A);
 	P(bd->G);
 	P(bd->w0);
@@ -182,14 +181,14 @@ void tt_biquad_highpass(tt_biquad_t *bq, int shfreq, ttspl_t q)
 
 	biquad_predesign(bq, &bd, shfreq, 0, q);
 
-        ttspl_t common = TTADD(1, bd.cosw0);
+        ttspl_t common = TTADDI(bd.cosw0, 1);
         bd.b[0] = TTDINT(common, 2);
         bd.b[1] = TTNEGATE(common);
         bd.b[2] = bd.b[0];
 
-	bd.a[0] = TTADD(TTINT(1), bd.alpha);
+	bd.a[0] = TTADDI(bd.alpha, 1);
 	bd.a[1] = TTMINT(bd.cosw0, -2);
-	bd.a[2] = TTSUB(TTINT(1), bd.alpha);
+	bd.a[2] = TTISUB(1, bd.alpha);
 
 	biquad_applydesign(bq, &bd);
 }
