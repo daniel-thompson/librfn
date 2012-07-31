@@ -90,6 +90,15 @@ int main()
 	T(hundreth, TLDIV(TLFLOAT(0.1), TTINT(10)), 0.01); // TLDIV
 	T(hundreth, TLLOWER(TLDINT(TLFLOAT(0.1), 10)), 0.01); // TLDINT
 
+	// fractional component
+	for (int i=0; i<20; i++) {
+		float expected = (i/10.0) - (int) (i/10.0);
+		ttspl_t fraction = TTFRACTION(TTDINT(TTINT(i), 10));
+
+		printf("%5.2f = %5.2f\n", expected, TTASFLOAT(fraction));
+		assert(fuzzcmpf(expected, TTASFLOAT(fraction), 1.001));
+	}
+
 	// dB conversions
 	float minus6 = TTASFLOAT(TTLINEAR2DB(TTFLOAT(0.5)));
 	printf("minus6 = %5.2fdB\n", minus6);

@@ -95,13 +95,13 @@ char *tt_sbuf_tostring(tt_sbuf_t *sbuf, unsigned int lines)
 				"%s%s%9.3f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f%s",
 				p,
 				(last_line ? " ... " : "     "),
-				TTAT(sbuf, offset + 0),
-				TTAT(sbuf, offset + 1),
-				TTAT(sbuf, offset + 2),
-				TTAT(sbuf, offset + 3),
-				TTAT(sbuf, offset + 4),
-				TTAT(sbuf, offset + 5),
-				TTAT(sbuf, offset + 6),
+				TTASFLOAT(TTAT(sbuf, offset + 0)),
+				TTASFLOAT(TTAT(sbuf, offset + 1)),
+				TTASFLOAT(TTAT(sbuf, offset + 2)),
+				TTASFLOAT(TTAT(sbuf, offset + 3)),
+				TTASFLOAT(TTAT(sbuf, offset + 4)),
+				TTASFLOAT(TTAT(sbuf, offset + 5)),
+				TTASFLOAT(TTAT(sbuf, offset + 6)),
 				(penultimate_line ? " ...\n" :
 				 last_line        ? "" :
 						    "\n"));

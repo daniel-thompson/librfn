@@ -29,7 +29,7 @@ bool compare_shape(tt_waveshaper_t *ws, float in, float expected)
 {
 	ttspl_t out = tt_waveshaper_step(ws, TTFLOAT(in));
 
-	bool ok = fuzzcmpf(out, expected, 1.001f);
+	bool ok = fuzzcmpf(TTASFLOAT(out), expected, 1.001f);
 
 	printf("    %7.3f -> waveshaper -> %7.3f (expected %7.3f)  [ %s ]\n",
 			in, TTASFLOAT(out), expected, ok ? " OK " : "FAIL");
@@ -106,6 +106,8 @@ int main()
 	tt_waveshaper_setup(ws, TTINT(-1), TTINT(1), line, lengthof(line));
 	tt_waveshaper_process(ws, inbuf, outbuf);
 
+#if 0
+	// this test doesn't account for small numeric errors (and is therefore broken)
 	char *s = tt_sbuf_tostring(inbuf, 512); // will automatically shrink
 	char *t = tt_sbuf_tostring(outbuf, 512);
 	if (0 != strcmp(s, t)) {
@@ -115,14 +117,15 @@ int main()
 	}
 	free(s);
 	free(t);
+#endif
 
 	for (unsigned int i=0; i<inbuf->sz; i++) {
 		float in = TTASFLOAT(TTAT(inbuf, i));
 		float out = TTASFLOAT(TTAT(outbuf, i));
 
-		bool ok = fuzzcmpf(in, out, 1.001f);
+		bool ok = fuzzcmpf(in, out, 1.0005f);
 #if 0
-		printf("    %7.3f -> waveshaper -> %7.3f (expected %7.3f)  [ %s ]\n",
+		printf("    %9.6f -> waveshaper -> %9.6f (expected %9.6f)  [ %s ]\n",
 				in, out, in, ok ? " OK " : "FAIL");
 #endif
 		assert(ok);

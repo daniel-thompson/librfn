@@ -165,7 +165,7 @@ typedef int64_t tlspl_t;
 
 #endif // HAVE_FPU
 
-#define TTFRACTION(x) TTSUB((x), TTINT(TTASINT(x))) 
+#define TTFRACTION(x) TTSUBI((x), TTASINT(x))
 
 #define TTDB2LINEAR(x) TTPOW(TTINT(10), TTDINT((x), 20))
 #define TTLINEAR2DB(x) TTMINT(TTLOG10(x), 20)

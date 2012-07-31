@@ -58,7 +58,7 @@ inline ttspl_t tt_waveshaper_step(tt_waveshaper_t *ws, ttspl_t in)
 	assert(TTINT(0) <= in && in <= TTINT(1));
 
 	ttspl_t index = TTMINT(in, ws->shape.sz-1);
-	unsigned int i = TTINT(index);
+	unsigned int i = TTASINT(index);
 	ttspl_t aspl = TTAT(&ws->shape, i+1);
 	ttspl_t aweight = TTFRACTION(index);
 	ttspl_t bspl = TTAT(&ws->shape, i);
