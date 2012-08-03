@@ -43,7 +43,7 @@ void tt_preamp_setup(tt_preamp_t *p, tt_preamp_model_t model)
 {
 	tt_tubestage_setup(&(p->stages[0]), TT_TUBESTAGE_12AX7_Ri68K, -4, 2700, 22570, 86);
 	tt_tubestage_setup(&(p->stages[1]), TT_TUBESTAGE_12AX7_Ri250K, -9, 1500, 6531, 132);
-	tt_tubestage_setup(&(p->stages[2]), TT_TUBESTAGE_12AX7_Ri250K, -13, 820, 6531, 194);
+	tt_tubestage_setup(&(p->stages[2]), TT_TUBESTAGE_12AX7_Ri250K, -14, 820, 6531, 194);
 
 	p->num_stages = 3;
 }
