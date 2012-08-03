@@ -29,7 +29,7 @@ int main()
 	tt_siggen_t *sg = tt_siggen_new(ctx);
 	tt_cabsim_t *cabsim = tt_cabsim_new(ctx);
 
-	tt_siggen_setup(sg, 400, 1.570793, TT_SIGGEN_SIN);
+	tt_siggen_setup(sg, 400, TTFLOAT(1.570793), TT_SIGGEN_SIN);
 
 	tt_siggen_process(sg, inbuf);
 	tt_cabsim_process(cabsim, inbuf, outbuf);
