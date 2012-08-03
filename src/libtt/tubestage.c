@@ -44,7 +44,7 @@ void tt_tubestage_init(tt_tubestage_t *ts, tt_context_t *ctx)
 	tt_biquad_init(&ts->input_filter, ctx);
 	tt_waveshaper_init(&ts->tube);
 	tt_biquad_init(&ts->feedback_filter, ctx);
-	tt_biquad_init(&ts->output_filter, ctx);
+	tt_dcblocker_init(&ts->output_filter, ctx);
 }
 
 void tt_tubestage_finalize(tt_tubestage_t *ts)
@@ -52,7 +52,7 @@ void tt_tubestage_finalize(tt_tubestage_t *ts)
 	tt_biquad_finalize(&ts->input_filter);
 	//tt_waveshaper_finalize(&ts->tube);
 	tt_biquad_finalize(&ts->feedback_filter);
-	tt_biquad_finalize(&ts->output_filter);
+	tt_dcblocker_finalize(&ts->output_filter);
 }
 
 tt_generic_new(tubestage);
@@ -88,7 +88,7 @@ void tt_tubestage_setup(tt_tubestage_t *ts,
 
 	tt_biquad_lowpass(&ts->input_filter, input_cutoff, TTFLOAT(0.7));
 	tt_biquad_lowpass(&ts->feedback_filter, feedback_cutoff, TTFLOAT(0.7));
-	tt_biquad_highpass(&ts->output_filter, 31, TTFLOAT(0.7));
+	tt_dcblocker_setup(&ts->output_filter, 31);
 
 	// TODO: It would be good to "pre-warm" the biasing filter
 }
@@ -105,7 +105,7 @@ inline ttspl_t tt_tubestage_step(tt_tubestage_t *ts, ttspl_t spl)
 	feedback = tt_biquad_step(&ts->feedback_filter, feedback);
 	ts->bias = feedback;
 
-	spl = tt_biquad_step(&ts->output_filter, spl);
+	spl = tt_dcblocker_step(&ts->output_filter, spl);
 	return spl;
 }
 

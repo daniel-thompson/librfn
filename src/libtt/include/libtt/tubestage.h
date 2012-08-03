@@ -28,7 +28,7 @@ typedef struct {
 	tt_biquad_t input_filter;
 	tt_waveshaper_t tube;
 	tt_biquad_t feedback_filter;
-	tt_biquad_t output_filter;
+	tt_dcblocker_t output_filter;
 
 	ttspl_t bias;
 } tt_tubestage_t;
