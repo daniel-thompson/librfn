@@ -103,7 +103,8 @@ int main()
 		tt_tintamp_process(tt, inbuf, outbuf);
 		peak = TTASFLOAT(TTLINEAR2DB(tt_analyse_peak(outbuf)));
 		printf("Noise peaking at %4d.00dB -> %7.2fdB  (gain %7.2fdB)\n",
-				i, peak, peak - i);		assert(peak <= 0);
+				i, peak, peak - i);
+		assert(peak <= 0);
 	}
 
 	// TIDY
