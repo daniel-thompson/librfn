@@ -21,6 +21,7 @@
 // building blocks
 #include "libtt/analyse.h"
 #include "libtt/biquad.h"
+#include "libtt/dcblocker.h"
 #include "libtt/firstorder.h"
 #include "libtt/siggen.h"
 #include "libtt/quantizer.h"
