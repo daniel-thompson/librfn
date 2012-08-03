@@ -138,10 +138,12 @@ typedef int32_t ttspl_t;				//!< Sample in normal precision samples
 
 #define TTPI TTFLOAT(M_PI)
 
+ttspl_t ttlog10(ttspl_t x);
+
 #define TTABS(x) TTFLOAT(fabsf(TTASFLOAT(x)))
 #define TTCOS(x) TTFLOAT(cosf(TTASFLOAT(x)))
 #define TTLOG2(x) TTFLOAT(log2(TTASFLOAT(x)))
-#define TTLOG10(x) TTFLOAT(log10(TTASFLOAT(x)))
+#define TTLOG10(x) ttlog10(x)
 #define TTPOW(a, b) TTFLOAT(powf(TTASFLOAT(a), TTASFLOAT(b)))
 #define TTSIN(x) TTFLOAT(sinf(TTASFLOAT(x)))
 #define TTSQRT(x) TTFLOAT(sqrtf(TTASFLOAT(x)))

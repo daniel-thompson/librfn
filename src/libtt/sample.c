@@ -60,3 +60,20 @@ tlspl_t tlvalidate(tlspl_t spl,  const char *fname, int lineno)
 }
 
 #endif // HAVE_FPU
+
+#ifndef HAVE_FPU
+ttspl_t ttlog10(ttspl_t x)
+{
+	// when the argument is 0 the logarithm is infinite. that can't be
+	// represented in fixed point and will cause us some numeric
+	// problems. we solve this by assuming the first bit removed
+	// by the quantizer is non-zero when determining logarithms.
+	//
+	// One consequence of this is that converting silence into
+	// decibels reports ~-126dB.
+	if (0 == x)
+		return TTFLOAT(log10(1.0 / (1 << (TTQ+1))));
+
+	return TTFLOAT(log10(TTASFLOAT(x)));
+}
+#endif // !HAVE_FPU
