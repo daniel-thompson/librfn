@@ -51,18 +51,28 @@ void tt_firstorder_flush(tt_firstorder_t *fo)
 
 void tt_firstorder_lowpass(tt_firstorder_t *fo, int freq)
 {
+	tlspl_t l = TTRAISE(TTNEGATE(TTPI));
+	l = TLMINT(l, freq);
+	l = TLDINT(l, fo->ctx->sampling_frequency);
+	ttspl_t coeff = TTEXP(TLLOWER(l));
+
 	fo->x[0] = TTINT(1);
 	fo->x[1] = TTFLOAT(0.12);
 	fo->x[2] = TTINT(0);
-	fo->y[0] = TTFLOAT(exp((-M_PI * freq) / fo->ctx->sampling_frequency));
+	fo->y[0] = coeff;
 	fo->y[1] = TTINT(0);
 }
 
 void tt_firstorder_highpass(tt_firstorder_t *fo, int freq)
 {
+	tlspl_t l = TTRAISE(TTNEGATE(TTPI));
+	l = TLMINT(l, freq);
+	l = TLDINT(l, fo->ctx->sampling_frequency);
+	ttspl_t coeff = TTEXP(TLLOWER(l));
+
 	fo->x[0] = TTINT(1);
 	fo->x[1] = TTINT(-1);
 	fo->x[2] = TTINT(0);
-	fo->y[0] = TTFLOAT(exp((-M_PI * freq) / fo->ctx->sampling_frequency));
+	fo->y[0] = coeff;
 	fo->y[1] = TTINT(0);
 }

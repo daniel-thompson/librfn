@@ -84,6 +84,7 @@ tlspl_t tlvalidate(tlspl_t spl, const char *fname, int lineno);
 
 #define TTABS(x) TTVALIDATE(fabsf(TTVALIDATE(x)))
 #define TTCOS(x) TTVALIDATE(cosf(TTVALIDATE(x)))
+#define TTEXP(x) TTVALIDATE(expf(TTVALIDATE(x)))
 #define TTLOG2(x) TTVALIDATE(log2(TTVALIDATE(x)))
 #define TTLOG10(x) TTVALIDATE(log10(TTVALIDATE(x)))
 #define TTPOW(a, b) TTVALIDATE(powf(TTVALIDATE(a), TTVALIDATE(b)))
@@ -98,6 +99,7 @@ tlspl_t tlvalidate(tlspl_t spl, const char *fname, int lineno);
 
 #define TLADD(a, b) TLVALIDATE(TLVALIDATE(a) + TLVALIDATE(b))			//!< Add operation (long precision)
 #define TLSUB(a, b) TLVALIDATE(TLVALIDATE(a) - TLVALIDATE(b))			//!< Subtract operation (long precision)
+#define TLMINT(a, b) TLVALIDATE(TLVALIDATE(a) * (b))
 #define TLDIV(a, b) TTVALIDATE(TLVALIDATE(a) / TTVALIDATE(b))			//!< Divide. \arg b is normal precision
 #define TLDINT(a, b) TLVALIDATE(TLVALIDATE(a) / (b))		//!< Divide long precision number by integer
 						//   \return Long precision result
@@ -142,6 +144,7 @@ ttspl_t ttlog10(ttspl_t x);
 
 #define TTABS(x) TTFLOAT(fabsf(TTASFLOAT(x)))
 #define TTCOS(x) TTFLOAT(cosf(TTASFLOAT(x)))
+#define TTEXP(x) TTFLOAT(expf(TTASFLOAT(x)))
 #define TTLOG2(x) TTFLOAT(log2(TTASFLOAT(x)))
 #define TTLOG10(x) ttlog10(x)
 #define TTPOW(a, b) TTFLOAT(powf(TTASFLOAT(a), TTASFLOAT(b)))
@@ -160,6 +163,7 @@ typedef int64_t tlspl_t;
 
 #define TLADD(a, b) ((a) + (b))			//!< Add operation (long precision)
 #define TLSUB(a, b) ((a) - (b))			//!< Subtract operation (long precision)
+#define TLMINT(a, b) ((a) * (b))
 #define TLDIV(a, b) ((a) / (b))			//!< Divide. \arg b is normal precision
 #define TLDINT(a, b) ((a) / (b))		//!< Divide long precision number by integer
 						//   \return Long precision result

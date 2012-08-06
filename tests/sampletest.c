@@ -70,6 +70,7 @@ int main()
 	// functions
 	T(one, TTABS(TTINT(-1)), 1.0); // TTABS
 	T(fcos, TTCOS(TTPI), -1.0); // TTCOS
+	T(fexp, TTEXP(TTINT(2)), 7.389); // TTEXP
 	T(flog2, TTLOG2(TTINT(16)), 4.0); // TTLOG2
 	T(flog10, TTLOG10(TTINT(1000)), 3.0); // TTLOG10
 	T(fpow, TTPOW(TTINT(2), TTINT(4)), 16.0); // TTPOW
@@ -87,6 +88,7 @@ int main()
 	// long maths
 	T(fortytwo, TLLOWER(TLADD(TLFLOAT(22.2), TLFLOAT(19.8))), 42.0); // TLADD
 	T(six, TLLOWER(TLSUB(TLFLOAT(10.7), TLFLOAT(4.7))), 6.0); // TLSUB
+	T(ten, TLLOWER(TLMINT(TLFLOAT(0.1), 100)), 10.0); // TLMINT
 	T(hundreth, TLDIV(TLFLOAT(0.1), TTINT(10)), 0.01); // TLDIV
 	T(hundreth, TLLOWER(TLDINT(TLFLOAT(0.1), 10)), 0.01); // TLDINT
 
