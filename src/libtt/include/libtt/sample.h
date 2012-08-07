@@ -140,16 +140,23 @@ typedef int32_t ttspl_t;				//!< Sample in normal precision samples
 
 #define TTPI TTFLOAT(M_PI)
 
+ttspl_t ttabs(ttspl_t x);
+ttspl_t ttcos(ttspl_t x);
+ttspl_t ttexp(ttspl_t x);
+ttspl_t ttlog2(ttspl_t x);
 ttspl_t ttlog10(ttspl_t x);
+ttspl_t ttpow(ttspl_t a, ttspl_t b);
+ttspl_t ttsin(ttspl_t x);
+ttspl_t ttsqrt(ttspl_t x);
 
-#define TTABS(x) TTFLOAT(fabsf(TTASFLOAT(x)))
-#define TTCOS(x) TTFLOAT(cosf(TTASFLOAT(x)))
-#define TTEXP(x) TTFLOAT(expf(TTASFLOAT(x)))
-#define TTLOG2(x) TTFLOAT(log2(TTASFLOAT(x)))
+#define TTABS(x) ttabs(x)
+#define TTCOS(x) ttcos(x)
+#define TTEXP(x) ttexp(x)
+#define TTLOG2(x) ttlog2(x)
 #define TTLOG10(x) ttlog10(x)
-#define TTPOW(a, b) TTFLOAT(powf(TTASFLOAT(a), TTASFLOAT(b)))
-#define TTSIN(x) TTFLOAT(sinf(TTASFLOAT(x)))
-#define TTSQRT(x) TTFLOAT(sqrtf(TTASFLOAT(x)))
+#define TTPOW(a, b) ttpow(a, b)
+#define TTSIN(x) ttsin(x)
+#define TTSQRT(x) ttsqrt(x)
 
 #define TTVALID(x) 1
 

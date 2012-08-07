@@ -62,6 +62,27 @@ tlspl_t tlvalidate(tlspl_t spl,  const char *fname, int lineno)
 #endif // HAVE_FPU
 
 #ifndef HAVE_FPU
+
+ttspl_t ttabs(ttspl_t x)
+{
+	return TTFLOAT(fabsf(TTASFLOAT(x)));
+}
+
+ttspl_t ttcos(ttspl_t x)
+{
+	return TTFLOAT(cosf(TTASFLOAT(x)));
+}
+
+ttspl_t ttexp(ttspl_t x)
+{
+	return TTFLOAT(expf(TTASFLOAT(x)));
+}
+
+ttspl_t ttlog2(ttspl_t x)
+{
+	return TTFLOAT(log2f(TTASFLOAT(x)));
+}
+
 ttspl_t ttlog10(ttspl_t x)
 {
 	// when the argument is 0 the logarithm is infinite. that can't be
@@ -76,4 +97,20 @@ ttspl_t ttlog10(ttspl_t x)
 
 	return TTFLOAT(log10(TTASFLOAT(x)));
 }
+
+ttspl_t ttpow(ttspl_t a, ttspl_t b)
+{
+	return TTFLOAT(pow(TTASFLOAT(a), TTASFLOAT(b)));
+}
+
+ttspl_t ttsin(ttspl_t x)
+{
+	return TTFLOAT(sinf(TTASFLOAT(x)));
+}
+
+ttspl_t ttsqrt(ttspl_t x)
+{
+	return TTFLOAT(sqrtf(TTASFLOAT(x)));
+}
+
 #endif // !HAVE_FPU
