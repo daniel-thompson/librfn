@@ -16,6 +16,8 @@ gl_VALGRIND_TESTS
  
 AC_SEARCH_LIBS([cos], [m])
 PKG_CHECK_MODULES([JACK], [jack >= 0.9])
+PKG_CHECK_MODULES([GTK], [gtk+-3.0])
+AX_APPEND_LINK_FLAGS([-export-dynamic])
 
 dnl Currently the floating point build is on by default.
 AC_ARG_WITH([fpu],
@@ -37,6 +39,6 @@ dnl Keep these near the bottom - adding -Werror breaks various tests
 AX_CFLAGS_WARN_ALL
 AX_APPEND_COMPILE_FLAGS([-Werror])
 
-AC_CONFIG_FILES(Makefile src/Makefile src/librfn/Makefile src/libtt/Makefile src/jacklab/Makefile src/jacklua/Makefile tests/Makefile)
+AC_CONFIG_FILES(Makefile src/Makefile src/librfn/Makefile src/libtt/Makefile src/jacklab/Makefile src/jacklua/Makefile src/tintamp/Makefile tests/Makefile)
 AC_OUTPUT
 
