@@ -18,6 +18,23 @@
 
 #include "librfn/util.h" // for xmalloc (used by generic macros)
 
+/**
+ * Assigned a unique number to each of the high level processing block.
+ *
+ * Primarily this is used to partition the control space to make
+ * composition easier.
+ */
+typedef enum {
+	TT_TUBESTAGE_BASE = 1,
+	TT_PREAMP_BASE,
+	TT_CABSIM_BASE,
+	TT_TINTAMP_BASE
+} tt_base_t;
+
+#define TT_BASE2TAG(x) ((x) << 16)
+#define TT_TAG2BASE(x) ((x) >> 16)
+#define TT_TAG2ID(x)   ((x) & 0xffff)
+
 typedef struct {
 	unsigned int sampling_frequency;
 	unsigned int grain_size;
@@ -41,6 +58,20 @@ void tt_##type##_delete(tt_##type##_t *p) \
 { \
 	tt_##type##_finalize(p); \
 	free(p); \
+}
+
+/*!
+ * Generate a simple control enumeration function.
+ *
+ * The generated function is only of use for build blocks that have a single
+ * contiguous range of control values.
+ */
+#define tt_generic_enum_control(type, min, max) \
+tt_##type##_control_t tt_##type##_enum_control(tt_##type##_control_t ctrl) \
+{ \
+	return (ctrl < (min)  ? (min) : \
+		ctrl >= (max) ? 0 : \
+			        ctrl+1); \
 }
 
 /*!

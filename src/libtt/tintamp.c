@@ -37,6 +37,54 @@ void tt_tintamp_finalize(tt_tintamp_t *tt)
 tt_generic_new(tintamp);
 tt_generic_delete(tintamp);
 
+ttspl_t tt_tintamp_get_control(tt_tintamp_t *tt, tt_tintamp_control_t ctrl)
+{
+	switch(TT_TAG2BASE(ctrl)) {
+	case TT_PREAMP_BASE:
+		return tt_preamp_get_control(&tt->preamp, ctrl);
+	default:
+		assert(0);
+		break;
+	}
+
+	return TTINT(0);
+}
+void tt_tintamp_set_control(tt_tintamp_t *tt, tt_tintamp_control_t ctrl, ttspl_t val)
+{
+	switch(TT_TAG2BASE(ctrl)) {
+	case TT_PREAMP_BASE:
+		tt_preamp_set_control(&tt->preamp, ctrl, val);
+		break;
+	default:
+		assert(0);
+		break;
+	}
+}
+
+tt_tintamp_control_t tt_tintamp_enum_control(tt_tintamp_control_t ctrl)
+{
+	if (0 == ctrl)
+		return TT_PREAMP_CONTROL_MIN;
+
+	switch(TT_TAG2BASE(ctrl)) {
+	case TT_PREAMP_BASE:
+		ctrl = tt_preamp_enum_control(ctrl);
+		if (ctrl)
+			return ctrl;
+		//FALLTHRU
+#if 0
+	case TT_CABSIM_BASE:
+		ctrl = tt_cabsim_enum_control(ctrl);
+		if (ctrl)
+			return ctrl;
+		//FALLTHRU
+#endif
+	default:
+		return 0;
+	}
+}
+
+
 void tt_tintamp_process(tt_tintamp_t *tt, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf)
 {
 	tt_preamp_process(&tt->preamp, inbuf, tt->tmpbuf);

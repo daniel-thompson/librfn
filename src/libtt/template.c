@@ -33,6 +33,23 @@ void tt_template_setup(tt_template_t *p)
 {
 }
 
+ttspl_t tt_template_get_control(tt_template_t *p, tt_template_control_t ctrl)
+{
+	assert(ctrl >= TT_TEMPLATE_CONTROL_MIN && ctrl < TT_TEMPLATE_CONTROL_MAX);
+	return p->controls[TT_TAG2ID(ctrl)];
+}
+
+void tt_template_set_control(tt_template_t *p, tt_template_control_t ctrl, ttspl_t val)
+{
+	assert(ctrl >= TT_TEMPLATE_CONTROL_MIN && ctrl < TT_TEMPLATE_CONTROL_MAX);
+	p->controls[TT_TAG2ID(ctrl)] = val;
+
+	// apply the change
+}
+
+tt_generic_enum_control(template, TT_TEMPLATE_CONTROL_MIN, TT_TEMPLATE_CONTROL_MAX);
+
+
 ttspl_t tt_template_step(tt_template_t *p, ttspl_t spl)
 {
 	return spl;

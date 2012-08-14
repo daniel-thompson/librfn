@@ -41,12 +41,33 @@ tt_generic_delete(preamp);
 
 void tt_preamp_setup(tt_preamp_t *p, tt_preamp_model_t model)
 {
-	tt_tubestage_setup(&(p->stages[0]), TT_TUBESTAGE_12AX7_Ri68K, -4, 2700, 22570, 86);
-	tt_tubestage_setup(&(p->stages[1]), TT_TUBESTAGE_12AX7_Ri250K, -9, 1500, 6531, 132);
-	tt_tubestage_setup(&(p->stages[2]), TT_TUBESTAGE_12AX7_Ri250K, -14, 820, 6531, 194);
+	p->controls[TT_TAG2ID(TT_PREAMP_CONTROL_GAIN)] = TTINT(-9);
+	tt_preamp_set_control(p, TT_PREAMP_CONTROL_MODEL, TT_PREAMP_CLEAN);
+}
 
+ttspl_t tt_preamp_get_control(tt_preamp_t *p, tt_preamp_control_t ctrl)
+{
+	assert(ctrl >= TT_PREAMP_CONTROL_MODEL && ctrl < TT_PREAMP_CONTROL_MAX);
+	return p->controls[TT_TAG2ID(ctrl)];
+}
+
+void tt_preamp_set_control(tt_preamp_t *p, tt_preamp_control_t ctrl, ttspl_t val)
+{
+	assert(ctrl >= TT_PREAMP_CONTROL_MODEL && ctrl < TT_PREAMP_CONTROL_MAX);
+	p->controls[TT_TAG2ID(ctrl)] = val;
+
+	tt_preamp_model_t model = TTASINT(p->controls[TT_PREAMP_CONTROL_MODEL]);
+	int gain = TTASINT(p->controls[TT_TAG2ID(TT_PREAMP_CONTROL_GAIN)]);
+
+	assert(model == TT_PREAMP_CLEAN); // only one model exists at the moment
+
+	tt_tubestage_setup(&(p->stages[0]), TT_TUBESTAGE_12AX7_Ri68K, -4, 2700, 22570, 86);
+	tt_tubestage_setup(&(p->stages[1]), TT_TUBESTAGE_12AX7_Ri250K, gain, 1500, 6531, 132);
+	tt_tubestage_setup(&(p->stages[2]), TT_TUBESTAGE_12AX7_Ri250K, -14, 820, 6531, 194);
 	p->num_stages = 3;
 }
+
+tt_generic_enum_control(preamp, TT_PREAMP_CONTROL_MODEL, TT_PREAMP_CONTROL_MAX);
 
 ttspl_t tt_preamp_step(tt_preamp_t *p, ttspl_t spl)
 {

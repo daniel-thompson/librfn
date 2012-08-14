@@ -16,8 +16,21 @@
 
 #include "libtt/util.h"
 
+typedef enum {
+	TT_PREAMP_CONTROL_MIN = TT_BASE2TAG(TT_PREAMP_BASE),
+	TT_PREAMP_CONTROL_MODEL = TT_PREAMP_CONTROL_MIN,
+	TT_PREAMP_CONTROL_GAIN,
+	TT_PREAMP_CONTROL_MAX
+} tt_preamp_control_t;
+
+typedef enum {
+	TT_PREAMP_CLEAN
+} tt_preamp_model_t;
+
 typedef struct {
 	tt_context_t *ctx;
+
+	ttspl_t controls[TT_PREAMP_CONTROL_MAX];
 
 	unsigned int num_stages;
 	tt_tubestage_t stages[3];
@@ -25,16 +38,15 @@ typedef struct {
 	tt_sbuf_t *tmpbuf;
 } tt_preamp_t;
 
-typedef enum {
-	TT_PREAMP_CLEAN
-} tt_preamp_model_t;
-
 void tt_preamp_init(tt_preamp_t *p, tt_context_t *ctx);
 void tt_preamp_finalize(tt_preamp_t *p);
 tt_preamp_t *tt_preamp_new(tt_context_t *ctx);
 void tt_preamp_delete(tt_preamp_t *p);
 
 void tt_preamp_setup(tt_preamp_t *p, tt_preamp_model_t model);
+ttspl_t tt_preamp_get_control(tt_preamp_t *p, tt_preamp_control_t ctrl);
+void tt_preamp_set_control(tt_preamp_t *p, tt_preamp_control_t ctrl, ttspl_t val);
+tt_preamp_control_t tt_preamp_enum_control(tt_preamp_control_t ctrl);
 
 ttspl_t tt_preamp_step(tt_preamp_t *p, ttspl_t spl);
 void tt_preamp_process(tt_preamp_t *p, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
