@@ -65,12 +65,15 @@ tlspl_t tlvalidate(tlspl_t spl,  const char *fname, int lineno)
 
 ttspl_t ttabs(ttspl_t x)
 {
-	return TTFLOAT(fabsf(TTASFLOAT(x)));
+	if (x > 0)
+		return x;
+
+	return TTNEGATE(x);
 }
 
 ttspl_t ttcos(ttspl_t x)
 {
-	return TTFLOAT(cosf(TTASFLOAT(x)));
+	return ttsin(TTADD(x, TTDINT(TTPI, 2)));
 }
 
 ttspl_t ttexp(ttspl_t x)
@@ -108,9 +111,35 @@ ttspl_t ttsin(ttspl_t x)
 	return TTFLOAT(sinf(TTASFLOAT(x)));
 }
 
+/**
+ * Determine the square root of x using fixed point maths.
+ *
+ * The algorithm is a simple binary search looking for the greatest value
+ * who square is smaller than or equal to x. The only extra trick used is
+ * to avoid searching the top most bits (which we already know must be unset).
+ *
+ * The algorithm will return zero if x is negative (which is no more wrong
+ * than any other value).
+ */
 ttspl_t ttsqrt(ttspl_t x)
 {
-	return TTFLOAT(sqrtf(TTASFLOAT(x)));
+	tlspl_t target = TTRAISE(x);
+	ttspl_t root = 0;
+	// TODO: Need a static assert that TTQ == 20
+	ttspl_t max = TTINT(32); // gives the highest set bit in root(TTSPL_MAX)
+
+	// binary search skipping to top few bits because they overflow when
+	// converted back into a long to standard precision.
+	for (ttspl_t bit=max; bit; bit>>=1) {
+		ttspl_t candidate = (root | bit);
+		tlspl_t square = TTMUL(candidate, candidate);
+		if (square <= target)
+			root = candidate;
+	}
+
+	return root;
+	//return TTFLOAT(sqrtf(TTASFLOAT(x)));
+
 }
 
 #endif // !HAVE_FPU
