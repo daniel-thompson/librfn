@@ -329,6 +329,81 @@ You should have received a copy of the GNU General Public License along with tin
           </packing>
         </child>
         <child>
+          <object class="GtkToolbar" id="toolbar1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkToolButton" id="toolbutton1">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">toolbutton1</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-goto-first</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton2">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">toolbutton2</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-go-back</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton3">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">toolbutton3</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-go-forward</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton4">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">toolbutton4</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-goto-last</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkBox" id="box2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -521,7 +596,7 @@ You should have received a copy of the GNU General Public License along with tin
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
