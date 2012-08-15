@@ -15,5 +15,6 @@ libtt_a_SOURCES=\
 	wavwriter.c \
 	tubestage.c \
 	preamp.c \
+	tonestack.c \
 	cabsim.c \
 	tintamp.c

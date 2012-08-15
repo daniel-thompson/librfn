@@ -27,6 +27,7 @@
 typedef enum {
 	TT_TUBESTAGE_BASE = 1,
 	TT_PREAMP_BASE,
+	TT_TONESTACK_BASE,
 	TT_CABSIM_BASE,
 	TT_TINTAMP_BASE
 } tt_base_t;
