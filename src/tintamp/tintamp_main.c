@@ -1,5 +1,5 @@
 /*
- * jacklua.c
+ * tintamp_main.c
  *
  * Part of tintamp (the integer amplifier)
  *

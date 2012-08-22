@@ -169,7 +169,7 @@ void tintamp_ui_init(void)
 	GtkWidget       *window;
 
 	builder = gtk_builder_new ();
-	gtk_builder_add_from_file (builder, "tintamp_ui.xml", NULL);
+	gtk_builder_add_from_resource (builder, "/tintamp/tintamp.ui", NULL);
 	window = GTK_WIDGET (gtk_builder_get_object (builder, "window"));
 	aboutdialog = GTK_DIALOG (gtk_builder_get_object(builder, "aboutdialog"));
 
