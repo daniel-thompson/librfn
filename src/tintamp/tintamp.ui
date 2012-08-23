@@ -42,9 +42,10 @@ You should have received a copy of the GNU General Public License along with tin
     </child>
   </object>
   <object class="GtkAdjustment" id="adjustment_bass">
-    <property name="upper">10</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">1</property>
+    <property name="lower">-24</property>
+    <property name="upper">24</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_gain">
     <property name="lower">-24</property>
@@ -53,19 +54,22 @@ You should have received a copy of the GNU General Public License along with tin
     <property name="page_increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_middle">
-    <property name="upper">10</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">1</property>
+    <property name="lower">-24</property>
+    <property name="upper">24</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_treble">
-    <property name="upper">10</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">1</property>
+    <property name="lower">-24</property>
+    <property name="upper">24</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_volume">
-    <property name="upper">10</property>
-    <property name="step_increment">0.10000000000000001</property>
-    <property name="page_increment">1</property>
+    <property name="lower">-24</property>
+    <property name="upper">24</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">5</property>
   </object>
   <object class="GtkWindow" id="dummy">
     <property name="can_focus">False</property>
@@ -418,6 +422,9 @@ You should have received a copy of the GNU General Public License along with tin
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Gain</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -431,6 +438,9 @@ You should have received a copy of the GNU General Public License along with tin
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Treble</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -444,6 +454,9 @@ You should have received a copy of the GNU General Public License along with tin
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Middle</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
@@ -457,6 +470,9 @@ You should have received a copy of the GNU General Public License along with tin
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Bass</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="left_attach">3</property>
@@ -470,6 +486,9 @@ You should have received a copy of the GNU General Public License along with tin
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Volume</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="left_attach">4</property>
@@ -482,7 +501,6 @@ You should have received a copy of the GNU General Public License along with tin
                   <object class="GtkScaleButton" id="scalebutton_treble">
                     <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="vexpand">True</property>
@@ -504,7 +522,6 @@ You should have received a copy of the GNU General Public License along with tin
                   <object class="GtkScaleButton" id="scalebutton_middle">
                     <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
@@ -525,7 +542,6 @@ You should have received a copy of the GNU General Public License along with tin
                   <object class="GtkScaleButton" id="scalebutton_bass">
                     <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
@@ -546,7 +562,6 @@ You should have received a copy of the GNU General Public License along with tin
                   <object class="GtkScaleButton" id="scalebutton_volume">
                     <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>

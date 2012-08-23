@@ -27,7 +27,11 @@ static struct {
 	const char *name;
 	int ctrl;
 } ui_map[] = {
-		{ "adjustment_gain", TT_PREAMP_CONTROL_GAIN }
+		{ "adjustment_gain", TT_PREAMP_CONTROL_GAIN },
+		{ "adjustment_bass", TT_TONESTACK_CONTROL_BASS },
+		{ "adjustment_middle", TT_TONESTACK_CONTROL_MID },
+		{ "adjustment_treble", TT_TONESTACK_CONTROL_TREBLE },
+		{ "adjustment_volume", TT_TINTAMP_CONTROL_MASTER_VOLUME },
 };
 
 static void polar2cartesian(double r, double t, double *x, double *y)
@@ -63,6 +67,10 @@ gboolean on_knob_draw (GtkWidget *widget, cairo_t *cr, gpointer data)
 	gdouble upper = gtk_adjustment_get_upper(adjustment);
 	gdouble value = gtk_adjustment_get_value(adjustment);
 
+	int scale = (intptr_t) g_object_get_data(G_OBJECT(data), "scale");
+	if (0 == scale)
+		scale = 10;
+
 	// put is the value to be displayed (in range 0..1)
 	gdouble range = (value - lower) / (upper - lower);
 
@@ -92,7 +100,7 @@ gboolean on_knob_draw (GtkWidget *widget, cairo_t *cr, gpointer data)
 	cairo_stroke (cr);
 
 	// draw the tick marks
-	for (theta = start; theta <= end; theta += ((end - start) / 10)) {
+	for (theta = start; theta <= end; theta += ((end - start) / scale)) {
 		polar2cartesian(0.45, theta, &x1, &y1);
 		polar2cartesian(0.5, theta, &x2, &y2);
 		cairo_move_to(cr, x1, y1);
@@ -196,6 +204,9 @@ void tintamp_ui_setup(tt_tintamp_t *tt)
 		g_object_set_data(obj, "func", &tt_tintamp_set_control);
 		g_object_set_data(obj, "obj", tt);
 		g_object_set_data(obj, "ctrl", (void *) (intptr_t) ui_map[i].ctrl);
+
+		if (TT_TINTAMP_CONTROL_MASTER_VOLUME == ui_map[i].ctrl)
+			g_object_set_data(obj, "scale", (void *) (intptr_t) 11);
 
 		ttspl_t val = tt_tintamp_get_control(tt, ui_map[i].ctrl);
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(obj), TTASFLOAT(val));
