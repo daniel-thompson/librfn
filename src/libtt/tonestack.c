@@ -62,8 +62,8 @@ void tt_tonestack_set_control(tt_tonestack_t *ts, tt_tonestack_control_t ctrl, t
 	treble = TTSUB(treble, mid);
 
 	// design the filters and convert the gain to linear
-	tt_biquad_highshelf(&ts->trebleshelf, 1000, TTASINT(treble), TTFLOAT(0.4));
-	tt_biquad_lowshelf(&ts->bassshelf, 300, TTASINT(bass), TTFLOAT(0.4));
+	tt_biquad_highshelf(&ts->trebleshelf, 1000, TTASINT(treble), TTFLOAT(0.8));
+	tt_biquad_lowshelf(&ts->bassshelf, 300, TTASINT(bass), TTFLOAT(0.8));
 	ts->gain = TTDB2LINEAR(gain);
 }
 

@@ -13,6 +13,7 @@ noinst_PROGRAMS=\
 	wavreadertest \
 	tubestagetest \
 	preamptest \
+	tonestacktest \
 	cabsimtest \
 	tintamptest
 
@@ -53,6 +54,9 @@ tubestagetest_LDADD = $(AM_LDADD)
 
 preamptest_SOURCES=preamptest.c
 preamptest_LDADD = $(AM_LDADD)
+
+tonestacktest_SOURCES=tonestacktest.c
+tonestacktest_LDADD = $(AM_LDADD)
 
 cabsimtest_SOURCES=cabsimtest.c
 cabsimtest_LDADD = $(AM_LDADD)

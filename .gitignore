@@ -38,6 +38,7 @@ tests/wavreadertest
 tests/wavwritertest.wav
 tests/tubestagetest
 tests/preamptest
+tests/tonestacktest
 tests/cabsimtest
 tests/tintamptest
 
