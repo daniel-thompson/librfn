@@ -19,12 +19,14 @@
 
 typedef enum {
 	TT_TINTAMP_CONTROL_MIN = TT_BASE2TAG(TT_TINTAMP_BASE),
-	TT_TINTAMP_CONTROL_MAX = TT_TINTAMP_CONTROL_MIN
+	TT_TINTAMP_CONTROL_MASTER_VOLUME = TT_TINTAMP_CONTROL_MIN,
+	TT_TINTAMP_CONTROL_MAX
 } tt_tintamp_control_t;
 
 typedef struct {
 	tt_context_t *ctx;
 	tt_preamp_t preamp;
+	tt_tonestack_t tonestack;
 	tt_cabsim_t cabsim;
 
 	tt_sbuf_t *tmpbuf;
