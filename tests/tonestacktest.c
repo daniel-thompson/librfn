@@ -62,9 +62,8 @@ static bool test_response_at(tt_tonestack_t *ts, int gfreq, float db)
 
 	float levelf = TTASFLOAT(TTLINEAR2DB(level));
 
-	// OK if level is correct +-1dB
-	ok = (levelf > db && levelf < (db+2)) ||
-	     (levelf < db && levelf > (db-2));
+	// OK if level is correct +-2dB
+	ok = fuzzcmpef(levelf, db, 2);
 
 	printf("    %4dHz@%dHz    %6.2fdB %c= %6.2fdB            [ %s ]\n",
 			gfreq, ts->ctx->sampling_frequency, levelf,

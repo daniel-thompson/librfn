@@ -16,10 +16,34 @@
 
 #include <assert.h>
 
+/*! Test whether two values are equal to within a relative tolerance.
+ *
+ * \return True, if a and b are approximately equal.
+ */
 int fuzzcmp(double a, double b, double delta);
+
+/*! Single precision equivalence test using a relative tolerance.
+ *
+ * See ::fuzzcmp
+ */
 int fuzzcmpf(float a, float b, float delta);
 
+/*! Test whether two values are equal to within an absolute tolerance.
+ */
+int fuzzcmpe(double a, double b, double e);
+
+/*! Single precision equivalence test using an absolute tolerance.
+ *
+ * See ::fuzzcmpe
+ */
+int fuzzcmpef(float a, float b, float e);
+
+/*! Test whether two values are equal within the first N bits.
+ */
 int fuzzcmpb(double a, double b, int bits);
+
+/*! Single precision equivalence test within the first N bits.
+ */
 int fuzzcmpbf(float a, float b, int bits);
 
 /*! Assert two values are approximately equal.

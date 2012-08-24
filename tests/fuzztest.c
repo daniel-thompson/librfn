@@ -54,6 +54,53 @@ void testf()
 	//assert(!fuzzcmpf(-10, -10.01, 1.001));
 }
 
+void teste()
+{
+	assert( fuzzcmpe(10, 10, 0));
+
+	assert( fuzzcmpe(10, 10.01, 0.1));
+	assert( fuzzcmpe(10, 10.01, 0.01));
+	assert(!fuzzcmpe(10, 10.01, 0.001));
+
+	assert( fuzzcmpe(10, 9.99, 0.1));
+	assert( fuzzcmpe(10, 9.99, 0.01));
+	assert(!fuzzcmpe(10, 9.99, 0.001));
+
+	assert( fuzzcmpe(-10, -10, 0));
+
+	assert( fuzzcmpe(-10, -10.01, 0.1));
+	assert( fuzzcmpe(-10, -10.01, 0.01));
+	assert(!fuzzcmpe(-10, -10.01, 0.001));
+
+	assert( fuzzcmpe(-10, -9.99, 0.1));
+	assert( fuzzcmpe(-10, -9.99, 0.01));
+	assert(!fuzzcmpe(-10, -9.99, 0.001));
+
+}
+
+void testef()
+{
+	assert( fuzzcmpef(10, 10, 0));
+
+	assert( fuzzcmpef(10, 10.01, 0.1));
+	assert( fuzzcmpef(10, 10.01, 0.01));
+	assert(!fuzzcmpef(10, 10.01, 0.001));
+
+	assert( fuzzcmpef(10, 9.99, 0.1));
+	assert( fuzzcmpef(10, 9.99, 0.01));
+	assert(!fuzzcmpef(10, 9.99, 0.001));
+
+	assert( fuzzcmpef(-10, -10, 0));
+
+	assert( fuzzcmpef(-10, -10.01, 0.1));
+	assert( fuzzcmpef(-10, -10.01, 0.01));
+	assert(!fuzzcmpef(-10, -10.01, 0.001));
+
+	assert( fuzzcmpef(-10, -9.99, 0.1));
+	assert( fuzzcmpef(-10, -9.99, 0.01));
+	assert(!fuzzcmpef(-10, -9.99, 0.001));
+}
+
 void testb()
 {
 	double a = 32767.0f;
@@ -82,6 +129,8 @@ int main()
 {
 	test();
 	testf();
+	teste();
+	testef();
 	testb();
 	testbf();
 	return 0;

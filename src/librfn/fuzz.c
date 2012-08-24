@@ -58,6 +58,18 @@ int fuzzcmpf(float a, float b, float delta)
 	}
 }
 
+int fuzzcmpe(double a, double b, double e)
+{
+	return ((a <= b) && ((a+e)) >= b) ||
+	       ((b <= a) && ((b+e)) >= a);
+}
+
+int fuzzcmpef(float a, float b, float e)
+{
+	return ((a <= b) && ((a+e)) >= b) ||
+	       ((b <= a) && ((b+e)) >= a);
+}
+
 int fuzzcmpb(double a, double b, int bits)
 {
 	double delta = 1.0 + (1.0 / (double) (1 << bits));
