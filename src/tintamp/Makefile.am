@@ -1,4 +1,6 @@
+if GTK
 bin_PROGRAMS=tintamp
+endif
 
 tintamp_SOURCES=tintamp_gresource.c tintamp_main.c tintamp_ui.c
 tintamp_CPPFLAGS=$(JACK_CFLAGS) $(GTK_CFLAGS) -I../libtt/include -I../librfn/include
