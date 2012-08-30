@@ -12,11 +12,17 @@ AS_IF([test "x$ac_cv_prog_cc_c99" = "xno"], [AC_MSG_ERROR([compiler does not sup
 AM_PROG_CC_C_O
 AC_PROG_RANLIB
 gl_VALGRIND_TESTS
- AC_SEARCH_LIBS([cos], [m])
+AC_SEARCH_LIBS([cos], [m])
+AC_SEARCH_LIBS([clock_gettime], [rt])
+
+dnl Range checking is off by default.
+AC_ARG_ENABLE([benchmark],
+    AS_HELP_STRING([--enable-benchmark], [Enable benchmark test (long runtime under valgrind)]))
+AM_CONDITIONAL(BENCHMARK, [test "x$enable_benchmark" == "xyes"])
 
 dnl The GTK+ tools are on by default
 AC_ARG_WITH([gtk],
-    AS_HELP_STRING([--without-gtl], [Disable GTK+ based tools]))
+    AS_HELP_STRING([--without-gtk], [Disable GTK+ based tools]))
 AM_CONDITIONAL(GTK, [test "x$with_gtk" != "xno"])
 
 dnl The floating point build is on by default.

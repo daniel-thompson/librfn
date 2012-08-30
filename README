@@ -2,4 +2,29 @@ tintamp - The Integer Amplifier
 ===============================
 
 tintamp is a guitar amp. modeller suitable to low power devices whose
-main CPU has not FPU. It is based purely on fixed point arithmetic.
+main CPU has no FPU. It is based purely on fixed point arithmetic.
+
+Required libraries
+-----------------
+
+* Jack >= 0.9 (jack-audio-connection-kit-devel, libjack-jackd2-dev)
+* GTK+ >= 3.0 (gtk3-devel, libgtk-3-dev)
+
+The GTK+ requirement is optional (and can be disabled by passing --without-gtk
+to ./configure) but strongly recommended if you want to explore tintamp's
+capabilities interactively on a PC.
+
+Building
+--------
+
+From a distributed package the build process is the standard GNU autotools
+approach:
+
+  ./configure
+  make
+  make install
+
+If you obtained tintamp via git you must generate the configure script
+and Makefile templates first:
+
+  autoreconf -i
