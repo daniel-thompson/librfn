@@ -1,5 +1,5 @@
 /*
- * util.h
+ * string.h
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
@@ -11,21 +11,24 @@
  * (at your option) any later version.
  */
 
-#ifndef RF_UTIL_H_
-#define RF_UTIL_H_
+#ifndef RF_STRING_H_
+#define RF_STRING_H_
 
 #include <stdarg.h>
 #include <stdlib.h>
 
-#define lengthof(x) ((sizeof(x) / sizeof(*(x))))
+char *strdup_join(const char *head, const char *tail);
+char *xstrdup_join(const char *head, const char *tail);
 
-void rf_intrenal_out_of_memory(void);
 
-void *xmalloc(size_t sz);
 
-char *strdup_printf(const char *format, ...);
-char *strdup_vprintf(const char *format, va_list ap);
-char *xstrdup_printf(const char *format, ...);
-char *xstrdup_vprintf(const char *format, va_list ap);
+char *strtolower(char *s);
+char *strdup_tolower(const char *s);
+char *xstrdup_tolower(const char *s);
+
+char *strtoupper(char *s);
+char *strdup_toupper(const char *s);
+char *xstrdup_toupper(const char *s);
+
 
 #endif // RF_UTIL_H_

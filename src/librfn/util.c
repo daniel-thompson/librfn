@@ -20,7 +20,7 @@
  *
  * \todo Currently out_of_memory cannot actually be hooked
  */
-static void out_of_memory(void)
+void rf_internal_out_of_memory(void)
 {
 	abort();
 }
@@ -29,7 +29,7 @@ void *xmalloc(size_t sz)
 {
 	void *p = malloc(sz);
 	if (!p)
-		out_of_memory();
+		rf_internal_out_of_memory();
 	return p;
 }
 
