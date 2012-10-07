@@ -1,5 +1,5 @@
 /*
- * librfn.h
+ * enum.c
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
@@ -11,15 +11,26 @@
  * (at your option) any later version.
  */
 
-#ifndef RF_LIBRFN_H_
-#define RF_LIBRFN_H_
+#include <string.h>
 
-#include "librfn/enum.h"
-#include "librfn/fixed.h"
-#include "librfn/fuzz.h"
-#include "librfn/hex.h"
-#include "librfn/pack.h"
-#include "librfn/wavheader.h"
-#include "librfn/util.h"
+#include "librfn.h"
 
-#endif // RF_LIBRFN_H_
+const char *rf_enum2string(rf_enumtable_t *t, int e)
+{
+	for (; t->s; t++) {
+		if (t->e == e)
+			return t->s;
+	}
+
+	return NULL;
+}
+
+int rf_string2enum(rf_enumtable_t *t, const char *s)
+{
+	for (; t->s; t++) {
+		if (0 == strcmp(t->s, s))
+			return t->e;
+	}
+
+	return RF_ENUM_OUT_OF_RANGE;
+}

@@ -3,6 +3,7 @@ AM_LDADD = ../src/libtt/libtt.a ../src/librfn/librfn.a
 TESTS_ENVIRONMENT=$(VALGRIND)
 
 noinst_PROGRAMS=\
+	enumtest \
 	fuzztest \
 	wavheadertest \
 	sampletest \
@@ -23,6 +24,9 @@ endif
 #
 # librfn tests
 #
+
+enumtest_SOURCES=enumtest.c
+enumtest_LDADD = $(AM_LDADD)
 
 fuzztest_SOURCES=fuzztest.c
 fuzztest_LDADD = $(AM_LDADD)
