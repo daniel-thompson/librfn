@@ -119,7 +119,7 @@ tt_tintamp_control_t tt_tintamp_enum_control(tt_tintamp_control_t ctrl)
 #endif
 	default:
 		return (ctrl < TT_TINTAMP_CONTROL_MIN  ? TT_TINTAMP_CONTROL_MIN :
-			ctrl >= TT_TINTAMP_CONTROL_MAX ? 0 :
+			ctrl >= TT_TINTAMP_CONTROL_MAX-1 ? 0 :
 				                           ctrl+1);
 	}
 }

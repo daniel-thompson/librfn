@@ -71,7 +71,7 @@ void tt_##type##_delete(tt_##type##_t *p) \
 tt_##type##_control_t tt_##type##_enum_control(tt_##type##_control_t ctrl) \
 { \
 	return (ctrl < (min)  ? (min) : \
-		ctrl >= (max) ? 0 : \
+		ctrl >= (max-1) ? 0 : \
 			        ctrl+1); \
 }
 
