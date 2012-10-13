@@ -16,6 +16,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <librfn.h>
 #include <libtt.h>
@@ -95,6 +96,7 @@ int main()
 	// SETUP: 400Hz low pass filter
 	printf("Low-pass filter (400Hz@%dHz):\n", ctx->sampling_frequency);
 	tt_biquad_t *bq = tt_biquad_new(ctx);
+	tt_biquad_t b1, b2;
 	assert(bq);
 	tt_biquad_lowpass(bq, 400, TTFLOAT(0.7));
 
@@ -112,6 +114,7 @@ int main()
 	// TEST: When stimulated by an impulse the effect has a duration
 	//       beyond the memory of the filter (the I in IIR)
 	ttspl_t y0 = tt_biquad_step(bq, TTINT(1));
+	b1 = *bq;
 	ttspl_t y1 = tt_biquad_step(bq, TTINT(0));
 	assert(TTINT(0) != y1);
 	assert(TTINT(0) != tt_biquad_step(bq, TTINT(0)));
@@ -127,6 +130,8 @@ int main()
 
 	// TEST: Flush does not damage filter coefficients
 	assert(y0 == tt_biquad_step(bq, TTINT(1)));
+	b2 = *bq;
+	assert(0 == memcmp(&b1, &b2, sizeof(b1)));
 	assert(y1 == tt_biquad_step(bq, TTINT(0)));
 
 	// TEST: Should response is -3dB, rolloff at ~12dB per octave and
