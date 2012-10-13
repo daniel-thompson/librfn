@@ -74,6 +74,10 @@ void tt_biquad_flush(tt_biquad_t *bq)
 {
 	memset(bq->zx, 0, sizeof(bq->zx));
 	memset(bq->zy, 0, sizeof(bq->zy));
+#ifndef HAVE_FPU
+	bq->error_feedback = 0;
+#endif
+
 }
 
 typedef struct biquad_design {
