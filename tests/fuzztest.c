@@ -83,21 +83,21 @@ void testef()
 	assert( fuzzcmpef(10, 10, 0));
 
 	assert( fuzzcmpef(10, 10.01, 0.1));
-	assert( fuzzcmpef(10, 10.01, 0.01));
+	assert( fuzzcmpef(10, 10.5, 0.5));
 	assert(!fuzzcmpef(10, 10.01, 0.001));
 
 	assert( fuzzcmpef(10, 9.99, 0.1));
-	assert( fuzzcmpef(10, 9.99, 0.01));
+	assert( fuzzcmpef(10, 9.5, 0.5));
 	assert(!fuzzcmpef(10, 9.99, 0.001));
 
 	assert( fuzzcmpef(-10, -10, 0));
 
 	assert( fuzzcmpef(-10, -10.01, 0.1));
-	assert( fuzzcmpef(-10, -10.01, 0.01));
+	assert( fuzzcmpef(-10, -10.5, 0.5));
 	assert(!fuzzcmpef(-10, -10.01, 0.001));
 
 	assert( fuzzcmpef(-10, -9.99, 0.1));
-	assert( fuzzcmpef(-10, -9.99, 0.01));
+	assert( fuzzcmpef(-10, -9.5, 0.5));
 	assert(!fuzzcmpef(-10, -9.99, 0.001));
 }
 
