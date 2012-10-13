@@ -42,6 +42,7 @@ tests/preamptest
 tests/tonestacktest
 tests/cabsimtest
 tests/tintamptest
+tests/presettest
 tests/benchmark
 
 tests/media/

@@ -17,4 +17,6 @@ libtt_a_SOURCES=\
 	preamp.c \
 	tonestack.c \
 	cabsim.c \
-	tintamp.c
+	tintamp.c \
+	preset.c \
+	presetio.c

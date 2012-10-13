@@ -1,5 +1,5 @@
 /*
- * template.c
+ * preset.c
  *
  * Part of libtt (the integer amplifier library)
  *
@@ -14,47 +14,70 @@
 #include <string.h>
 
 #include "libtt.h"
-#include "libtt/template.h"
 
-void tt_template_init(tt_template_t *p, tt_context_t *ctx)
+
+void tt_preset_init(tt_preset_t *p, const tt_preset_ops_t *ops)
 {
 	memset(p, 0, sizeof(*p));
-	p->ctx = ctx;
+	p->ops = ops;
+	tt_preset_clear(p);
 }
 
-void tt_template_finalize(tt_template_t *p)
+void tt_preset_finalize(tt_preset_t *p)
 {
+	// do nothing
 }
 
-tt_generic_new(template);
-tt_generic_delete(template);
-
-void tt_template_setup(tt_template_t *p)
+tt_preset_t * tt_preset_new(const tt_preset_ops_t *ops)
 {
+	tt_preset_t *p = malloc(sizeof(tt_preset_t));
+	if (p)
+		tt_preset_init(p, ops);
+	return p;
 }
 
-ttspl_t tt_template_get_control(tt_template_t *p, tt_template_control_t ctrl)
+void tt_preset_delete(tt_preset_t *p)
 {
-	assert(ctrl >= TT_TEMPLATE_CONTROL_MIN && ctrl < TT_TEMPLATE_CONTROL_MAX);
-	return p->controls[TT_TAG2ID(ctrl)];
+	tt_preset_finalize(p);
+	free(p);
 }
 
-void tt_template_set_control(tt_template_t *p, tt_template_control_t ctrl, ttspl_t val)
+void tt_preset_clear(tt_preset_t *p)
 {
-	assert(ctrl >= TT_TEMPLATE_CONTROL_MIN && ctrl < TT_TEMPLATE_CONTROL_MAX);
-	p->controls[TT_TAG2ID(ctrl)] = val;
-
-	// apply the change
+	for (int i=0; i<lengthof(p->controls); i++) {
+		p->controls[i].ctrl = -1;
+		p->controls[i].val = TTINT(0);
+	}
 }
 
-tt_generic_enum_control(template, TT_TEMPLATE_CONTROL_MIN, TT_TEMPLATE_CONTROL_MAX);
-
-
-ttspl_t tt_template_step(tt_template_t *p, ttspl_t spl)
+void tt_preset_save(tt_preset_t *p, void *q)
 {
-	return spl;
+	tt_preset_clear(p);
+
+	for (int ctrl = p->ops->enum_control(0);
+	     ctrl != 0;
+	     ctrl = p->ops->enum_control(ctrl))
+		tt_preset_deserialize(p, ctrl, p->ops->get_control(q, ctrl));
 }
 
-void tt_template_process(tt_template_t *p, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf)
+void tt_preset_restore(tt_preset_t *p, void *q)
 {
+	tt_preset_serialize(p, q, p->ops->set_control);
+}
+
+void tt_preset_serialize(tt_preset_t *p, void *q, tt_preset_set_control_t *serialize)
+{
+	for (int i=0; p->controls[i].ctrl != -1; i++)
+		serialize(q, p->controls[i].ctrl, p->controls[i].val);
+}
+
+void tt_preset_deserialize(tt_preset_t *p, int ctrl, ttspl_t val)
+{
+	int i;
+
+	for (i=0; p->controls[i].ctrl != -1; i++)
+		assert(i < lengthof(p->controls));
+
+	p->controls[i].ctrl = ctrl;
+	p->controls[i].val = val;
 }

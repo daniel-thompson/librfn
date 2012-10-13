@@ -1,5 +1,5 @@
 /*
- * template.h
+ * preset.h
  *
  * Part of libtt (the integer amplifier library)
  *
@@ -11,35 +11,49 @@
  * (at your option) any later version.
  */
 
-#ifndef TT_TEMPLATE_H_
-#define TT_TEMPLATE_H_
+#ifndef TT_PRESET_H_
+#define TT_PRESET_H_
 
 #include "libtt/sample.h"
 #include "libtt/util.h"
 
-typedef enum {
-	TT_TEMPLATE_CONTROL_MIN = TT_BASE2TAG(TT_TEMPLATE_BASE),
-	TT_TEMPLATE_CONTROL_FIRST_CONTROL = TT_TEMPLATE_CONTROL_MIN,
-	TT_TEMPLATE_CONTROL_MAX
-} tt_template_control_t;
+#define TT_PRESET_NUM_CONTROLS 16
+
+typedef ttspl_t tt_preset_get_control_t(void *q, int ctrl);
+typedef void tt_preset_set_control_t(void *q, int ctrl, ttspl_t val);
+typedef int tt_preset_enum_control_t(int ctrl);
 
 typedef struct {
-	tt_context_t *ctx;
+	tt_preset_get_control_t *get_control;
+	tt_preset_set_control_t *set_control;
+	tt_preset_enum_control_t *enum_control;
+} tt_preset_ops_t;
 
-	ttspl_t controls[TT_TEMPLATE_CONTROL_MAX];
-} tt_template_t;
+#define TT_PRESET_OPS_INITIALIZER(get, set, enumerate) \
+{ \
+	(tt_preset_get_control_t *) get, \
+	(tt_preset_set_control_t *) set, \
+	(tt_preset_enum_control_t *) enumerate \
+}
 
-void tt_template_init(tt_template_t *p, tt_context_t *ctx);
-void tt_template_finalize(tt_template_t *p);
-tt_template_t *tt_template_new(tt_context_t *ctx);
-void tt_template_delete(tt_template_t *p);
+typedef struct {
+	const tt_preset_ops_t *ops;
+	struct {
+		int ctrl;
+		ttspl_t val;
+	} controls[TT_PRESET_NUM_CONTROLS];
+} tt_preset_t;
 
-void tt_template_setup(tt_template_t *p);
-ttspl_t tt_template_get_control(tt_template_t *p, tt_template_control_t ctrl);
-void tt_template_set_control(tt_template_t *p, tt_template_control_t ctrl, ttspl_t val);
-tt_template_control_t tt_template_enum_control(tt_template_control_t ctrl);
+void tt_preset_init(tt_preset_t *p, const tt_preset_ops_t *ops);
+void tt_preset_finalize(tt_preset_t *p);
+tt_preset_t *tt_preset_new(const tt_preset_ops_t *ops);
+void tt_preset_delete(tt_preset_t *p);
 
-ttspl_t tt_template_step(tt_template_t *p, ttspl_t spl);
-void tt_template_process(tt_template_t *p, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
+void tt_preset_clear(tt_preset_t *p);
+void tt_preset_save(tt_preset_t *p, void *q);
+void tt_preset_restore(tt_preset_t *p, void *q);
 
-#endif // TT_TEMPLATE_H_
+void tt_preset_serialize(tt_preset_t *p, void *q, tt_preset_set_control_t *serialize);
+void tt_preset_deserialize(tt_preset_t *p, int ctrl, ttspl_t val);
+
+#endif // TT_PRESET_H_

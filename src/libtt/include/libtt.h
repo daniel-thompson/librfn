@@ -35,5 +35,7 @@
 #include "libtt/tonestack.h"
 #include "libtt/cabsim.h"
 #include "libtt/tintamp.h"
+#include "libtt/preset.h"
+#include "libtt/presetio.h"
 
 #endif // TT_LIBTT_H_
