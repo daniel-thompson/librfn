@@ -63,12 +63,29 @@ int main()
 	tt_preset_save(pre2, tt);
 	assert(0 == memcmp(pre, pre2, sizeof(*pre)));
 
+	// clear it and it must be different
+	tt_preset_clear(pre2);
+	assert(0 != memcmp(pre, pre2, sizeof(*pre)));
+
 	// check that we serialize the right number of items
 	int i = 0, j = 0;
 	tt_preset_serialize(pre, &i, serialize_and_count);
 	for (int k=tt_tintamp_enum_control(0); k!=0; k=tt_tintamp_enum_control(k))
 		j++;
 	assert(i == j);
+
+	// serialize to file, deserialize and compare
+	//
+	// Note: this is a bit-exact compare so this will only pass in FPU
+	//       mode if the controls themselves have easily represented values
+	FILE *f;
+	f = fopen("presettest.pre", "w");
+	tt_presetio_serialize(f, pre);
+	fclose(f);
+	f = fopen("presettest.pre", "r");
+	tt_presetio_deserialize(f, pre2);
+	fclose(f);
+	assert(0 == memcmp(pre, pre2, sizeof(*pre)));
 
 	// TIDY
 	tt_preset_delete(pre2);

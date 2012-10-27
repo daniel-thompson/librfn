@@ -43,6 +43,7 @@ tests/tonestacktest
 tests/cabsimtest
 tests/tintamptest
 tests/presettest
+tests/presettest.pre
 tests/benchmark
 
 tests/media/
