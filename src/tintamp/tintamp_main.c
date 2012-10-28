@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include <jack/jack.h>
 
+#include <librfn.h>
 #include <libtt.h>
 
 #include "tintamp_ui.h"
@@ -85,6 +86,9 @@ int main (int argc, char *argv[])
 	const char *server_name = NULL;
 	jack_options_t options = JackNullOption;
 	jack_status_t status;
+	char *settings_fname;
+	FILE *settings_file;
+	tt_preset_t settings;
 
 	gtk_init (&argc, &argv);
 
@@ -153,12 +157,26 @@ int main (int argc, char *argv[])
 		exit (1);
 	}
 
-	/* setup tintamp */
+	// setup tintamp
 	tt_context_init(&ctx->tt_ctx);
 	ctx->tt_ctx.sampling_frequency = jack_get_sample_rate(ctx->client);
 	ctx->tt_ctx.grain_size = jack_get_buffer_size(ctx->client);
 
 	tt_tintamp_init(&ctx->tintamp, &ctx->tt_ctx);
+
+	// load the previous settings from file
+	tt_preset_init(&settings, &tt_preset_ops_tintamp);
+	settings_fname = getenv("HOME");
+	if (settings_fname)
+		settings_fname = xstrdup_join(settings_fname, "/.tintamp.settings");
+	else
+		settings_fname = xstrdup("tintamp.settings");
+	settings_file = fopen(settings_fname, "r");
+	if (settings_file) {
+		tt_presetio_deserialize(settings_file, &settings);
+		tt_preset_restore(&settings, &ctx->tintamp);
+		fclose(settings_file);
+	}
 
 	// tell the gui what it is controlling
 	tintamp_ui_setup(&ctx->tintamp);
@@ -182,6 +200,18 @@ int main (int argc, char *argv[])
 
 	/* the DSP is up and running... enter the main loop */
 	gtk_main ();
+
+	// save current settings
+	settings_file = fopen(settings_fname, "w");
+	free(settings_fname);
+	if (settings_file) {
+		tt_preset_save(&settings, &ctx->tintamp);
+		tt_presetio_serialize(settings_file, &settings);
+		fclose(settings_file);
+	}
+
+	tt_tintamp_finalize(&ctx->tintamp);
+	tt_preset_finalize(&settings);
 
 	jack_client_close (ctx->client);
 
