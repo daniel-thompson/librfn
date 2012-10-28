@@ -17,10 +17,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+char *xstrdup(const char *s);
+
 char *strdup_join(const char *head, const char *tail);
 char *xstrdup_join(const char *head, const char *tail);
-
-
 
 char *strtolower(char *s);
 char *strdup_tolower(const char *s);

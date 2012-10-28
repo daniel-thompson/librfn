@@ -19,7 +19,7 @@
 
 #define lengthof(x) ((sizeof(x) / sizeof(*(x))))
 
-void rf_intrenal_out_of_memory(void);
+void rf_internal_out_of_memory(void);
 
 void *xmalloc(size_t sz);
 

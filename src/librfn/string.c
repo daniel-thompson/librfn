@@ -11,17 +11,24 @@
  * (at your option) any later version.
  */
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "librfn.h"
 
 static char *xtest(char *p)
 {
 	if (!p)
-		rf_internal_out_of_memory(p);
+		rf_internal_out_of_memory();
 
 	return p;
+}
+
+char *xstrdup(const char *s)
+{
+	return xtest(strdup(s));
 }
 
 char *strdup_join(const char *head, const char *tail)
