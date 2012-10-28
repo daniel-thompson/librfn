@@ -17,6 +17,7 @@
 #include <stdio.h>
 
 #include "librfn/enum.h"
+#include "libtt/preset.h"
 
 extern rf_enumtable_t tt_presetio_enumtable[];
 

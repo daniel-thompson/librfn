@@ -36,18 +36,12 @@ void serialize_and_count(void *p, int ctrl, ttspl_t val)
 
 int main()
 {
-	tt_preset_ops_t tintamp_ops = TT_PRESET_OPS_INITIALIZER(
-			tt_tintamp_get_control,
-			tt_tintamp_set_control,
-			tt_tintamp_enum_control
-	);
-
 	// INIT
 	tt_context_t *ctx = tt_context_new();
 	ctx->sampling_frequency = 48000;
 	tt_tintamp_t *tt = tt_tintamp_new(ctx);
-	tt_preset_t *pre = tt_preset_new(&tintamp_ops);
-	tt_preset_t *pre2 = tt_preset_new(&tintamp_ops);
+	tt_preset_t *pre = tt_preset_new(&tt_preset_ops_tintamp);
+	tt_preset_t *pre2 = tt_preset_new(&tt_preset_ops_tintamp);
 
 	// save a preset, print it ('cos it looks nice) and add one to each control
 	tt_preset_save(pre, tt);

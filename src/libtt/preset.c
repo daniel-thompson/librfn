@@ -16,6 +16,13 @@
 #include "libtt.h"
 
 
+const tt_preset_ops_t tt_preset_ops_tintamp = TT_PRESET_OPS_INITIALIZER(
+		tt_tintamp_get_control,
+		tt_tintamp_set_control,
+		tt_tintamp_enum_control
+);
+
+
 void tt_preset_init(tt_preset_t *p, const tt_preset_ops_t *ops)
 {
 	memset(p, 0, sizeof(*p));
