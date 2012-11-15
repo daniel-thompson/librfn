@@ -17,6 +17,7 @@ noinst_PROGRAMS=\
 	tonestacktest \
 	cabsimtest \
 	tintamptest \
+	drummachinetest \
 	presettest
 if BENCHMARK
 noinst_PROGRAMS += benchmark
@@ -71,6 +72,9 @@ cabsimtest_LDADD = $(AM_LDADD)
 
 tintamptest_SOURCES=tintamptest.c
 tintamptest_LDADD = $(AM_LDADD)
+
+drummachinetest_SOURCES=drummachinetest.c
+drummachinetest_LDADD = $(AM_LDADD)
 
 presettest_SOURCES=presettest.c
 presettest_LDADD = $(AM_LDADD)

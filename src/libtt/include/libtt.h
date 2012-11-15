@@ -29,12 +29,15 @@
 #include "libtt/wavreader.h"
 #include "libtt/wavwriter.h"
 
-// high level processing
+// high level amp processing
 #include "libtt/tubestage.h"
 #include "libtt/preamp.h"
 #include "libtt/tonestack.h"
 #include "libtt/cabsim.h"
 #include "libtt/tintamp.h"
+
+// high level utilities
+#include "libtt/drummachine.h"
 #include "libtt/preset.h"
 #include "libtt/presetio.h"
 

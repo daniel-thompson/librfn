@@ -29,7 +29,8 @@ typedef enum {
 	TT_PREAMP_BASE,
 	TT_TONESTACK_BASE,
 	TT_CABSIM_BASE,
-	TT_TINTAMP_BASE
+	TT_DRUMMACHINE_BASE,
+	TT_TINTAMP_BASE,
 } tt_base_t;
 
 #define TT_BASE2TAG(x) ((x) << 16)

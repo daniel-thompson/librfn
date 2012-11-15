@@ -18,5 +18,6 @@ libtt_a_SOURCES=\
 	tonestack.c \
 	cabsim.c \
 	tintamp.c \
+	drummachine.c \
 	preset.c \
 	presetio.c

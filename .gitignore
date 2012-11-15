@@ -42,6 +42,8 @@ tests/preamptest
 tests/tonestacktest
 tests/cabsimtest
 tests/tintamptest
+tests/drummachinetest
+tests/drummachinetest.wav
 tests/presettest
 tests/presettest.pre
 tests/benchmark
