@@ -39,11 +39,7 @@ void tt_tonestack_setup(tt_tonestack_t *ts, tt_tonestack_model_t model)
 	tt_tonestack_set_control(ts, TT_TONESTACK_CONTROL_MODEL, TT_TONESTACK_DIGITAL);
 }
 
-ttspl_t tt_tonestack_get_control(tt_tonestack_t *ts, tt_tonestack_control_t ctrl)
-{
-	assert(ctrl >= TT_TONESTACK_CONTROL_MIN && ctrl < TT_TONESTACK_CONTROL_MAX);
-	return ts->controls[TT_TAG2ID(ctrl)];
-}
+tt_generic_get_control(tonestack, TT_TONESTACK_CONTROL_MIN, TT_TONESTACK_CONTROL_MAX);
 
 void tt_tonestack_set_control(tt_tonestack_t *ts, tt_tonestack_control_t ctrl, ttspl_t val)
 {

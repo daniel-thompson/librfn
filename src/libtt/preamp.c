@@ -45,15 +45,11 @@ void tt_preamp_setup(tt_preamp_t *p, tt_preamp_model_t model)
 	tt_preamp_set_control(p, TT_PREAMP_CONTROL_MODEL, TT_PREAMP_CLEAN);
 }
 
-ttspl_t tt_preamp_get_control(tt_preamp_t *p, tt_preamp_control_t ctrl)
-{
-	assert(ctrl >= TT_PREAMP_CONTROL_MODEL && ctrl < TT_PREAMP_CONTROL_MAX);
-	return p->controls[TT_TAG2ID(ctrl)];
-}
+tt_generic_get_control(preamp, TT_PREAMP_CONTROL_MIN, TT_PREAMP_CONTROL_MAX);
 
 void tt_preamp_set_control(tt_preamp_t *p, tt_preamp_control_t ctrl, ttspl_t val)
 {
-	assert(ctrl >= TT_PREAMP_CONTROL_MODEL && ctrl < TT_PREAMP_CONTROL_MAX);
+	assert(ctrl >= TT_PREAMP_CONTROL_MIN && ctrl < TT_PREAMP_CONTROL_MAX);
 	p->controls[TT_TAG2ID(ctrl)] = val;
 
 	tt_preamp_model_t model = (int) (p->controls[TT_PREAMP_CONTROL_MODEL]);

@@ -62,6 +62,16 @@ void tt_##type##_delete(tt_##type##_t *p) \
 }
 
 /*!
+ * Generate a simple control getter function.
+ */
+#define tt_generic_get_control(type, min, max) \
+ttspl_t tt_##type##_get_control(tt_##type##_t *p, tt_##type##_control_t ctrl) \
+{ \
+	assert(ctrl >= (min) && ctrl < (max)); \
+	return p->controls[TT_TAG2ID(ctrl)]; \
+}
+
+/*!
  * Generate a simple control enumeration function.
  *
  * The generated function is only of use for build blocks that have a single
