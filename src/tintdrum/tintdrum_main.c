@@ -1,0 +1,105 @@
+/*
+ * tintdrum_main.c
+ *
+ * Part of tintamp (the integer amplifier)
+ *
+ * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ */
+
+#include <assert.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <signal.h>
+#include <unistd.h>
+
+#include <librfn.h>
+#include <libtt.h>
+
+typedef struct {
+	tt_context_t tt_ctx;
+	tt_drummachine_t drummachine;
+	tt_pulsewriter_t writer;
+
+	tt_sbuf_t *output_buf;
+} appctx_t;
+
+appctx_t appctx;
+
+void main_loop(appctx_t *ctx)
+{
+	sigset_t sigset;
+
+	// block SIGINT during the main loop
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGINT);
+	(void) sigprocmask(SIG_BLOCK, &sigset, NULL);
+
+	// main loop handler
+	while (0 == sigpending(&sigset) && !sigismember(&sigset, SIGINT)) {
+		tt_drummachine_process(&ctx->drummachine, ctx->output_buf);
+		tt_pulsewriter_process(&ctx->writer, ctx->output_buf);
+	}
+
+	// re-enable SIGINT
+	sigemptyset(&sigset);
+	(void) sigprocmask(SIG_SETMASK, &sigset, NULL);
+	sigaddset(&sigset, SIGINT);
+	(void) sigprocmask(SIG_UNBLOCK, &sigset, NULL);
+}
+
+int main (int argc, char *argv[])
+{
+	appctx_t *ctx = &appctx;
+
+	char *settings_fname;
+	FILE *settings_file;
+	tt_preset_t settings;
+
+	// setup tintamp
+	tt_context_init(&ctx->tt_ctx);
+	tt_drummachine_init(&ctx->drummachine, &ctx->tt_ctx);
+	tt_pulsewriter_init(&ctx->writer, &ctx->tt_ctx);
+
+	tt_drummachine_setup(&ctx->drummachine);
+	tt_pulsewriter_setup(&ctx->writer);
+
+	// load the previous settings from file
+	tt_preset_init(&settings, &tt_preset_ops_drummachine);
+	settings_fname = getenv("HOME");
+	if (settings_fname)
+		settings_fname = xstrdup_join(settings_fname, "/.tindrum.settings");
+	else
+		settings_fname = xstrdup("tintdrum.settings");
+	settings_file = fopen(settings_fname, "r");
+	if (settings_file) {
+		tt_presetio_deserialize(settings_file, &settings);
+		tt_preset_restore(&settings, &ctx->drummachine);
+		fclose(settings_file);
+	}
+
+	ctx->output_buf = tt_sbuf_new(ctx->tt_ctx.grain_size);
+
+	main_loop(ctx);
+
+	// save current settings
+	settings_file = fopen(settings_fname, "w");
+	free(settings_fname);
+	if (settings_file) {
+		tt_preset_save(&settings, &ctx->drummachine);
+		tt_presetio_serialize(settings_file, &settings);
+		fclose(settings_file);
+	}
+
+	tt_drummachine_finalize(&ctx->drummachine);
+	tt_preset_finalize(&settings);
+
+	return 0;
+}

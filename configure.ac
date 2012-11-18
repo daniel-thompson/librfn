@@ -52,6 +52,6 @@ dnl Keep these near the bottom - adding -Werror breaks various tests
 AX_CFLAGS_WARN_ALL
 AX_APPEND_COMPILE_FLAGS([-Werror])
 
-AC_CONFIG_FILES(Makefile src/Makefile src/librfn/Makefile src/libtt/Makefile src/jacklab/Makefile src/jacklua/Makefile src/tintamp/Makefile tests/Makefile)
+AC_CONFIG_FILES(Makefile src/Makefile src/librfn/Makefile src/libtt/Makefile src/jacklab/Makefile src/jacklua/Makefile src/tintamp/Makefile src/tintdrum/Makefile tests/Makefile)
 AC_OUTPUT
 

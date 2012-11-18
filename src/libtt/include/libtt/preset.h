@@ -37,6 +37,7 @@ typedef struct {
 }
 
 extern const tt_preset_ops_t tt_preset_ops_tintamp;
+extern const tt_preset_ops_t tt_preset_ops_drummachine;
 
 typedef struct {
 	const tt_preset_ops_t *ops;
