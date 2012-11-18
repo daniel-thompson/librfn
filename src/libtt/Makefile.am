@@ -8,6 +8,7 @@ libtt_a_SOURCES=\
 	biquad.c \
 	dcblocker.c \
 	firstorder.c \
+	pulsewriter.c \
 	siggen.c \
 	quantizer.c \
 	waveshaper.c \

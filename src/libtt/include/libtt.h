@@ -23,6 +23,7 @@
 #include "libtt/biquad.h"
 #include "libtt/dcblocker.h"
 #include "libtt/firstorder.h"
+#include "libtt/pulsewriter.h"
 #include "libtt/siggen.h"
 #include "libtt/quantizer.h"
 #include "libtt/waveshaper.h"
