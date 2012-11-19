@@ -23,7 +23,9 @@
 #include "libtt/biquad.h"
 #include "libtt/dcblocker.h"
 #include "libtt/firstorder.h"
+#ifdef HAVE_PULSE
 #include "libtt/pulsewriter.h"
+#endif
 #include "libtt/siggen.h"
 #include "libtt/quantizer.h"
 #include "libtt/waveshaper.h"
