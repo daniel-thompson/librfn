@@ -1,5 +1,5 @@
 noinst_LIBRARIES=libtt.a
-libtt_a_CPPFLAGS=-I../librfn/include -Iinclude
+libtt_a_CPPFLAGS=$(PULSE_CFLAGS) -I../librfn/include -Iinclude
 libtt_a_SOURCES=\
 	sample.c \
 	sbuf.c \
@@ -8,7 +8,7 @@ libtt_a_SOURCES=\
 	biquad.c \
 	dcblocker.c \
 	firstorder.c \
-	pulsewriter.c \
+	$(pulsewriter_SOURCES) \
 	siggen.c \
 	quantizer.c \
 	waveshaper.c \
@@ -22,3 +22,7 @@ libtt_a_SOURCES=\
 	drummachine.c \
 	preset.c \
 	presetio.c
+
+if HAVE_PULSE
+pulsewriter_SOURCES = pulsewriter.c
+endif

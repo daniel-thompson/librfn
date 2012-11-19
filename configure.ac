@@ -15,7 +15,7 @@ gl_VALGRIND_TESTS
 AC_SEARCH_LIBS([cos], [m])
 AC_SEARCH_LIBS([clock_gettime], [rt])
 
-dnl Range checking is off by default.
+dnl Benchmarking is off by default (because it takes ages in valgrind).
 AC_ARG_ENABLE([benchmark],
     AS_HELP_STRING([--enable-benchmark], [Enable benchmark test (long runtime under valgrind)]))
 AM_CONDITIONAL(BENCHMARK, [test "x$enable_benchmark" == "xyes"])
@@ -40,13 +40,21 @@ AS_IF([test "x$enable_range_check" == "xyes"], [
 	AC_DEFINE([ENABLE_RANGE_CHECK])
 ])
 
+dnl Jack is mandatory (for now)
 PKG_CHECK_MODULES([JACK], [jack >= 0.9])
+
+dnl Pulseaudio is optional (but tintdrum won't build without it)
+PKG_CHECK_MODULES([PULSE], [libpulse-simple >= 1.1],
+	AM_CONDITIONAL(HAVE_PULSE, true)
+          AC_DEFINE(HAVE_PULSE,1,[Have pulseaudio]),
+	AM_CONDITIONAL(HAVE_PULSE, false))
+
 AS_IF([test "x$with_gtk" != "xno"], [
    PKG_CHECK_MODULES([GTK], [gtk+-3.0 glib-2.0])
 ])
+
+dnl This flag is required for the GTK+ signal autoconnection to work
 AX_APPEND_LINK_FLAGS([-export-dynamic])
-
-
 
 dnl Keep these near the bottom - adding -Werror breaks various tests
 AX_CFLAGS_WARN_ALL
