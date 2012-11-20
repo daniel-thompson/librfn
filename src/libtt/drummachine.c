@@ -94,6 +94,8 @@ void tt_drummachine_init(tt_drummachine_t *dm, tt_context_t *ctx)
 
 	// default values for controls
 	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)] = TTINT(0);
+	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_BPM)] = TTINT(120);
+
 }
 
 void tt_drummachine_finalize(tt_drummachine_t *dm)
@@ -105,16 +107,6 @@ tt_generic_delete(drummachine);
 
 void tt_drummachine_setup(tt_drummachine_t *dm)
 {
-	tt_drummachine_set_control(dm, TT_DRUMMACHINE_CONTROL_BPM, TTINT(120));
-}
-
-tt_generic_get_control(drummachine, TT_DRUMMACHINE_CONTROL_MIN, TT_DRUMMACHINE_CONTROL_MAX);
-
-void tt_drummachine_set_control(tt_drummachine_t *dm, tt_drummachine_control_t ctrl, ttspl_t val)
-{
-	assert(ctrl >= TT_DRUMMACHINE_CONTROL_MIN && ctrl < TT_DRUMMACHINE_CONTROL_MAX);
-	dm->controls[TT_TAG2ID(ctrl)] = val;
-
 	// apply the change
 	ttspl_t beats_per_minute = dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_BPM)];
 	int pattern_index = TTASINT(dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)]);
@@ -133,6 +125,16 @@ void tt_drummachine_set_control(tt_drummachine_t *dm, tt_drummachine_control_t c
 	dm->pattern_start = pattern + TT_DRUMMACHINE_PATTERN;
 	dm->pattern_end = dm->pattern_start + pattern[TT_DRUMMACHINE_PATTERN_LENGTH];
 	dm->pattern_pointer = dm->pattern_start;
+}
+
+tt_generic_get_control(drummachine, TT_DRUMMACHINE_CONTROL_MIN, TT_DRUMMACHINE_CONTROL_MAX);
+
+void tt_drummachine_set_control(tt_drummachine_t *dm, tt_drummachine_control_t ctrl, ttspl_t val)
+{
+	assert(ctrl >= TT_DRUMMACHINE_CONTROL_MIN && ctrl < TT_DRUMMACHINE_CONTROL_MAX);
+	dm->controls[TT_TAG2ID(ctrl)] = val;
+
+	tt_drummachine_setup(dm);
 }
 
 tt_generic_enum_control(drummachine, TT_DRUMMACHINE_CONTROL_MIN, TT_DRUMMACHINE_CONTROL_MAX);
