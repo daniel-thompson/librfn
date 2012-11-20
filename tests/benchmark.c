@@ -14,19 +14,18 @@
 #undef NDEBUG
 
 #include <assert.h>
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <librfn.h>
 #include <libtt.h>
 
-
-int main()
+int main(int argc, char **argv)
 {
-	struct timespec start;
-	struct timespec end;
-	double ratio;
+	int test_cycles = 1;
+
+	if (argc >= 2)
+		test_cycles = strtol(argv[1], (char **) NULL, 10);
 
 	// INIT
 	tt_context_t *ctx = tt_context_new();
@@ -43,50 +42,37 @@ int main()
 	tt_drummachine_setup(dm);
 
 	//
+	// variables needed to gather a benchmark
+	//
+
+	rf_benchmark_t bm;
+	rf_benchmark_results_t results;
+	double us_per_loop = (1000000.0 * ctx->grain_size) / ctx->sampling_frequency;
+	double us;
+
+	//
 	// tintamp benchmark
 	//
 
-	// preheat things a bit (both to get the caches warm and CPU frequency scaling to
-	// kick in)
-	for (int i=0; i<((2*ctx->sampling_frequency)/ctx->grain_size); i++)
-		tt_tintamp_process(tt, inbuf, outbuf);
-
-	// do the benchmark
-	clock_gettime(CLOCK_REALTIME, &start);
-	for (int i=0; i<((20*ctx->sampling_frequency)/ctx->grain_size); i++)
-		tt_tintamp_process(tt, inbuf, outbuf);
-	clock_gettime(CLOCK_REALTIME, &end);
-
-	ratio = (end.tv_nsec - start.tv_nsec);
-	ratio += (end.tv_sec - start.tv_sec) * 1000000000.0;
-	printf("tintamp - Execution time: %.3fms\n", ratio/1000000.0);
-
-	// convert to CPU usage
-	ratio /= 20000000000.0;
-	printf("tintamp - CPU usage:      %5.2f%%\n", ratio * 100.0);
+	for (int i=0; i<test_cycles; i++) {
+		rf_benchmark_init(&bm, 2*1000000);
+		for (us=0; rf_benchmark_running(&bm); us+=us_per_loop)
+			tt_tintamp_process(tt, inbuf, outbuf);
+		rf_benchmark_finalize(&bm, us, &results);
+		rf_benchmark_results_show(&results, "tt_tintamp_process");
+	}
 
 	//
 	// drummachine benchmark
 	//
 
-	// preheat things a bit (both to get the caches warm and CPU frequency scaling to
-	// kick in)
-	for (int i=0; i<((2*ctx->sampling_frequency)/ctx->grain_size); i++)
-		tt_drummachine_process(dm, outbuf);
-
-	// do the benchmark
-	clock_gettime(CLOCK_REALTIME, &start);
-	for (int i=0; i<((20*ctx->sampling_frequency)/ctx->grain_size); i++)
-		tt_drummachine_process(dm, outbuf);
-	clock_gettime(CLOCK_REALTIME, &end);
-
-	ratio = (end.tv_nsec - start.tv_nsec);
-	ratio += (end.tv_sec - start.tv_sec) * 1000000000.0;
-	printf("drummachine - Execution time: %.3fms\n", ratio/1000000.0);
-
-	// convert to CPU usage
-	ratio /= 20000000000.0;
-	printf("drummachine - CPU usage:      %5.2f%%\n", ratio * 100.0);
+	for (int i=0; i<test_cycles; i++) {
+		rf_benchmark_init(&bm, 2*1000000);
+		for (us=0; rf_benchmark_running(&bm); us+=us_per_loop)
+			tt_drummachine_process(dm, outbuf);
+		rf_benchmark_finalize(&bm, us, &results);
+		rf_benchmark_results_show(&results, "tt_drummachine_process");
+	}
 
 	// TIDY
 	tt_drummachine_delete(dm);

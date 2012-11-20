@@ -14,6 +14,7 @@
 #ifndef RF_LIBRFN_H_
 #define RF_LIBRFN_H_
 
+#include "librfn/benchmark.h"
 #include "librfn/enum.h"
 #include "librfn/fixed.h"
 #include "librfn/fuzz.h"
