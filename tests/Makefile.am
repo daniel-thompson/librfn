@@ -1,5 +1,5 @@
-AM_CPPFLAGS = -I../src/librfn/include -I../src/libtt/include
-AM_LDADD = ../src/libtt/libtt.a ../src/librfn/librfn.a
+AM_CPPFLAGS = -I$(top_srcdir)/src/librfn/include -I$(top_srcdir)/src/libtt/include
+AM_LDADD = $(top_builddir)/src/libtt/libtt.a $(top_builddir)/src/librfn/librfn.a
 TESTS_ENVIRONMENT=$(VALGRIND)
 
 noinst_PROGRAMS=\

@@ -1,5 +1,5 @@
 noinst_LIBRARIES=libtt.a
-libtt_a_CPPFLAGS=$(PULSE_CFLAGS) -I../librfn/include -Iinclude
+libtt_a_CPPFLAGS=$(PULSE_CFLAGS) -I$(top_srcdir)/src/librfn/include -I$(srcdir)/include
 libtt_a_SOURCES=\
 	sample.c \
 	sbuf.c \
