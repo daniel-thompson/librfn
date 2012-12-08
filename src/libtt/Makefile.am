@@ -4,7 +4,9 @@ libtt_a_SOURCES=\
 	sample.c \
 	sbuf.c \
 	util.c \
+	$(alsawriter_SOURCES) \
 	analyse.c \
+	audiowriter.c \
 	biquad.c \
 	dcblocker.c \
 	firstorder.c \
@@ -23,6 +25,9 @@ libtt_a_SOURCES=\
 	preset.c \
 	presetio.c
 
+if HAVE_ALSA
+alsawriter_SOURCES = alsawriter.c
+endif
 if HAVE_PULSE
 pulsewriter_SOURCES = pulsewriter.c
 endif

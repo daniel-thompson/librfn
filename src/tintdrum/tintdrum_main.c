@@ -26,7 +26,7 @@
 typedef struct {
 	tt_context_t tt_ctx;
 	tt_drummachine_t drummachine;
-	tt_pulsewriter_t writer;
+	tt_audiowriter_t writer;
 
 	tt_sbuf_t *output_buf;
 } appctx_t;
@@ -45,7 +45,7 @@ void main_loop(appctx_t *ctx)
 	// main loop handler
 	while (0 == sigpending(&sigset) && !sigismember(&sigset, SIGINT)) {
 		tt_drummachine_process(&ctx->drummachine, ctx->output_buf);
-		tt_pulsewriter_process(&ctx->writer, ctx->output_buf);
+		tt_audiowriter_process(&ctx->writer, ctx->output_buf);
 	}
 
 	// re-enable SIGINT
@@ -66,10 +66,10 @@ int main (int argc, char *argv[])
 	// setup tintamp
 	tt_context_init(&ctx->tt_ctx);
 	tt_drummachine_init(&ctx->drummachine, &ctx->tt_ctx);
-	tt_pulsewriter_init(&ctx->writer, &ctx->tt_ctx);
+	tt_audiowriter_init(&ctx->writer, &ctx->tt_ctx);
 
 	tt_drummachine_setup(&ctx->drummachine);
-	tt_pulsewriter_setup(&ctx->writer);
+	tt_audiowriter_setup(&ctx->writer);
 
 	// load the previous settings from file
 	tt_preset_init(&settings, &tt_preset_ops_drummachine);

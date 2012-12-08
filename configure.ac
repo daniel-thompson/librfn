@@ -40,6 +40,12 @@ AS_IF([test "x$enable_range_check" == "xyes"], [
 	AC_DEFINE([ENABLE_RANGE_CHECK])
 ])
 
+dnl ALSA is optional (although the tools prefer pulseaudio if they can get it)
+PKG_CHECK_MODULES([ALSA], [alsa >= 1.0],
+	AM_CONDITIONAL(HAVE_ALSA, true)
+          AC_DEFINE(HAVE_ALSA,1,[Have ALSA]),
+	AM_CONDITIONAL(HAVE_ALSA, false))
+
 dnl Jack is mandatory (for now)
 PKG_CHECK_MODULES([JACK], [jack >= 0.9])
 

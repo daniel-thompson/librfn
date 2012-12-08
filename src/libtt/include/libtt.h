@@ -19,7 +19,11 @@
 #include "libtt/util.h"
 
 // building blocks
+#ifdef HAVE_ALSA
+#include "libtt/alsawriter.h"
+#endif
 #include "libtt/analyse.h"
+#include "libtt/audiowriter.h"
 #include "libtt/biquad.h"
 #include "libtt/dcblocker.h"
 #include "libtt/firstorder.h"
