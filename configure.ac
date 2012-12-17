@@ -13,7 +13,10 @@ AM_PROG_CC_C_O
 AC_PROG_RANLIB
 gl_VALGRIND_TESTS
 AC_SEARCH_LIBS([cos], [m])
-AC_SEARCH_LIBS([clock_gettime], [rt])
+AC_SEARCH_LIBS([clock_gettime], [rt],
+	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, true)
+          AC_DEFINE(HAVE_CLOCK_GETTIME,1,[Have clock_gettime]),
+	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, false))
 
 dnl Benchmarking is off by default (because it takes ages in valgrind).
 AC_ARG_ENABLE([benchmark],
