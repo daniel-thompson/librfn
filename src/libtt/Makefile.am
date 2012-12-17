@@ -10,6 +10,8 @@ libtt_a_SOURCES=\
 	biquad.c \
 	dcblocker.c \
 	firstorder.c \
+	jackcommon.c \
+	jackwriter.c \
 	$(pulsewriter_SOURCES) \
 	siggen.c \
 	quantizer.c \
