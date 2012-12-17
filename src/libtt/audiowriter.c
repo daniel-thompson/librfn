@@ -25,6 +25,22 @@ void tt_audiowriter_init(tt_audiowriter_t *p, tt_context_t *ctx)
 	// when we add jack support this will become runtime/environment selected
 	p->vtable = NULL;
 
+#if 1
+	if (NULL == p->vtable) {
+		static tt_audiowriter_vtable_t jack_vtable = {
+			(void *) &tt_jackwriter_finalize,
+			(void *) &tt_jackwriter_setup,
+			(void *) &tt_audiowriter_null,
+			(void *) &tt_jackwriter_process
+		};
+
+		bool success = tt_jackwriter_init(&p->u.jackwriter, ctx);
+		if (success) {
+			p->vtable = &jack_vtable;
+		}
+	}
+#endif
+
 #ifdef HAVE_PULSE
 	if (NULL == p->vtable) {
 		static tt_audiowriter_vtable_t pulse_vtable = {
