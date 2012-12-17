@@ -43,8 +43,13 @@ char *xstrdup_join(const char *head, const char *tail)
 
 char *strtolower(char *s)
 {
+	// did *you* know that for the code to be (portably) correct you have
+	// to force the argument of tolower (and indeed of any of the ctype.h
+	// functions) into an unsigned type before conversion?
+	//
+	// I didn't until -Wall (and newlib) told me...
 	for (char *p = s; *p != '\0'; p++)
-		*p = tolower(*p);
+		*p = tolower((unsigned char) *p);
 
 	return s;
 }
@@ -62,8 +67,9 @@ char *xstrdup_tolower(const char *s)
 
 char *strtoupper(char *s)
 {
+	// to understand the cast see strtolower...
 	for (char *p = s; *p != '\0'; p++)
-		*p = toupper(*p);
+		*p = toupper((unsigned char) *p);
 
 	return s;
 }
