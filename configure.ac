@@ -18,11 +18,6 @@ AC_SEARCH_LIBS([clock_gettime], [rt],
           AC_DEFINE(HAVE_CLOCK_GETTIME,1,[Have clock_gettime]),
 	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, false))
 
-dnl Benchmarking is off by default (because it takes ages in valgrind).
-AC_ARG_ENABLE([benchmark],
-    AS_HELP_STRING([--enable-benchmark], [Enable benchmark test (long runtime under valgrind)]))
-AM_CONDITIONAL(BENCHMARK, [test "x$enable_benchmark" == "xyes"])
-
 dnl The GTK+ tools are on by default
 AC_ARG_WITH([gtk],
     AS_HELP_STRING([--without-gtk], [Disable GTK+ based tools]))

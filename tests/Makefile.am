@@ -18,10 +18,8 @@ noinst_PROGRAMS=\
 	cabsimtest \
 	tintamptest \
 	drummachinetest \
-	presettest
-if BENCHMARK
-noinst_PROGRAMS += benchmark
-endif
+	presettest \
+	benchmark
 
 #
 # librfn tests
