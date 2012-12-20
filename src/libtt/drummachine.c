@@ -114,12 +114,14 @@ void tt_drummachine_setup(tt_drummachine_t *dm)
 		pattern_index = 0;
 	uint8_t *pattern = patterns[pattern_index];
 
+	// We struggle to maintain numeric accuracy here. The trick to maintain
+	// accuracy is knowing that TTRAISE(TLDIV(...)) does not truncate to 32 bits
 	ttspl_t beats_per_second = TTDINT(beats_per_minute, 60);
-	ttspl_t samples_per_second = dm->ctx->sampling_frequency / 2;
-	ttspl_t samples_per_beat = TLDIV(TLINT(samples_per_second), beats_per_second);
-	ttspl_t samples_per_division = TTDINT(samples_per_beat, pattern[TT_DRUMMACHINE_DIVISIONS_PER_BEAT]);
+	unsigned int samples_per_second = dm->ctx->sampling_frequency / 2;
+	tlspl_t samples_per_beat = TTRAISE(TLDIV(TLINT(samples_per_second), beats_per_second));
+	tlspl_t samples_per_division = TLDINT(samples_per_beat, pattern[TT_DRUMMACHINE_DIVISIONS_PER_BEAT]);
 
-	dm->division_reload = TTASINT(samples_per_division);
+	dm->division_reload = TLASINT(samples_per_division);
 	dm->division_counter = 0;
 
 	dm->pattern_start = pattern + TT_DRUMMACHINE_PATTERN;

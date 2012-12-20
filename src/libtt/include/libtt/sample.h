@@ -54,13 +54,15 @@ tlspl_t tlvalidate(tlspl_t spl, const char *fname, int lineno);
 #define TTFLOAT(a) (a)               		//!< Conversion from float
 #define TTASFLOAT(a) (a)              		//!< Conversion to float
 #define TTINT(a) ((ttspl_t) (a))		//!< Conversion from integer
-#define TTASINT(a) ((uint32_t) (a))		//!< Conversion to integer
+#define TTASINT(a) ((int32_t) (a))		//!< Conversion to integer
 #define TTS16LE(a) ((a) / 32767.0)		//!< Conversion from S16LE
 #define TTASS16LE(a) ((a) * 32767.0)		//!< Conversion to S16LE
 #define TTS32LE(a) ((a) / 2147483647.0)		//!< Conversion from S32LE
 #define TTASS32LE(a) ((a) * 2147483647.0)	//!< Conversion to S32LE
 
-#define TTRAISE(x) TLVALIDATE(TTVALIDATE(x))				//!< Conversion to long precision
+// The use of TLVALIDATE on the input is correct (it is possible to directly
+// raise the output of TLDIV() without truncating x to 32-bit)
+#define TTRAISE(x) TLVALIDATE(TLVALIDATE(x))	//!< Conversion to long precision
 
 #define TTADD(a, b) TTVALIDATE(TTVALIDATE(a) + TTVALIDATE(b))			//!< Add operation (normal precision)
 #define TTSUB(a, b) TTVALIDATE(TTVALIDATE(a) - TTVALIDATE(b))			//!< Subtract operation (normal precision)
@@ -94,13 +96,16 @@ tlspl_t tlvalidate(tlspl_t spl, const char *fname, int lineno);
 
 #define TLFLOAT(a) (a)               		//!< Conversion from float
 #define TLINT(a) ((ttspl_t) (a))		//!< Conversion from integer
+#define TLASINT(a) ((int32_t) (a))		//!< Conversion to integer
 
 #define TLLOWER(x) TTVALIDATE(TLVALIDATE(x))				//!< Conversion to normal precision
 
 #define TLADD(a, b) TLVALIDATE(TLVALIDATE(a) + TLVALIDATE(b))			//!< Add operation (long precision)
 #define TLSUB(a, b) TLVALIDATE(TLVALIDATE(a) - TLVALIDATE(b))			//!< Subtract operation (long precision)
 #define TLMINT(a, b) TLVALIDATE(TLVALIDATE(a) * (b))
-#define TLDIV(a, b) TTVALIDATE(TLVALIDATE(a) / TTVALIDATE(b))			//!< Divide. \arg b is normal precision
+// The use of TLVALIDATE on the result is correct (it is possible to directly
+// raise the output of TLDIV() without truncating x to 32-bit)
+#define TLDIV(a, b) TLVALIDATE(TLVALIDATE(a) / TTVALIDATE(b))			//!< Divide. \arg b is normal precision
 #define TLDINT(a, b) TLVALIDATE(TLVALIDATE(a) / (b))		//!< Divide long precision number by integer
 						//   \return Long precision result
 
@@ -164,6 +169,7 @@ typedef int64_t tlspl_t;
 
 #define TLFLOAT(a) ((tlspl_t) ((a) * (float) (1ll << TLQ))) //!< Conversion from float
 #define TLINT(a) ((tlspl_t) (a) << TLQ)		//!< Conversion from integer
+#define TLASINT(a) ((int32_t) ((a) >> TLQ))	//!< Conversion to integer
 
 #define TLLOWER(x) ((ttspl_t) (x >> (TLQ - TTQ))) //!< Conversion to normal precision
 #define TLERROR(x) ((x) & ((1 << (TLQ-TTQ)) - 1)) //!< Lost precision due to truncation
