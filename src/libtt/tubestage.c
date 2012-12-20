@@ -84,7 +84,7 @@ void tt_tubestage_setup(tt_tubestage_t *ts,
 	ts->gain = TTDB2LINEAR(TTINT(dbgain));
 
 	ts->Rk = Rk;
-	ts->predivide = TTDINT(TTINT(ts->Rk), ts->Rp);
+	ts->predivide = TLLOWER(TLDINT(TLINT(ts->Rk), ts->Rp));
 
 	tt_biquad_lowpass(&ts->input_filter, input_cutoff, TTFLOAT(0.7));
 	tt_biquad_lowpass(&ts->feedback_filter, feedback_cutoff, TTFLOAT(0.7));
