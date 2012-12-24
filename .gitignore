@@ -28,6 +28,7 @@ src/jacklua/tintamp_jacklua
 src/tintamp/tintamp_gresource.c
 src/tintamp/tintamp
 src/tintdrum/tintdrum
+tests/bitopstest
 tests/enumtest
 tests/fuzztest
 tests/wavheadertest

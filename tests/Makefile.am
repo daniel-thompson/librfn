@@ -3,6 +3,7 @@ AM_LDADD = $(top_builddir)/src/libtt/libtt.a $(top_builddir)/src/librfn/librfn.a
 TESTS_ENVIRONMENT=$(VALGRIND)
 
 noinst_PROGRAMS=\
+	bitopstest \
 	enumtest \
 	fuzztest \
 	wavheadertest \
@@ -24,6 +25,9 @@ noinst_PROGRAMS=\
 #
 # librfn tests
 #
+
+bitopstest_SOURCES=bitopstest.c
+bitopstest_LDADD = $(AM_LDADD)
 
 enumtest_SOURCES=enumtest.c
 enumtest_LDADD = $(AM_LDADD)
