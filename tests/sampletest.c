@@ -22,6 +22,15 @@
 
 int main()
 {
+#define F(function, expression, input) \
+{ \
+	ttspl_t tt ## function = expression; \
+	float f ## function = TTASFLOAT(tt ## function); \
+	float expected = function(input); \
+	printf("%s(%9.6f) = %9.6f (expected %9.6f)\n", #function, input, f ## function, expected); \
+	assert(fuzzcmpf(f ## function, expected, 1.001)); \
+}
+
 #define T(name, expression, expected) \
 { \
 	ttspl_t tt ## name = expression; \
@@ -71,8 +80,13 @@ int main()
 	T(one, TTABS(TTINT(-1)), 1.0); // TTABS
 	T(fcos, TTCOS(TTPI), -1.0); // TTCOS
 	T(fexp, TTEXP(TTINT(2)), 7.389); // TTEXP
-	T(flog2, TTLOG2(TTINT(16)), 4.0); // TTLOG2
-	T(flog10, TTLOG10(TTINT(1000)), 3.0); // TTLOG10
+	T(filog2, TTLOG2(TTINT(16)), 4.0); // TTLOG2
+	F(log2f, TTLOG2(TTFLOAT(2.125)), 2.125);
+	F(log2f, TTLOG2(TTFLOAT(6.125)), 6.125);
+	F(log2f, TTLOG2(TTFLOAT(0.01)), 0.01);
+	F(log2f, TTLOG2(TTFLOAT(0.125)), 0.125);
+	T(filog10, TTLOG10(TTINT(1000)), 3.0); // TTLOG10
+	T(flog10, TTLOG10(TTFLOAT(10.05)), log10f(10.05)); // TTLOG10
 	T(fpow, TTPOW(TTINT(2), TTINT(4)), 16.0); // TTPOW
 	T(fsin, TTSIN(TTPI/2), 1.0); // TTSIN
 	T(fsqrt, TTSQRT(TTINT(49)), 7.0); // TTSQRT
@@ -109,8 +123,6 @@ int main()
 	float quarter = TTASFLOAT(TTDB2LINEAR(TTINT(-12)));
 	printf("quarter = %9.6f\n", quarter);
 	assert(fuzzcmpf(0.25, quarter, 1.01));
-
-
 
 	return 0;
 }

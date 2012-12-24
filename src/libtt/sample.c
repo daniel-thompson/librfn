@@ -83,11 +83,66 @@ ttspl_t ttexp(ttspl_t x)
 
 ttspl_t ttlog2(ttspl_t x)
 {
-	return TTFLOAT(log2f(TTASFLOAT(x)));
+	int z;
+	ttspl_t a, c, m, y;
+
+	assert(x);
+
+	//
+	// Reminder: This function is part of the the fixed point
+	//           implementation. This means we operate on ttspl_t
+	//           *without* the macros when this is convenient.
+	//
+
+	// Decompose into integer part and fractional part using the summation
+	// identity (an identity which remains correct when c is -ve):
+	//   logB(a+c) = logB(a) + logB(1 + (c/a))
+
+	// find the integer part of the result by separating the top bit from
+	// everything else
+	z = ilog2(x);
+	a = (1 << z);
+	c = x - a;
+
+	// final derivation of the above identity (from now on we'll be working
+	// out log2(a) + log2(m)
+	m = TTADD(TTINT(1), TLDIV(TTRAISE(c), a));
+
+	// calculating the integer part is easy in base 2. y is currently an
+	// integer since it has no fractional part but it does not need to
+	// be shifted by TTQ since this is a side effect of the shifts in
+	// the bit generating loop.
+	y = z - TTQ;
+
+	// now generate each remaining bit
+	for (int i=0; i<TTQ; i++) {
+		assert(m >= TTINT(1) && m < TTINT(2));
+
+		m = TTMAL(m, m);
+		y <<= 1;
+
+		if (m > TTINT(2)) {
+			m = TTDINT(m, 2);
+			y++;
+		}
+	}
+
+	return y;
 }
 
 ttspl_t ttlog10(ttspl_t x)
 {
+	const ttspl_t log2_of_10 = 3483294;
+	const ttspl_t log10_of_quantization_error = -6628709;
+
+#if 0
+	printf("log2_of_10:  %d  (local copy is %d)\n",
+			TTFLOAT(log2(10.0)), log2_of_10);
+	printf("log10_of_quantization_error: %d  (local copy is %d)\n",
+			TTFLOAT(log10(1.0 / (1 << (TTQ+1)))),
+			log10_of_quantization_error);
+#endif
+
 	// when the argument is 0 the logarithm is infinite. that can't be
 	// represented in fixed point and will cause us some numeric
 	// problems. we solve this by assuming the first bit removed
@@ -96,9 +151,9 @@ ttspl_t ttlog10(ttspl_t x)
 	// One consequence of this is that converting silence into
 	// decibels reports ~-126dB.
 	if (0 == x)
-		return TTFLOAT(log10(1.0 / (1 << (TTQ+1))));
+		return log10_of_quantization_error;
 
-	return TTFLOAT(log10(TTASFLOAT(x)));
+	return TLDIV(TTRAISE(ttlog2(x)), log2_of_10);
 }
 
 ttspl_t ttpow(ttspl_t a, ttspl_t b)
@@ -139,7 +194,6 @@ ttspl_t ttsqrt(ttspl_t x)
 
 	return root;
 	//return TTFLOAT(sqrtf(TTASFLOAT(x)));
-
 }
 
 #endif // !HAVE_FPU
