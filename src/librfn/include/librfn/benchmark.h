@@ -35,9 +35,23 @@ typedef struct {
  */
 uint64_t rf_benchmark_time_now();
 
+/*!
+ * Initialize a benchmark structure.
+ *
+ * \arg runtime Minimum time (in microseconds) that the benchmark must run for.
+ */
 void rf_benchmark_init(rf_benchmark_t *b, uint64_t runtime);
+
+/*!
+ * Test whether the benchmark has completed it's minimum runtime.
+ */
 bool rf_benchmark_running(rf_benchmark_t *b);
+
+/*!
+ * Generate the benchmark results by comparing the actual runtime to the nominal runtime.
+ */
 void rf_benchmark_finalize(rf_benchmark_t *b, uint64_t nominal, rf_benchmark_results_t *r);
+
 void rf_benchmark_results_show(rf_benchmark_results_t *r, const char *tag);
 
 #endif // RF_BENCHMARK_H_
