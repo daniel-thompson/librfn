@@ -26,7 +26,7 @@ typedef enum {
 typedef struct {
 	tt_context_t *ctx;
 
-	ttspl_t controls[TT_TEMPLATE_CONTROL_MAX];
+	ttspl_t controls[TT_TAG2ID(TT_TEMPLATE_CONTROL_MAX)];
 } tt_template_t;
 
 void tt_template_init(tt_template_t *p, tt_context_t *ctx);

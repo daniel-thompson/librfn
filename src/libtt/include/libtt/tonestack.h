@@ -34,7 +34,7 @@ typedef enum {
 typedef struct {
 	tt_context_t *ctx;
 
-	ttspl_t controls[TT_TONESTACK_CONTROL_MAX];
+	ttspl_t controls[TT_TAG2ID(TT_TONESTACK_CONTROL_MAX)];
 
 	tt_biquad_t trebleshelf;
 	tt_biquad_t bassshelf;

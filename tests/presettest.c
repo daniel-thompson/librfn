@@ -25,7 +25,13 @@ void serialize_and_increment(void *p, int ctrl, ttspl_t val)
 {
 	tt_tintamp_t *tt = p;
 
-	tt_tintamp_set_control(tt, ctrl, TTADD(val, TTINT(1)));
+	// TODO - only one preamp model is supported at the moment and
+	//        to attempt to add one to the model violates the function
+	//        preconditions
+	if (ctrl == TT_PREAMP_CONTROL_MODEL)
+		val = TTSUBI(val, 1);
+
+	tt_tintamp_set_control(tt, ctrl, TTADDI(val, 1));
 }
 
 void serialize_and_count(void *p, int ctrl, ttspl_t val)

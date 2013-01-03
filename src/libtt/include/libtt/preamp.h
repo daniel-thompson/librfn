@@ -30,7 +30,7 @@ typedef enum {
 typedef struct {
 	tt_context_t *ctx;
 
-	ttspl_t controls[TT_PREAMP_CONTROL_MAX];
+	ttspl_t controls[TT_TAG2ID(TT_PREAMP_CONTROL_MAX)];
 
 	unsigned int num_stages;
 	tt_tubestage_t stages[3];

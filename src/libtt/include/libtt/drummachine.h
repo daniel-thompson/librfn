@@ -27,7 +27,7 @@ typedef enum {
 typedef struct {
 	tt_context_t *ctx;
 
-	ttspl_t controls[TT_DRUMMACHINE_CONTROL_MAX];
+	ttspl_t controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_MAX)];
 
 	bool cold_sample; //!< True for "cold" samples (0 into the resampler)
 	tt_biquad_t resampler;

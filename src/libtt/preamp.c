@@ -52,7 +52,7 @@ void tt_preamp_set_control(tt_preamp_t *p, tt_preamp_control_t ctrl, ttspl_t val
 	assert(ctrl >= TT_PREAMP_CONTROL_MIN && ctrl < TT_PREAMP_CONTROL_MAX);
 	p->controls[TT_TAG2ID(ctrl)] = val;
 
-	tt_preamp_model_t model = (int) (p->controls[TT_PREAMP_CONTROL_MODEL]);
+	tt_preamp_model_t model = (int) (p->controls[TT_TAG2ID(TT_PREAMP_CONTROL_MODEL)]);
 	int gain = TTASINT(p->controls[TT_TAG2ID(TT_PREAMP_CONTROL_GAIN)]);
 
 	assert(model == TT_PREAMP_CLEAN); // only one model exists at the moment
