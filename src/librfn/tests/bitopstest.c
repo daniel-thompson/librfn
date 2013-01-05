@@ -18,7 +18,6 @@
 #include <stdlib.h>
 
 #include <librfn.h>
-#include <libtt.h>
 
 int main()
 {

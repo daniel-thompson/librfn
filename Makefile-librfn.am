@@ -1,0 +1,70 @@
+#
+# Makefile-librfn.am
+#
+# Part of tintamp (the integer amplifier)
+#
+# Copyright (C) 2012, 2013 Daniel Thompson <daniel@redfelineninja.org.uk> 
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+
+
+#
+# librfn.a
+#
+
+noinst_LIBRARIES += src/librfn/librfn.a
+
+LIBRFN_CFLAGS = -I$(top_srcdir)/src/librfn/include
+LIBRFN_LIBS = $(top_builddir)/src/librfn/librfn.a
+
+src_librfn_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
+
+src_librfn_librfn_a_SOURCES = \
+	$(src_librfn_benchmark_sources) \
+	src/librfn/bitops.c \
+	src/librfn/enum.c \
+	src/librfn/fuzz.c \
+	src/librfn/hex.c \
+	src/librfn/pack.c \
+	src/librfn/string.c \
+	src/librfn/wavheader.c \
+	src/librfn/util.c
+
+if HAVE_CLOCK_GETTIME
+src_librfn_benchmark_sources = \
+	src/librfn/benchmark.c
+endif
+
+
+#
+# librfn test suite
+#
+
+src_librfn_tests = \
+	src/librfn/tests/bitopstest \
+	src/librfn/tests/enumtest \
+	src/librfn/tests/fuzztest \
+	src/librfn/tests/wavheadertest
+
+noinst_PROGRAMS += $(src_librfn_tests)
+TESTS += $(src_librfn_tests)
+
+src_librfn_tests_bitopstest_SOURCES = src/librfn/tests/bitopstest.c
+src_librfn_tests_bitopstest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_bitopstest_LDADD = $(LIBRFN_LIBS)
+
+src_librfn_tests_enumtest_SOURCES = src/librfn/tests/enumtest.c
+src_librfn_tests_enumtest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_enumtest_LDADD = $(LIBRFN_LIBS)
+
+src_librfn_tests_fuzztest_SOURCES = src/librfn/tests/fuzztest.c
+src_librfn_tests_fuzztest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_fuzztest_LDADD = $(LIBRFN_LIBS)
+
+src_librfn_tests_wavheadertest_SOURCES = src/librfn/tests/wavheadertest.c
+src_librfn_tests_wavheadertest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_wavheadertest_LDADD = $(LIBRFN_LIBS)
