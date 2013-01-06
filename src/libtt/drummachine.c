@@ -25,7 +25,7 @@
 #define TT_DRUMMACHINE_DIVISIONS_PER_BEAT 1
 #define TT_DRUMMACHINE_PATTERN 2
 
-#define TT_DRUMMACHINE_VOICE_LENGTH lengthof(kick_Dry_b)
+#define TT_DRUMMACHINE_VOICE_LENGTH ((int) lengthof(kick_Dry_b))
 
 uint8_t basic[] = {
 	4,					// length of pattern
