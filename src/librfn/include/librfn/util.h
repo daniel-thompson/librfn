@@ -14,10 +14,23 @@
 #ifndef RF_UTIL_H_
 #define RF_UTIL_H_
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdlib.h>
 
 #define lengthof(x) ((sizeof(x) / sizeof(*(x))))
+
+#ifdef VERBOSE
+#define verify(s) \
+	do { \
+		printf("Checking %s ... ", #s); \
+		assert(s); \
+		printf("OK\n"); \
+	} while (0)
+
+#else
+#define verify(x) assert(x)
+#endif
 
 void rf_internal_out_of_memory(void);
 
