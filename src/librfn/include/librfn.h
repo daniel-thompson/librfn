@@ -20,6 +20,7 @@
 #include "librfn/fixed.h"
 #include "librfn/fuzz.h"
 #include "librfn/hex.h"
+#include "librfn/list.h"
 #include "librfn/pack.h"
 #include "librfn/protothreads.h"
 #include "librfn/string.h"
