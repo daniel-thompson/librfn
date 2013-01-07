@@ -16,8 +16,22 @@
 
 #include <assert.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdlib.h>
 
+/**
+ * This macro is similar to the Linux kernel's container_of() macro but
+ * doesn't use the GNU extension needed to assure type safety.
+ */
+#define containerof(ptr, type, member) \
+	((type *) ((char *) ptr) - offsetof(type, member))
+
+/**
+ * Determine the number of elements in a statically allocated array.
+ *
+ * There's no compile-time checks to this macro. Abuse it and you'll just
+ * get the wrong result!
+ */
 #define lengthof(x) ((sizeof(x) / sizeof(*(x))))
 
 #ifdef VERBOSE
