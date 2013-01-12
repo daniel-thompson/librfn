@@ -17,6 +17,7 @@
 #include "librfn/benchmark.h"
 #include "librfn/bitops.h"
 #include "librfn/enum.h"
+#include "librfn/fibre.h"
 #include "librfn/fixed.h"
 #include "librfn/fuzz.h"
 #include "librfn/hex.h"

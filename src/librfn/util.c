@@ -16,6 +16,11 @@
 
 #include "librfn.h"
 
+int32_t cyclecmp32(uint32_t a, uint32_t b)
+{
+	return (int) (a - b);
+}
+
 /*! Out of memory hook.
  *
  * \todo Currently out_of_memory cannot actually be hooked

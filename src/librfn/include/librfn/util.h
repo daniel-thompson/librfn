@@ -18,6 +18,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 /**
  * This macro is similar to the Linux kernel's container_of() macro but
@@ -45,6 +46,13 @@
 #else
 #define verify(x) assert(x)
 #endif
+
+/*!
+ * @returns >1 if a > b
+ * @returns 0 if a == b
+ * @returns <1 if a < b
+ */
+int32_t cyclecmp32(uint32_t a, uint32_t b);
 
 void rf_internal_out_of_memory(void);
 

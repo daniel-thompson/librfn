@@ -1,0 +1,221 @@
+/*
+ * fibre.c
+ *
+ * Part of librfn (a general utility library from redfelineninja.org.uk)
+ *
+ * Copyright (C) 2013 Daniel Thompson <daniel@redfelineninja.org.uk>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ */
+
+#include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "librfn/atomic.h"
+#include "librfn/fibre.h"
+#include "librfn/list.h"
+#include "librfn/messageq.h"
+#include "librfn/util.h"
+
+static fibre_t *atomic_runq_buf[8];
+
+static struct {
+	fibre_t *current;
+	bool check_duetime;
+	uint32_t now;
+
+	list_t runq;
+	messageq_t atomic_runq;
+	list_t timerq;
+} kernel = {
+	.runq = LIST_VAR_INIT,
+	.atomic_runq = MESSAGEQ_VAR_INIT(
+			atomic_runq_buf,
+			sizeof(atomic_runq_buf), sizeof(atomic_runq_buf[0])),
+	.timerq = LIST_VAR_INIT
+};
+
+static void handle_atomic_runq()
+{
+	fibre_t *f;
+
+	while (NULL != (f = messageq_receive(&kernel.atomic_runq))) {
+		fibre_run(f);
+		messageq_release(&kernel.atomic_runq, f);
+	}
+}
+
+static void handle_timerq()
+{
+	list_iterator_t iter;
+
+	list_node_t *node = list_iterate(&kernel.timerq, &iter);
+	fibre_t *timeout_fibre = containerof(node, fibre_t, link);
+	while (NULL != node &&
+			cyclecmp32(timeout_fibre->duetime, kernel.now) <= 0) {
+		node = list_iterator_remove(&iter);
+		list_insert(&kernel.runq, &timeout_fibre->link);
+		timeout_fibre = containerof(node, fibre_t, link);
+	}
+
+}
+
+static fibre_t *get_next_task()
+{
+	list_node_t *node = list_extract(&kernel.runq);
+	if (!node)
+		return NULL;
+
+	return containerof(node, fibre_t, link);
+}
+
+static void update_current_state(fibre_state_t state)
+{
+	kernel.current->state = state;
+
+	switch (state) {
+	case FIBRE_STATE_YIELDED:
+		fibre_run(kernel.current);
+		break;
+	case FIBRE_STATE_EXITED:
+		PT_INIT(&kernel.current->priv);
+		break;
+	case FIBRE_STATE_WAITING:
+		break;
+	default:
+		assert(0);
+		break;
+	}
+
+	kernel.current = NULL;
+}
+
+static uint32_t get_next_wakeup()
+{
+	// TODO: list_peek()
+	list_node_t *node_runq = kernel.runq.head;
+	if (node_runq)
+		return kernel.now;
+
+	// TODO: list_peek()
+	list_node_t *node_timerq = kernel.timerq.head;
+	if (!node_timerq) {
+		return kernel.now + FIBRE_UNBOUNDED_SLEEP;
+	}
+
+	fibre_t *fibre = containerof(node_timerq, fibre_t, link);
+	return fibre->duetime;
+}
+
+static int duetime_cmp(list_node_t *n1, list_node_t *n2)
+{
+	fibre_t *f1 = containerof(n1, fibre_t, link);
+	fibre_t *f2 = containerof(n2, fibre_t, link);
+
+	return f1->duetime - f2->duetime;
+}
+
+fibre_t *fibre_self()
+{
+	return kernel.current;
+}
+
+uint32_t fibre_schedule_next(uint32_t time)
+{
+	kernel.now = time;
+
+	handle_atomic_runq();
+	handle_timerq();
+
+	kernel.current = get_next_task();
+	if (kernel.current) {
+		fibre_state_t state = kernel.current->fn(kernel.current);
+		handle_atomic_runq();
+		update_current_state(state);
+	}
+
+	return get_next_wakeup();
+}
+
+void fibre_init(fibre_t *f, fibre_entrypoint_t *fn)
+{
+	memset(f, 0, sizeof(*f));
+
+	f->fn = fn;
+	// TODO: list_node_init
+	//list_node_init(&f->link);
+}
+
+void fibre_run(fibre_t *f)
+{
+	handle_atomic_runq();
+
+	if (!list_contains(&kernel.runq, &f->link, NULL)) {
+		list_insert(&kernel.runq, &f->link);
+		(void) list_remove(&kernel.timerq, &f->link);
+	}
+}
+
+bool fibre_run_atomic(fibre_t *f)
+{
+	fibre_t *queued_fibre = messageq_claim(&kernel.atomic_runq);
+	if (!queued_fibre)
+		return false;
+
+	queued_fibre = f;
+	messageq_send(&kernel.atomic_runq, queued_fibre);
+	return true;
+}
+
+bool fibre_kill(fibre_t *f)
+{
+	handle_atomic_runq();
+	list_remove(&kernel.runq, &f->link);
+	list_remove(&kernel.timerq, &f->link);
+
+	return false;
+}
+
+bool fibre_timeout(uint32_t duetime)
+{
+	if (cyclecmp32(duetime, kernel.now) <= 0)
+		return true;
+
+	kernel.current->duetime = duetime;
+	if (!list_contains(&kernel.runq, &kernel.current->link, NULL))
+		list_insert_sorted(&kernel.timerq, &kernel.current->link, duetime_cmp);
+	return false;
+}
+
+void fibre_eventq_init(fibre_eventq_t *evtq, fibre_entrypoint_t *fn,
+		void *basep, size_t base_len, size_t msg_len)
+{
+	fibre_init(&evtq->fibre, fn);
+	messageq_init(&evtq->eventq, basep, base_len, msg_len);
+}
+
+void *fibre_eventq_claim(fibre_eventq_t *evtq)
+{
+	return messageq_claim(&evtq->eventq);
+}
+
+bool fibre_eventq_send(fibre_eventq_t *evtq, void *evtp)
+{
+	messageq_send(&evtq->eventq, evtp);
+	return fibre_run_atomic(&evtq->fibre);
+}
+
+void *fibre_eventq_receive(fibre_eventq_t *evtq)
+{
+	return messageq_receive(&evtq->eventq);
+}
+
+void fibre_eventq_release(fibre_eventq_t *evtq, void *evtp)
+{
+	messageq_release(&evtq->eventq, evtp);
+}

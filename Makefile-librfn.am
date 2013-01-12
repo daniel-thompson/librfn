@@ -27,6 +27,7 @@ src_librfn_librfn_a_SOURCES = \
 	$(src_librfn_benchmark_sources) \
 	src/librfn/bitops.c \
 	src/librfn/enum.c \
+	src/librfn/fibre.c \
 	src/librfn/fuzz.c \
 	src/librfn/hex.c \
 	src/librfn/list.c \
@@ -57,6 +58,11 @@ src_librfn_tests += src/librfn/tests/enumtest
 src_librfn_tests_enumtest_SOURCES = src/librfn/tests/enumtest.c
 src_librfn_tests_enumtest_CFLAGS = $(LIBRFN_CFLAGS)
 src_librfn_tests_enumtest_LDADD = $(LIBRFN_LIBS)
+
+src_librfn_tests += src/librfn/tests/fibretest
+src_librfn_tests_fibretest_SOURCES = src/librfn/tests/fibretest.c
+src_librfn_tests_fibretest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_fibretest_LDADD = $(LIBRFN_LIBS)
 
 src_librfn_tests += src/librfn/tests/fuzztest
 src_librfn_tests_fuzztest_SOURCES = src/librfn/tests/fuzztest.c

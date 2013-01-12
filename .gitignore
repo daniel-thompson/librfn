@@ -26,6 +26,7 @@ missing
 
 src/librfn/tests/bitopstest
 src/librfn/tests/enumtest
+src/librfn/tests/fibretest
 src/librfn/tests/fuzztest
 src/librfn/tests/listtest
 src/librfn/tests/messageqtest
