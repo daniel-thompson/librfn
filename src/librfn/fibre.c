@@ -42,10 +42,10 @@ static struct {
 
 static void handle_atomic_runq()
 {
-	fibre_t *f;
+	fibre_t **f;
 
 	while (NULL != (f = messageq_receive(&kernel.atomic_runq))) {
-		fibre_run(f);
+		fibre_run(*f);
 		messageq_release(&kernel.atomic_runq, f);
 	}
 }
@@ -163,11 +163,11 @@ void fibre_run(fibre_t *f)
 
 bool fibre_run_atomic(fibre_t *f)
 {
-	fibre_t *queued_fibre = messageq_claim(&kernel.atomic_runq);
+	fibre_t **queued_fibre = messageq_claim(&kernel.atomic_runq);
 	if (!queued_fibre)
 		return false;
 
-	queued_fibre = f;
+	*queued_fibre = f;
 	messageq_send(&kernel.atomic_runq, queued_fibre);
 	return true;
 }
