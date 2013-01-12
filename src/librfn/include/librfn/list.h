@@ -20,11 +20,13 @@
 typedef struct list_node {
 	struct list_node *next;
 } list_node_t;
+#define LIST_NODE_VAR_INIT { 0 }
 
 typedef struct {
 	list_node_t *head;
 	list_node_t *tail;
 } list_t;
+#define LIST_VAR_INIT { 0 }
 
 typedef struct {
 	list_node_t **prevnext;
