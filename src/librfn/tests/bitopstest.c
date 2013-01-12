@@ -1,7 +1,7 @@
 /*
  * bitopstest.c
  *
- * Part of libtt (the integer amplifier library)
+ * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
  * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk>
  *

@@ -28,23 +28,21 @@ int main()
 	uint8_t header[128];
 
 	memset(&in, 0, sizeof(in));
-	assert(0 != rf_wavheader_validate(&in));
+	verify(0 != rf_wavheader_validate(&in));
 
 	rf_wavheader_init(&in, 44100, 1, RF_WAVHEADER_FLOAT);
-	assert(0 == rf_wavheader_validate(&in));
+	verify(0 == rf_wavheader_validate(&in));
 
 	s = rf_wavheader_tostring(&in);
-	printf("%s\n", s);
+	//printf("%s\n", s);
 	free(s);
 
 	insz = rf_wavheader_encode(&in, header, sizeof(header));
-	printf("Encoded header size %d\n", insz);
-	assert(insz < sizeof(header));
+	verify(insz < sizeof(header));
 
 	outsz = rf_wavheader_decode(header, insz, &out);
-	printf("Decoded header size %d\n", outsz);
-	assert(insz == outsz);
-	assert(0 == memcmp(&in, &out, sizeof(in)));
+	verify(insz == outsz);
+	verify(0 == memcmp(&in, &out, sizeof(in)));
 
 	return 0;
 }
