@@ -24,7 +24,7 @@
  * doesn't use the GNU extension needed to assure type safety.
  */
 #define containerof(ptr, type, member) \
-	((type *) ((char *) ptr) - offsetof(type, member))
+	((type *) (((char *) ptr) - offsetof(type, member)))
 
 /**
  * Determine the number of elements in a statically allocated array.

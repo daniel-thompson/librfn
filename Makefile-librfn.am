@@ -77,5 +77,10 @@ src_librfn_tests_wavheadertest_SOURCES = src/librfn/tests/wavheadertest.c
 src_librfn_tests_wavheadertest_CFLAGS = $(LIBRFN_CFLAGS)
 src_librfn_tests_wavheadertest_LDADD = $(LIBRFN_LIBS)
 
+src_librfn_tests += src/librfn/tests/utiltest
+src_librfn_tests_utiltest_SOURCES = src/librfn/tests/utiltest.c
+src_librfn_tests_utiltest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_utiltest_LDADD = $(LIBRFN_LIBS)
+
 noinst_PROGRAMS += $(src_librfn_tests)
 TESTS += $(src_librfn_tests)
