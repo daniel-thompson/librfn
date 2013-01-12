@@ -28,6 +28,7 @@ src/librfn/tests/bitopstest
 src/librfn/tests/enumtest
 src/librfn/tests/fuzztest
 src/librfn/tests/listtest
+src/librfn/tests/messageqtest
 src/librfn/tests/protothreadstest
 src/librfn/tests/wavheadertest
 src/librfn/tests/utiltest

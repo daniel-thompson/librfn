@@ -30,6 +30,7 @@ src_librfn_librfn_a_SOURCES = \
 	src/librfn/fuzz.c \
 	src/librfn/hex.c \
 	src/librfn/list.c \
+	src/librfn/messageq.c \
 	src/librfn/pack.c \
 	src/librfn/string.c \
 	src/librfn/wavheader.c \
@@ -66,6 +67,11 @@ src_librfn_tests += src/librfn/tests/listtest
 src_librfn_tests_listtest_SOURCES = src/librfn/tests/listtest.c
 src_librfn_tests_listtest_CFLAGS = $(LIBRFN_CFLAGS)
 src_librfn_tests_listtest_LDADD = $(LIBRFN_LIBS)
+
+src_librfn_tests += src/librfn/tests/messageqtest
+src_librfn_tests_messageqtest_SOURCES = src/librfn/tests/messageqtest.c
+src_librfn_tests_messageqtest_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_tests_messageqtest_LDADD = $(LIBRFN_LIBS)
 
 src_librfn_tests += src/librfn/tests/protothreadstest
 src_librfn_tests_protothreadstest_SOURCES = src/librfn/tests/protothreadstest.c
