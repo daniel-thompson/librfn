@@ -1,7 +1,7 @@
 /*
  * protothreadstest.c
  *
- * Part of libtt (the integer amplifier library)
+ * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
  * Copyright (C) 2013 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
@@ -23,15 +23,15 @@
 pt_state_t empty_thread(pt_t *pt)
 {
 	PT_BEGIN(pt);
-	PT_END(pt);
+	PT_END();
 }
 
 /* The yield thread should return PT_YIELDED, then PT_EXITED. */
 pt_state_t yield_thread(pt_t *pt)
 {
 	PT_BEGIN(pt);
-	PT_YIELD(pt);
-	PT_END(pt);
+	PT_YIELD();
+	PT_END();
 }
 
 /* The wait thread should cycle through PT_WAITING, PT_WAITING, PT_EXITED. */
@@ -40,11 +40,11 @@ pt_state_t wait_thread(pt_t *pt)
 	static int count = 0;
 
 	PT_BEGIN(pt);
-	PT_WAIT_UNTIL(pt, count++ >= 1);
+	PT_WAIT_UNTIL(count++ >= 1);
 	assert(count >= 1);
-	PT_WAIT_UNTIL(pt, --count < 1);
+	PT_WAIT_UNTIL(--count < 1);
 	assert(count == 0);
-	PT_END(pt);
+	PT_END();
 }
 
 /* The exit through should return PT_YIELDED then PT_EXITED */
@@ -53,12 +53,12 @@ pt_state_t exit_thread(pt_t *pt)
 	PT_BEGIN(pt);
 
 	while (1) {
-		PT_YIELD(pt);
-		PT_EXIT(pt);
+		PT_YIELD();
+		PT_EXIT();
 	}
 
-	PT_WAIT_UNTIL(pt, false);
-	PT_END(pt);
+	PT_WAIT_UNTIL(false);
+	PT_END();
 }
 
 /* The spawn thread runs though all the other threads so it should
@@ -75,12 +75,12 @@ pt_state_t spawn_thread(pt_t *pt)
 
 	PT_BEGIN(pt);
 
-	PT_SPAWN(pt, &child, empty_thread(&child));
-	PT_SPAWN(pt, &child, yield_thread(&child));
-	PT_SPAWN(pt, &child, wait_thread(&child));
-	PT_SPAWN(pt, &child, exit_thread(&child));
+	PT_SPAWN(&child, empty_thread(&child));
+	PT_SPAWN(&child, yield_thread(&child));
+	PT_SPAWN(&child, wait_thread(&child));
+	PT_SPAWN(&child, exit_thread(&child));
 
-	PT_END(pt);
+	PT_END();
 }
 
 int main()
@@ -106,9 +106,11 @@ int main()
 	verify(PT_YIELDED == exit_thread(&t));
 	verify(PT_EXITED == exit_thread(&t));
 
+#if 0
 	PT_INIT(&t);
 	t = -1;
 	verify(PT_CRASHED == exit_thread(&t));
+#endif
 
 	PT_INIT(&t);
 	verify(PT_YIELDED == spawn_thread(&t));

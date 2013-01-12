@@ -22,7 +22,7 @@
  * Embedded Systems" by Dunkels et al.
  *
  * This implementation uses a similar interface as that proposed by Dunkels et
- * al but with a few small tweaks.
+ * al but with sufficient changes to make them incompatible:
  *
  * 1. Stronger distinction between yielding and waiting. This allows a
  *    scheduler to handle the cases differently. The fibre scheduler included
@@ -30,20 +30,17 @@
  *    continuation macros concept allowing a implementation of PT_YIELD()
  *    with no state variable.
  *
- * 2. If the thread state variable is inconsistent the thread reports
- *    PT_CRASHED to its caller. This makes detecting use of the
- *    PT_WAIT_UNTIL() macro from within nested switch statements more
- *    likely.
+ * 2. PT_INIT() saves the protothread pointer to simplify the usage of the other
+ *    macros.
  *
  * 3. The use of the provided pt_t type is optional. Any integer type large
  *    enough not to overflow when __LINE__ is assigned to it is sufficient.
  */
 
 typedef enum {
-	PT_WAITING,
 	PT_YIELDED,
-	PT_EXITED,
-	PT_CRASHED
+	PT_WAITING,
+	PT_EXITED
 } pt_state_t;
 
 typedef uint16_t pt_t;
@@ -54,38 +51,43 @@ typedef uint16_t pt_t;
 	} while (0)
 
 #define PT_BEGIN(pt) \
-	switch (*(pt)) { \
-	case 0:
+	{ \
+		pt_t *protothread_pointer_is_not_defined_missing_PT_BEGIN = pt; \
+		(void) protothread_pointer_is_not_defined_missing_PT_BEGIN; \
+		switch (*protothread_pointer_is_not_defined_missing_PT_BEGIN) { \
+		case 0:
 
-#define PT_END(pt) \
-	break; \
-	default: return PT_CRASHED; \
+#define PT_END() \
+			break; \
+		default: \
+			assert(0); \
+		} \
         } \
 	return PT_EXITED
 
-#define PT_WAIT_UNTIL(pt, c) \
+#define PT_WAIT_UNTIL(c) \
 	do { \
-		*(pt) = __LINE__; \
+		*protothread_pointer_is_not_defined_missing_PT_BEGIN = __LINE__; \
                 case __LINE__: \
 		if (!(c)) \
 			return PT_WAITING; \
 	} while (0)
 
-#define PT_YIELD(pt) \
+#define PT_YIELD() \
 	do { \
-		*(pt) = __LINE__; \
+		*protothread_pointer_is_not_defined_missing_PT_BEGIN = __LINE__; \
 		return PT_YIELDED; \
 		case __LINE__: ;\
 	} while (0)
 
-#define PT_EXIT(pt) \
+#define PT_EXIT() \
 	return PT_EXITED
 
-#define PT_SPAWN(pt, child, thread) \
+#define PT_SPAWN(child, thread) \
 	do { \
 		pt_state_t ptres; \
 		PT_INIT(child); \
-		*(pt) = __LINE__; \
+		*protothread_pointer_is_not_defined_missing_PT_BEGIN = __LINE__; \
                 case __LINE__: \
                 ptres = (thread); \
                 if (ptres != PT_EXITED) \
