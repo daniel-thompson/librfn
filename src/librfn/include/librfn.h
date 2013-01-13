@@ -27,6 +27,7 @@
 #include "librfn/pack.h"
 #include "librfn/protothreads.h"
 #include "librfn/string.h"
+#include "librfn/time.h"
 #include "librfn/wavheader.h"
 #include "librfn/util.h"
 

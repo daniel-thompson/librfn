@@ -24,7 +24,7 @@ LIBRFN_LIBS = $(top_builddir)/src/librfn/librfn.a
 src_librfn_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
 
 src_librfn_librfn_a_SOURCES = \
-	$(src_librfn_benchmark_sources) \
+	src/librfn/benchmark.c \
 	src/librfn/bitops.c \
 	src/librfn/enum.c \
 	src/librfn/fibre.c \
@@ -38,8 +38,8 @@ src_librfn_librfn_a_SOURCES = \
 	src/librfn/util.c
 
 if HAVE_CLOCK_GETTIME
-src_librfn_benchmark_sources = \
-	src/librfn/benchmark.c
+src_librfn_librfn_a_SOURCES += \
+	src/librfn/time_posix.c
 endif
 
 

@@ -20,35 +20,26 @@
 
 #include "librfn.h"
 
-uint64_t rf_benchmark_time_now()
-{
-	struct timespec now;
-
-	clock_gettime(CLOCK_REALTIME, &now);
-
-	return (now.tv_sec * 1000000ull) + (now.tv_nsec / 1000);
-}
-
 void rf_benchmark_init(rf_benchmark_t *b, uint64_t runtime)
 {
 	b->end = 0;
-	b->start = rf_benchmark_time_now() + 2;
+	b->start = time64_now() + 2;
 	b->expiry = b->start + runtime;
 
 	// wait until the test starts
-	while (b->start > rf_benchmark_time_now())
+	while (b->start > time64_now())
 		; // do nothing
 }
 
 bool rf_benchmark_running(rf_benchmark_t *b)
 {
-	b->end = rf_benchmark_time_now();
+	b->end = time64_now();
 	return (b->end < b->expiry);
 }
 
 void rf_benchmark_finalize(rf_benchmark_t *b, uint64_t nominal, rf_benchmark_results_t *r)
 {
-	uint64_t now = rf_benchmark_time_now();
+	uint64_t now = time64_now();
 	if (b->end < b->expiry)
 		b->end = now;
 

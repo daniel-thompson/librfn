@@ -29,13 +29,6 @@ typedef struct {
 } rf_benchmark_results_t;
 
 /*!
- * Get the current wall time (in microseconds).
- *
- * This is merely a wrapper around clock_gettime() but less cumbersome to work with.
- */
-uint64_t rf_benchmark_time_now();
-
-/*!
  * Initialize a benchmark structure.
  *
  * \arg runtime Minimum time (in microseconds) that the benchmark must run for.
