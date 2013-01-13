@@ -64,3 +64,4 @@ src/tintdrum/tintdrum
 
 tests/media/
 arm-none-eabi/
+x86_64-unknown-linux-gnu/
