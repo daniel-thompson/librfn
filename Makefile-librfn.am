@@ -39,9 +39,20 @@ src_librfn_librfn_a_SOURCES = \
 
 if HAVE_CLOCK_GETTIME
 src_librfn_librfn_a_SOURCES += \
+	src/librfn/fibre_posix.c \
 	src/librfn/time_posix.c
 endif
 
+#
+# librfn demos
+#
+
+if HAVE_CLOCK_GETTIME
+noinst_PROGRAMS += src/librfn/demos/fibredemo
+src_librfn_demos_fibredemo_SOURCES = src/librfn/demos/fibredemo.c
+src_librfn_demos_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
+src_librfn_demos_fibredemo_LDADD = $(LIBRFN_LIBS)
+endif
 
 #
 # librfn test suite

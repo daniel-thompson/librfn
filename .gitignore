@@ -24,6 +24,8 @@ missing
 *.o
 *#
 
+src/librfn/demos/fibredemo
+
 src/librfn/tests/bitopstest
 src/librfn/tests/enumtest
 src/librfn/tests/fibretest

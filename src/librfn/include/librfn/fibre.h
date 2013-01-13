@@ -74,5 +74,19 @@ bool fibre_eventq_send(fibre_eventq_t *evtq, void *evtp);
 void *fibre_eventq_receive(fibre_eventq_t *evtq);
 void fibre_eventq_release(fibre_eventq_t *evtq, void *evtp);
 
+/*!
+ * Enter the scheduler main loop.
+ *
+ * This function will dispatch threads when they become runnable and
+ * may attempt to conserve power by going idle in some implementation
+ * defined manner.
+ *
+ * An implementation of this function must be provided for each execution
+ * environment. librfn only comes with an implementation for a small
+ * subset of environments and may have to be provided by the library user.
+ * POSIX environments are, however, already supported to allow the
+ * demonstation programs to work.
+ */
+void fibre_scheduler_main_loop();
 
 #endif // RF_FIBRE_H_
