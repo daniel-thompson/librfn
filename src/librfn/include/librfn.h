@@ -14,6 +14,7 @@
 #ifndef RF_LIBRFN_H_
 #define RF_LIBRFN_H_
 
+#include "librfn/atomic.h"
 #include "librfn/benchmark.h"
 #include "librfn/bitops.h"
 #include "librfn/enum.h"
