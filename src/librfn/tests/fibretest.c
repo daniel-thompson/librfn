@@ -110,47 +110,47 @@ int main()
 	fibre_run(&sleeper.fibre);
 
 	/* only one fibre is running, it sleeps making system go idle */
-	verify(10 == fibre_schedule_next(0)); // sleeper runs
+	verify(10 == fibre_scheduler_next(0)); // sleeper runs
 	verify(10 == sleeper.time && 0 == yielder.count);
-	verify(20 == fibre_schedule_next(10)); // sleeper runs
+	verify(20 == fibre_scheduler_next(10)); // sleeper runs
 	verify(20 == sleeper.time && 0 == yielder.count);
 
 	/* two fibres are running, one sleeps, the other yields so system
 	 * remains busy
 	 */
 	fibre_run(&yielder.fibre);
-	verify(20 == fibre_schedule_next(20)); // yielder runs, sleeper runnable
+	verify(20 == fibre_scheduler_next(20)); // yielder runs, sleeper runnable
 	verify(20 == sleeper.time && 1 == yielder.count);
-	verify(21 == fibre_schedule_next(21)); // sleeper runs
+	verify(21 == fibre_scheduler_next(21)); // sleeper runs
 	verify(30 == sleeper.time && 1 == yielder.count);
-	verify(22 == fibre_schedule_next(22)); // yielder runs
+	verify(22 == fibre_scheduler_next(22)); // yielder runs
 	verify(30 == sleeper.time && 2 == yielder.count);
-	verify(31 == fibre_schedule_next(31)); // yielder runs, sleeper runnable
+	verify(31 == fibre_scheduler_next(31)); // yielder runs, sleeper runnable
 	verify(30 == sleeper.time && 3 == yielder.count);
-	verify(42 == fibre_schedule_next(42)); // sleeper runs twice
+	verify(42 == fibre_scheduler_next(42)); // sleeper runs twice
 	verify(50 == sleeper.time && 3 == yielder.count);
-	verify(44 == fibre_schedule_next(44)); // yielder runs
+	verify(44 == fibre_scheduler_next(44)); // yielder runs
 	verify(50 == sleeper.time && 4 == yielder.count);
-	verify(45 == fibre_schedule_next(45)); // yielder runs
+	verify(45 == fibre_scheduler_next(45)); // yielder runs
 	verify(50 == sleeper.time && 5 == yielder.count);
-	verify(50 == fibre_schedule_next(46)); // yielder completes
+	verify(50 == fibre_scheduler_next(46)); // yielder completes
 	//    ^^^^ note difference in idle time
 	verify(50 == sleeper.time && 5 == yielder.count);
-	verify(50 == fibre_schedule_next(47)); // idle
+	verify(50 == fibre_scheduler_next(47)); // idle
 	verify(50 == sleeper.time && 5 == yielder.count);
-	verify(50+FIBRE_UNBOUNDED_SLEEP == fibre_schedule_next(50)); // sleeper runs
+	verify(50+FIBRE_UNBOUNDED_SLEEP == fibre_scheduler_next(50)); // sleeper runs
 	verify(50 == sleeper.time && 5 == yielder.count);
 
 	fibre_run(&handler.evtq.fibre);
 	verify(60+FIBRE_UNBOUNDED_SLEEP ==
-		     fibre_schedule_next(60)); // handler runs to wait
+		     fibre_scheduler_next(60)); // handler runs to wait
 	assert(0 == handler.last_event.id);
 	event_descriptor_t *pdesc;
 	pdesc = fibre_eventq_claim(&handler.evtq);
 	pdesc->id = 1;
 	fibre_eventq_send(&handler.evtq, pdesc);
 	verify(70+FIBRE_UNBOUNDED_SLEEP ==
-		     fibre_schedule_next(70)); // handler runs to wait
+		     fibre_scheduler_next(70)); // handler runs to wait
 	assert(1 == handler.last_event.id);
 
 

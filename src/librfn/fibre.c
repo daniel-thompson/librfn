@@ -125,7 +125,7 @@ fibre_t *fibre_self()
 	return kernel.current;
 }
 
-uint32_t fibre_schedule_next(uint32_t time)
+uint32_t fibre_scheduler_next(uint32_t time)
 {
 	kernel.now = time;
 

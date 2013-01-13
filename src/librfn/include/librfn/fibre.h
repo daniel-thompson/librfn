@@ -58,7 +58,7 @@ typedef struct {
 #define PT_BEGIN_FIBRE(f) PT_BEGIN(&((f)->priv))
 
 fibre_t *fibre_self();
-uint32_t fibre_schedule_next(uint32_t time);
+uint32_t fibre_scheduler_next(uint32_t time);
 
 void fibre_init(fibre_t *f, fibre_entrypoint_t *fn);
 void fibre_run(fibre_t *f);
