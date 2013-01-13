@@ -26,12 +26,13 @@ static fibre_t *atomic_runq_buf[8];
 
 static struct {
 	fibre_t *current;
-	bool check_duetime;
 	uint32_t now;
 
 	list_t runq;
 	messageq_t atomic_runq;
 	list_t timerq;
+
+	atomic_uint taint_flags;
 } kernel = {
 	.runq = LIST_VAR_INIT,
 	.atomic_runq = MESSAGEQ_VAR_INIT(
@@ -112,6 +113,13 @@ static uint32_t get_next_wakeup()
 	return fibre->duetime;
 }
 
+static void add_taint(char id)
+{
+	id -= 'A';
+	assert(id < 8*sizeof(kernel.taint_flags));
+	atomic_fetch_or(&kernel.taint_flags, 1 << id);
+}
+
 static int duetime_cmp(list_node_t *n1, list_node_t *n2)
 {
 	fibre_t *f1 = containerof(n1, fibre_t, link);
@@ -164,8 +172,10 @@ void fibre_run(fibre_t *f)
 bool fibre_run_atomic(fibre_t *f)
 {
 	fibre_t **queued_fibre = messageq_claim(&kernel.atomic_runq);
-	if (!queued_fibre)
+	if (!queued_fibre) {
+		add_taint('A');
 		return false;
+	}
 
 	*queued_fibre = f;
 	messageq_send(&kernel.atomic_runq, queued_fibre);
@@ -204,7 +214,10 @@ void fibre_eventq_init(fibre_eventq_t *evtq, fibre_entrypoint_t *fn,
 
 void *fibre_eventq_claim(fibre_eventq_t *evtq)
 {
-	return messageq_claim(&evtq->eventq);
+	void *evtp = messageq_claim(&evtq->eventq);
+	if (!evtp)
+		add_taint('E');
+	return evtp;
 }
 
 bool fibre_eventq_send(fibre_eventq_t *evtq, void *evtp)
