@@ -174,11 +174,14 @@ bool fibre_run_atomic(fibre_t *f)
 
 bool fibre_kill(fibre_t *f)
 {
-	handle_atomic_runq();
-	list_remove(&kernel.runq, &f->link);
-	list_remove(&kernel.timerq, &f->link);
+	bool res = false;
 
-	return false;
+	handle_atomic_runq();
+
+	res |= list_remove(&kernel.runq, &f->link);
+	res |= list_remove(&kernel.timerq, &f->link);
+
+	return res;
 }
 
 bool fibre_timeout(uint32_t duetime)
