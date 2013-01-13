@@ -20,7 +20,8 @@
 
 typedef union {
 	enum update_event_id {
-		UPDATE_EVENT_TIME
+		UPDATE_EVENT_TIME,
+		UPDATE_EVENT_EXIT,
 	} id;
 
 	/* all the remaining event structures must commence with enum
@@ -32,6 +33,11 @@ typedef union {
 		unsigned int minutes;
 		unsigned int seconds;
 	} time;
+
+	struct {
+		enum update_event_id id;
+		int status;
+	} exit;
 } update_event_t;
 
 int update_handler(fibre_t *fibre)
@@ -52,6 +58,10 @@ int update_handler(fibre_t *fibre)
 			printf("\r%02d:%02d", evt->time.minutes,
 					evt->time.seconds);
 			fflush(stdout);
+			break;
+		case UPDATE_EVENT_EXIT:
+			printf("\n\nTime is up\n");
+			exit(evt->exit.status);
 			break;
 		default:
 			assert(0);
@@ -77,6 +87,8 @@ typedef struct {
 	uint32_t time;
 	unsigned int minutes;
 	unsigned int seconds;
+	unsigned int exit_after_minutes;
+	unsigned int exit_after_seconds;
 	fibre_t fibre;
 } stopwatch_fibre_t;
 
@@ -92,9 +104,10 @@ int stopwatch_fibre(fibre_t *fibre)
 	clock->time = time_now();
 
 	while (true) {
+		update_event_t *evt;
+
 		/* send the current time to the event handler */
-		update_event_t *evt = fibre_eventq_claim(&updater);
-		if (evt) {
+		if (NULL != (evt = fibre_eventq_claim(&updater))) {
 			evt->id = UPDATE_EVENT_TIME;
 			evt->time.minutes = clock->minutes;
 			evt->time.seconds = clock->seconds;
@@ -103,6 +116,16 @@ int stopwatch_fibre(fibre_t *fibre)
 		/* "error handling" usually comes from errors being logged as
 		 * scheduler "taints"
 		 */
+
+		/* has the stopwatch expired? */
+		if ((clock->exit_after_minutes || clock->exit_after_seconds) &&
+		    clock->exit_after_minutes <= clock->minutes &&
+		    clock->exit_after_seconds <= clock->seconds &&
+		    NULL != (evt = fibre_eventq_claim(&updater))) {
+			evt->id = UPDATE_EVENT_EXIT;
+			evt->exit.status = 0;
+			(void) fibre_eventq_send(&updater, evt);
+		}
 
 		/* increment the duetime by a second and wait for the duetime
 		 * to expire.
@@ -125,8 +148,39 @@ stopwatch_fibre_t stopwatch = {
 		.fibre = FIBRE_VAR_INIT(stopwatch_fibre)
 };
 
-int main()
+int main(int argc, char *argv[])
 {
+	switch(argc) {
+	int n;
+	case 0:
+	case 1:
+		// do nothing
+		break;
+	default:
+		fprintf(stderr, "Too many arguments - "
+				"all except '%s' will be ignored\n", argv[1]);
+		/* no break */
+	case 2:
+		n = sscanf(argv[1], "%d:%d",
+				&stopwatch.exit_after_minutes,
+				&stopwatch.exit_after_seconds);
+		switch (n) {
+		case 2:
+			// do nothing
+			break;
+		case 1:
+			stopwatch.exit_after_seconds =
+					stopwatch.exit_after_minutes;
+			stopwatch.exit_after_minutes = 0;
+			break;
+		case 0:
+			fprintf(stderr, "Cannot extract meaningful time "
+					"from '%s'\n", argv[1]);
+			break;
+		}
+		break;
+	}
+
 	fibre_run(&stopwatch.fibre);
 	fibre_run(&updater.fibre);
 

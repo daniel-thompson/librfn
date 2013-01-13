@@ -75,6 +75,8 @@ src_librfn_tests_fibretest_SOURCES = src/librfn/tests/fibretest.c
 src_librfn_tests_fibretest_CFLAGS = $(LIBRFN_CFLAGS)
 src_librfn_tests_fibretest_LDADD = $(LIBRFN_LIBS)
 
+TESTS += src/librfn/tests/fibredemotest
+
 src_librfn_tests += src/librfn/tests/fuzztest
 src_librfn_tests_fuzztest_SOURCES = src/librfn/tests/fuzztest.c
 src_librfn_tests_fuzztest_CFLAGS = $(LIBRFN_CFLAGS)
