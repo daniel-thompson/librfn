@@ -19,7 +19,9 @@
 #ifdef HAVE_ALSA
 #include "libtt/alsawriter.h"
 #endif
+#ifdef HAVE_JACK
 #include "libtt/jackwriter.h"
+#endif
 #ifdef HAVE_PULSE
 #include "libtt/pulsewriter.h"
 #endif
@@ -38,7 +40,9 @@ typedef struct {
 #ifdef HAVE_ALSA
 		tt_alsawriter_t alsawriter;
 #endif
+#ifdef HAVE_JACK
 		tt_jackwriter_t jackwriter;
+#endif
 #ifdef HAVE_PULSE
 		tt_pulsewriter_t pulsewriter;
 #endif

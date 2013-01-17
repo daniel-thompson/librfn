@@ -46,6 +46,7 @@ PKG_CHECK_MODULES([ALSA], [alsa >= 1.0],
 
 dnl Jack is mandatory (for now)
 PKG_CHECK_MODULES([JACK], [jack >= 0.9])
+AC_DEFINE(HAVE_JACK,1,[Have JACK])
 
 dnl Pulseaudio is optional (but tintdrum won't build without it)
 PKG_CHECK_MODULES([PULSE], [libpulse-simple >= 1.1],
