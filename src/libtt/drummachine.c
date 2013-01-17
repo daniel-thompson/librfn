@@ -84,6 +84,14 @@ int8_t *samples[8] = {
 	UNUSED_SAMPLE,
 };
 
+static uint8_t *lookup_pattern(tt_drummachine_t *dm)
+{
+	int pattern_index = TTASINT(dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)]);
+	if (pattern_index >= lengthof(patterns))
+		pattern_index = 0;
+	return patterns[pattern_index];
+}
+
 void tt_drummachine_init(tt_drummachine_t *dm, tt_context_t *ctx)
 {
 	memset(dm, 0, sizeof(*dm));
@@ -109,10 +117,7 @@ void tt_drummachine_setup(tt_drummachine_t *dm)
 {
 	// apply the change
 	ttspl_t beats_per_minute = dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_BPM)];
-	int pattern_index = TTASINT(dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)]);
-	if (pattern_index >= lengthof(patterns))
-		pattern_index = 0;
-	uint8_t *pattern = patterns[pattern_index];
+	uint8_t *pattern = lookup_pattern(dm);
 
 	// We struggle to maintain numeric accuracy here. The trick to maintain
 	// accuracy is knowing that TTRAISE(TLDIV(...)) does not truncate to 32 bits
@@ -140,6 +145,20 @@ void tt_drummachine_set_control(tt_drummachine_t *dm, tt_drummachine_control_t c
 }
 
 tt_generic_enum_control(drummachine, TT_DRUMMACHINE_CONTROL_MIN, TT_DRUMMACHINE_CONTROL_MAX);
+
+unsigned int tt_drummachine_samples_until_next_beat(tt_drummachine_t *dm)
+{
+	uint8_t *pattern = lookup_pattern(dm);
+
+	// the divison variables are prior to the resampler so must be multipled by two
+	unsigned int samples_until_next_division = 2*dm->division_counter + dm->cold_sample;
+	unsigned int samples_per_division = 2*dm->division_reload;
+	unsigned int pattern_offset = dm->pattern_pointer - dm->pattern_start;
+	unsigned int divisions_until_next_beat = pattern_offset % pattern[TT_DRUMMACHINE_DIVISIONS_PER_BEAT];
+
+	return (divisions_until_next_beat * samples_per_division) +
+			samples_until_next_division;
+}
 
 /*!
  * Produce the raw sequence of 16-bit mixed and timed drum samples.

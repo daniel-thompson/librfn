@@ -52,6 +52,8 @@ ttspl_t tt_drummachine_get_control(tt_drummachine_t *dm, tt_drummachine_control_
 void tt_drummachine_set_control(tt_drummachine_t *dm, tt_drummachine_control_t ctrl, ttspl_t val);
 tt_drummachine_control_t tt_drummachine_enum_control(tt_drummachine_control_t ctrl);
 
+unsigned int tt_drummachine_samples_until_next_beat(tt_drummachine_t *dm);
+
 ttspl_t tt_drummachine_step(tt_drummachine_t *dm);
 void tt_drummachine_process(tt_drummachine_t *dm, tt_sbuf_t *outbuf);
 
