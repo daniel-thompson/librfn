@@ -19,6 +19,7 @@ missing
 .dirstamp
 *~
 *.a
+*.d
 *.swp
 *.Po
 *.o
