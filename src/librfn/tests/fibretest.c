@@ -87,59 +87,65 @@ int event_handler(fibre_t *f)
 	PT_END();
 }
 
-sleep_fibre_t sleeper = {
-		.max_time = 50,
-		.step = 10,
-		.fibre = FIBRE_VAR_INIT(sleep_fibre)
-};
 
-yield_fibre_t yielder = {
-		.count = 0,
-		.max_count = 5,
-		.fibre = FIBRE_VAR_INIT(yield_fibre)
-};
-
-event_descriptor_t events[8];
-eventq_t handler = {
-		.evtq = FIBRE_EVENTQ_VAR_INIT(event_handler,
-				events, sizeof(events), sizeof(events[0]))
-};
-
-int main()
+/*
+ * This is a somewhat unfocused test of general scheduler behavior.
+ */
+static void basic_test()
 {
+	static sleep_fibre_t sleeper = {
+			.max_time = 50,
+			.step = 10,
+			.fibre = FIBRE_VAR_INIT(sleep_fibre)
+	};
+
+	static yield_fibre_t yielder = {
+			.count = 0,
+			.max_count = 5,
+			.fibre = FIBRE_VAR_INIT(yield_fibre)
+	};
+
+	static event_descriptor_t events[8];
+	static eventq_t handler = {
+			.evtq = FIBRE_EVENTQ_VAR_INIT(event_handler,
+					events, sizeof(events), sizeof(events[0]))
+	};
+
 	fibre_run(&sleeper.fibre);
 
 	/* only one fibre is running, it sleeps making system go idle */
-	verify(10 == fibre_scheduler_next(0)); // sleeper runs
-	verify(10 == sleeper.time && 0 == yielder.count);
-	verify(20 == fibre_scheduler_next(10)); // sleeper runs
-	verify(20 == sleeper.time && 0 == yielder.count);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == &sleeper.fibre);
+	verify( 10 == fibre_scheduler_next(  5) && fibre_self() == NULL);
+	verify( 10 == sleeper.time && 0 == yielder.count);
+	verify( 20 == fibre_scheduler_next( 10) && fibre_self() == &sleeper.fibre);
+	verify( 20 == sleeper.time && 0 == yielder.count);
 
 	/* two fibres are running, one sleeps, the other yields so system
 	 * remains busy
 	 */
 	fibre_run(&yielder.fibre);
-	verify(20 == fibre_scheduler_next(20)); // yielder runs, sleeper runnable
-	verify(20 == sleeper.time && 1 == yielder.count);
-	verify(21 == fibre_scheduler_next(21)); // sleeper runs
-	verify(30 == sleeper.time && 1 == yielder.count);
-	verify(22 == fibre_scheduler_next(22)); // yielder runs
-	verify(30 == sleeper.time && 2 == yielder.count);
-	verify(31 == fibre_scheduler_next(31)); // yielder runs, sleeper runnable
-	verify(30 == sleeper.time && 3 == yielder.count);
-	verify(42 == fibre_scheduler_next(42)); // sleeper runs twice
-	verify(50 == sleeper.time && 3 == yielder.count);
-	verify(44 == fibre_scheduler_next(44)); // yielder runs
-	verify(50 == sleeper.time && 4 == yielder.count);
-	verify(45 == fibre_scheduler_next(45)); // yielder runs
-	verify(50 == sleeper.time && 5 == yielder.count);
-	verify(50 == fibre_scheduler_next(46)); // yielder completes
+	verify( 20 == fibre_scheduler_next( 20) && fibre_self() == &yielder.fibre); // sleeper runnable
+	verify( 20 == sleeper.time && 1 == yielder.count);
+	verify( 21 == fibre_scheduler_next( 21) && fibre_self() == &sleeper.fibre);
+	verify( 30 == sleeper.time && 1 == yielder.count);
+	verify( 22 == fibre_scheduler_next( 22) && fibre_self() == &yielder.fibre);
+	verify( 30 == sleeper.time && 2 == yielder.count);
+	verify( 31 == fibre_scheduler_next( 31) && fibre_self() == &yielder.fibre); // sleeper runnable
+	verify( 30 == sleeper.time && 3 == yielder.count);
+	verify( 42 == fibre_scheduler_next( 42) && fibre_self() == &sleeper.fibre); // sleeper loops twice
+	verify( 50 == sleeper.time && 3 == yielder.count);
+	verify( 44 == fibre_scheduler_next( 44) && fibre_self() == &yielder.fibre);
+	verify( 50 == sleeper.time && 4 == yielder.count);
+	verify( 45 == fibre_scheduler_next( 45) && fibre_self() == &yielder.fibre);
+	verify( 50 == sleeper.time && 5 == yielder.count);
+	verify( 50 == fibre_scheduler_next( 46) && fibre_self() == &yielder.fibre); // fibre completes
 	//    ^^^^ note difference in idle time
-	verify(50 == sleeper.time && 5 == yielder.count);
-	verify(50 == fibre_scheduler_next(47)); // idle
-	verify(50 == sleeper.time && 5 == yielder.count);
-	verify(50+FIBRE_UNBOUNDED_SLEEP == fibre_scheduler_next(50)); // sleeper runs
-	verify(50 == sleeper.time && 5 == yielder.count);
+	verify( 50 == sleeper.time && 5 == yielder.count);
+	verify( 50 == fibre_scheduler_next( 47) && fibre_self() == NULL); // idle
+	verify( 50 == sleeper.time && 5 == yielder.count);
+	verify( 50+FIBRE_UNBOUNDED_SLEEP
+		   == fibre_scheduler_next(50) && fibre_self() == &sleeper.fibre);
+	verify( 50 == sleeper.time && 5 == yielder.count);
 
 	fibre_run(&handler.evtq.fibre);
 	verify(60+FIBRE_UNBOUNDED_SLEEP ==
@@ -152,7 +158,93 @@ int main()
 	verify(70+FIBRE_UNBOUNDED_SLEEP ==
 		     fibre_scheduler_next(70)); // handler runs to wait
 	assert(1 == handler.last_event.id);
+}
 
+/*
+ * A test that runs fibres from varying positions within the timerq.
+ */
+static void sleep_test()
+{
+	static sleep_fibre_t sleeper[3] = {
+		{
+			.max_time = 50,
+			.step = 10,
+			.fibre = FIBRE_VAR_INIT(sleep_fibre)
+		},
+		{
+			.max_time = 50,
+			.step = 10,
+			.fibre = FIBRE_VAR_INIT(sleep_fibre)
+		},
+		{
+			.time = 5,
+			.max_time = 50,
+			.step = 10,
+			.fibre = FIBRE_VAR_INIT(sleep_fibre)
+		}
+	};
+
+	/* All three fibres are launched and executed until the system becomes idle */
+	fibre_run(&sleeper[0].fibre);
+	fibre_run(&sleeper[1].fibre);
+	fibre_run(&sleeper[2].fibre);
+	verify(  0 == fibre_scheduler_next(  0) && fibre_self() == &sleeper[0].fibre);
+	verify(  0 == fibre_scheduler_next(  0) && fibre_self() == &sleeper[1].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == &sleeper[2].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == NULL);
+
+	/* Run sleeper[0] and schedule until idle */
+	fibre_run(&sleeper[0].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == &sleeper[0].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == NULL);
+
+	/* Run sleeper[1] and schedule until idle */
+	fibre_run(&sleeper[1].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == &sleeper[1].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == NULL);
+
+	/* Run sleeper[2] and schedule until idle */
+	fibre_run(&sleeper[2].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == &sleeper[2].fibre);
+	verify( 10 == fibre_scheduler_next(  0) && fibre_self() == NULL);
+
+	/* Allow time to pass causing #0 and #1 to be runnable. Ensure #0 runs first since
+	 * it was starting waiting first.
+	 */
+	verify( 10 == fibre_scheduler_next( 10) && fibre_self() == &sleeper[0].fibre);
+	verify( 15 == fibre_scheduler_next( 10) && fibre_self() == &sleeper[1].fibre);
+	verify( 15 == fibre_scheduler_next( 10) && fibre_self() == NULL);
+
+	/* Allow time to pass causing #2 to be runnable */
+	verify( 20 == fibre_scheduler_next( 15) && fibre_self() == &sleeper[2].fibre);
+	verify( 20 == fibre_scheduler_next( 15) && fibre_self() == NULL);
+
+	/* Make the fibres runnable in reverse order and allow time to pass, verify
+	 * that the fibre_run() imposes the execution order.
+	 */
+	fibre_run(&sleeper[2].fibre);
+	fibre_run(&sleeper[1].fibre);
+	fibre_run(&sleeper[0].fibre);
+	verify( 39 == fibre_scheduler_next( 39) && fibre_self() == &sleeper[2].fibre);
+	verify( 39 == fibre_scheduler_next( 39) && fibre_self() == &sleeper[1].fibre);
+	verify( 40 == fibre_scheduler_next( 39) && fibre_self() == &sleeper[0].fibre);
+	verify( 40 == fibre_scheduler_next( 39) && fibre_self() == NULL);
+
+	/* Allow sufficient time to pass for the fibres to complete. Here #1 will run
+	 * before #0 since it joined the timer queue first.
+	 */
+	verify( 60 == fibre_scheduler_next( 60) && fibre_self() == &sleeper[1].fibre);
+	verify( 60 == fibre_scheduler_next( 60) && fibre_self() == &sleeper[0].fibre);
+	verify( 60+FIBRE_UNBOUNDED_SLEEP
+		   == fibre_scheduler_next( 60) && fibre_self() == &sleeper[2].fibre);
+	verify( 60+FIBRE_UNBOUNDED_SLEEP
+		   == fibre_scheduler_next( 60) && fibre_self() == NULL);
+}
+
+int main()
+{
+	basic_test();
+	sleep_test();
 
 	return 0;
 }

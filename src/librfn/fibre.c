@@ -93,7 +93,8 @@ static void update_current_state(fibre_state_t state)
 		break;
 	}
 
-	kernel.current = NULL;
+	// preserve kernel.current since we permit fibre_self() to be called
+	// from the main loop in order to implement task accounting.
 }
 
 static uint32_t get_next_wakeup()
@@ -164,8 +165,8 @@ void fibre_run(fibre_t *f)
 	handle_atomic_runq();
 
 	if (!list_contains(&kernel.runq, &f->link, NULL)) {
-		list_insert(&kernel.runq, &f->link);
 		(void) list_remove(&kernel.timerq, &f->link);
+		list_insert(&kernel.runq, &f->link);
 	}
 }
 
