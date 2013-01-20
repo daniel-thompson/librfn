@@ -101,8 +101,9 @@ void tt_drummachine_init(tt_drummachine_t *dm, tt_context_t *ctx)
 	tt_biquad_lowpass(&dm->resampler, 10000, TTFLOAT(0.7));
 
 	// default values for controls
-	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)] = TTINT(0);
 	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_BPM)] = TTINT(120);
+	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)] = TTINT(0);
+	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN_MAX)] = TTINT(lengthof(patterns));
 
 }
 
@@ -139,8 +140,12 @@ tt_generic_get_control(drummachine, TT_DRUMMACHINE_CONTROL_MIN, TT_DRUMMACHINE_C
 void tt_drummachine_set_control(tt_drummachine_t *dm, tt_drummachine_control_t ctrl, ttspl_t val)
 {
 	assert(ctrl >= TT_DRUMMACHINE_CONTROL_MIN && ctrl < TT_DRUMMACHINE_CONTROL_MAX);
-	dm->controls[TT_TAG2ID(ctrl)] = val;
 
+	/* this value is read-only */
+	if (ctrl == TT_DRUMMACHINE_CONTROL_PATTERN_MAX)
+		return;
+
+	dm->controls[TT_TAG2ID(ctrl)] = val;
 	tt_drummachine_setup(dm);
 }
 
