@@ -27,49 +27,69 @@
 
 #define TT_DRUMMACHINE_VOICE_LENGTH ((int) lengthof(kick_Dry_b))
 
+enum {
+	__ = 0,
+	BA = 0x01,
+	SN = 0x02,
+	CH = 0x10,
+};
 uint8_t basic[] = {
 	4,					// length of pattern
 	1,					// divisions per beat
-	0x11,					// beat 1
-	0x12,					// beat 2
-	0x11,					// beat 3
-	0x12,					// beat 4
+	CH|BA|__,				// beat 1
+	CH|__|SN,				// beat 2
+	CH|BA|__,				// beat 3
+	CH|__|SN,				// beat 4
 };
 
 uint8_t basic8[] = {
 	8,					// length of pattern
 	2,					// divisions per beat
-	0x11,					// beat 1
-	0x10,
-	0x12,					// beat 2
-	0x10,
-	0x11,					// beat 3
-	0x10,
-	0x12,					// beat 4
-	0x10
+	CH|BA|__,				// beat 1
+	CH|__|__,
+	CH|__|SN,				// beat 2
+	CH|__|__,
+	CH|BA|__,				// beat 3
+	CH|__|__,
+	CH|__|SN,				// beat 4
+	CH|__|__,
 };
 
 uint8_t swing8[] = {
 	12,					// length of pattern
 	3,					// divisions per beat
-	0x11,					// beat 1
-	0,
-	0x10,
-	0x12,					// beat 2
-	0,
-	0x10,
-	0x11,					// beat 3
-	0,
-	0x10,
-	0x12,					// beat 4
-	0,
-	0x10
+	CH|BA|__,				// beat 1
+	__|__|__,
+	CH|__|__,
+	CH|__|SN,				// beat 2
+	__|__|__,
+	CH|__|__,
+	CH|BA|__,				// beat 3
+	__|__|__,
+	CH|__|__,
+	CH|__|SN,				// beat 4
+	__|__|__,
+	CH|__|__,
+};
+
+uint8_t augmented8[] = {
+	8,					// length of pattern
+	2,					// divisions per beat
+	CH|BA|__,				// beat 1
+	CH|__|__,
+	CH|__|SN,				// beat 2
+	CH|__|__,
+	CH|BA|__,				// beat 3
+	CH|BA|__,
+	CH|__|SN,				// beat 4
+	CH|BA|__,
 };
 
 uint8_t *patterns[] = {
 	basic,
 	basic8,
-	swing8
+	swing8,
+	augmented8
 };
 
 #define UNUSED_SAMPLE hhc_Rock_b
