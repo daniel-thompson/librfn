@@ -154,12 +154,15 @@ tt_generic_enum_control(drummachine, TT_DRUMMACHINE_CONTROL_MIN, TT_DRUMMACHINE_
 unsigned int tt_drummachine_samples_until_next_beat(tt_drummachine_t *dm)
 {
 	uint8_t *pattern = lookup_pattern(dm);
+	uint8_t divisions_per_beat = pattern[TT_DRUMMACHINE_DIVISIONS_PER_BEAT];
 
 	// the divison variables are prior to the resampler so must be multipled by two
 	unsigned int samples_until_next_division = 2*dm->division_counter + dm->cold_sample;
 	unsigned int samples_per_division = 2*dm->division_reload;
 	unsigned int pattern_offset = dm->pattern_pointer - dm->pattern_start;
-	unsigned int divisions_until_next_beat = pattern_offset % pattern[TT_DRUMMACHINE_DIVISIONS_PER_BEAT];
+	unsigned int divisions_so_far = pattern_offset % divisions_per_beat;
+	unsigned int divisions_until_next_beat = (0 == divisions_so_far ? 0 :
+			divisions_per_beat - divisions_so_far);
 
 	return (divisions_until_next_beat * samples_per_division) +
 			samples_until_next_division;
