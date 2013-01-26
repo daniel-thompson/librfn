@@ -227,6 +227,11 @@ bool fibre_eventq_send(fibre_eventq_t *evtq, void *evtp)
 	return fibre_run_atomic(&evtq->fibre);
 }
 
+bool fibre_eventq_empty(fibre_eventq_t *evtq)
+{
+	return messageq_empty(&evtq->eventq);
+}
+
 void *fibre_eventq_receive(fibre_eventq_t *evtq)
 {
 	return messageq_receive(&evtq->eventq);

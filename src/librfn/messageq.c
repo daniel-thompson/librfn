@@ -54,6 +54,18 @@ void messageq_send(messageq_t *mq, void *msg)
 	atomic_fetch_or(&mq->full_flags, (1 << sendp));
 }
 
+bool messageq_empty(messageq_t *mq)
+{
+	unsigned int receivep = mq->receivep;
+	unsigned int full_flags = atomic_fetch_and(
+			&mq->full_flags, ~(1 << receivep));
+
+	if (0 == (full_flags & (1 << receivep)))
+		return true;
+
+	return false;
+}
+
 void *messageq_receive(messageq_t *mq)
 {
 	unsigned int receivep = mq->receivep;

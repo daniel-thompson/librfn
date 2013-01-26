@@ -71,6 +71,7 @@ void fibre_eventq_init(fibre_eventq_t *evtq, fibre_entrypoint_t *fn,
 		void *basep, size_t base_len, size_t msg_len);
 void *fibre_eventq_claim(fibre_eventq_t *evtq);
 bool fibre_eventq_send(fibre_eventq_t *evtq, void *evtp);
+bool fibre_eventq_empty(fibre_eventq_t *evtq);
 void *fibre_eventq_receive(fibre_eventq_t *evtq);
 void fibre_eventq_release(fibre_eventq_t *evtq, void *evtp);
 

@@ -45,6 +45,7 @@ void messageq_init(messageq_t *mq, void *basep, size_t base_len, size_t msg_len)
 
 void *messageq_claim(messageq_t *mq);
 void messageq_send(messageq_t *mq, void *msg);
+bool messageq_empty(messageq_t *mq);
 void *messageq_receive(messageq_t *mq);
 void messageq_release(messageq_t *mq, void *msg);
 
