@@ -75,6 +75,9 @@ src_librfn_tests_fibretest_SOURCES = src/librfn/tests/fibretest.c
 src_librfn_tests_fibretest_CFLAGS = $(LIBRFN_CFLAGS)
 src_librfn_tests_fibretest_LDADD = $(LIBRFN_LIBS)
 
+# fibredemotest must use TESTS directly. src_librfn_tests is appended
+# to both noinst_PROGRAMS and TESTS but fibredemotest is a script that
+# wraps the demo program and cannot be compiled.
 TESTS += src/librfn/tests/fibredemotest
 
 src_librfn_tests += src/librfn/tests/fuzztest
