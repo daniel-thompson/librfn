@@ -13,6 +13,7 @@
 
 #include <string.h>
 
+#include "librfn.h"
 #include "libtt.h"
 #include "libtt/drummachine.h"
 
@@ -120,6 +121,8 @@ void tt_drummachine_init(tt_drummachine_t *dm, tt_context_t *ctx)
 	tt_biquad_init(&dm->resampler, ctx);
 	tt_biquad_lowpass(&dm->resampler, 10000, TTFLOAT(0.7));
 
+	dm->seed = RAND31_VAR_INIT;
+
 	// default values for controls
 	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_BPM)] = TTINT(120);
 	dm->controls[TT_TAG2ID(TT_DRUMMACHINE_CONTROL_PATTERN)] = TTINT(0);
@@ -198,8 +201,11 @@ static inline int16_t tt_drummachine_microstep(tt_drummachine_t *dm)
 	if (0 == dm->division_counter) {
 		// trigger the voices
 		for (int i=0; i<lengthof(dm->voice_pointer); i++)
-			if ((1 << i) & *(dm->pattern_pointer))
-				dm->voice_pointer[i] = TT_DRUMMACHINE_VOICE_LENGTH;
+			if ((1 << i) & *(dm->pattern_pointer)) {
+				dm->voice_pointer[i] = TT_DRUMMACHINE_VOICE_LENGTH - 64;
+				dm->voice_pointer[i] += rand31_r(&dm->seed) & 255;
+			}
+
 
 		// restart the division  counter and move to the next part of the pattern
 		dm->division_counter = dm->division_reload;
@@ -215,7 +221,8 @@ static inline int16_t tt_drummachine_microstep(tt_drummachine_t *dm)
 		if (dm->voice_pointer[i]) {
 			int j = TT_DRUMMACHINE_VOICE_LENGTH - dm->voice_pointer[i];
 
-			spl += samples[i][j] * dm->voice_pointer[i];
+			if (j >= 0)
+				spl += samples[i][j] * dm->voice_pointer[i];
 
 			dm->voice_pointer[i]--;
 		}

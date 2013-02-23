@@ -41,6 +41,9 @@ typedef struct {
 	uint8_t *pattern_start;
 	uint8_t *pattern_end;
 	uint8_t *pattern_pointer;
+
+	uint32_t seed; //!< State of pseudo random number generator
+
 } tt_drummachine_t;
 
 void tt_drummachine_init(tt_drummachine_t *dm, tt_context_t *ctx);
