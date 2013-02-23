@@ -16,6 +16,15 @@
 
 #include <stdint.h>
 
+/*!
+ * Initialize a seed value used by rand31_r().
+ *
+ * The only actualy requirement on the initial seed is that it must be
+ * strictly greater than zero (and 32-bit). However for simplicity we
+ * choose 1.
+ */
+#define RAND31_VAR_INIT 1
+
 uint32_t rand31_r(uint32_t *seedp);
 
 #endif // RF_RAND_H_

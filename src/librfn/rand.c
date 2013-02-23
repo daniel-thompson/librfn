@@ -29,6 +29,9 @@
  * 32 bit math and without division.
  *
  * Nth generated number (starting from zero) should be ???
+ *
+ * \param [inout] seedp Current state of the PRNG, initalized using
+ *                      ::RAND31_VAR_INIT
  */
 uint32_t rand31_r(uint32_t *seedp)
 {
