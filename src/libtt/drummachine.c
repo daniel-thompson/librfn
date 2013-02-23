@@ -192,9 +192,12 @@ unsigned int tt_drummachine_samples_until_next_beat(tt_drummachine_t *dm)
 }
 
 /*!
- * Produce the raw sequence of 16-bit mixed and timed drum samples.
+ * Produce the raw sequence of mixed and timed drum samples.
+ *
+ * The main algorithm operates purely on integers (even on f.p. builds, only
+ * the final return statement converts things to ttspl_t).
  */
-static inline int16_t tt_drummachine_microstep(tt_drummachine_t *dm)
+static inline ttspl_t tt_drummachine_ministep(tt_drummachine_t *dm)
 {
 	int32_t spl;
 
@@ -238,15 +241,7 @@ static inline int16_t tt_drummachine_microstep(tt_drummachine_t *dm)
 		spl = -32768;
 
 	// done
-	return spl;
-}
-
-/*!
- * Convert the raw 16-bit output into sample form and apply humanization.
- */
-static inline ttspl_t tt_drummachine_ministep(tt_drummachine_t *dm)
-{
-	return TTS16LE(tt_drummachine_microstep(dm));
+	return TTS16LE(spl);
 }
 
 /*!
