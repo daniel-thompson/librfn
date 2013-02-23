@@ -119,7 +119,16 @@ void tt_drummachine_init(tt_drummachine_t *dm, tt_context_t *ctx)
 	dm->ctx = ctx;
 
 	tt_biquad_init(&dm->resampler, ctx);
-	tt_biquad_lowpass(&dm->resampler, 10000, TTFLOAT(0.7));
+
+	// design a collection of different reconstruction filters with slightly
+	// different cut-offs and Q values (used to randomly vary the timbre)
+	for (int i=0; i<16; i++) {
+		int shfreq = 9400 + (i*50);
+		ttspl_t q = TTADD(TTFLOAT(0.55), TTMINT(TTFLOAT(0.15), i&3));
+
+		tt_biquad_lowpass(&dm->resampler, shfreq, q);
+		dm->coefficients[i] = dm->resampler.coeff;
+	}
 
 	dm->seed = RAND31_VAR_INIT;
 
@@ -257,10 +266,20 @@ ttspl_t tt_drummachine_step(tt_drummachine_t *dm)
 	bool hot_sample = !dm->cold_sample;
 	dm->cold_sample = hot_sample;
 
-	if (hot_sample)
+	if (hot_sample) {
 		spl = tt_drummachine_ministep(dm);
-	else
+
+		if (0 == dm->division_counter) {
+			// update the filter coefficients just before the
+			// beat is triggered... this is when the filter is
+			// at its most quiet so we shouldn't get a pop
+			// the change
+			dm->resampler.coeff = dm->coefficients[
+			                rand31_r(&dm->seed) % lengthof(dm->coefficients)];
+		}
+	} else {
 		spl = 0;
+	}
 
 	return tt_biquad_step(&dm->resampler, spl);
 }

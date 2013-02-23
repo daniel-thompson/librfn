@@ -32,6 +32,7 @@ typedef struct {
 
 	bool cold_sample; //!< True for "cold" samples (0 into the resampler)
 	tt_biquad_t resampler;
+	tt_biquad_coeff_t coefficients[16];
 
 	int division_counter;
 	int division_reload;
