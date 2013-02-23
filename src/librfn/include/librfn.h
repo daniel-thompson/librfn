@@ -26,6 +26,7 @@
 #include "librfn/messageq.h"
 #include "librfn/pack.h"
 #include "librfn/protothreads.h"
+#include "librfn/rand.h"
 #include "librfn/string.h"
 #include "librfn/time.h"
 #include "librfn/wavheader.h"
