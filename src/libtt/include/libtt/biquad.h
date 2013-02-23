@@ -19,11 +19,21 @@
 #include "sbuf.h"
 #include "util.h"
 
+/*!
+ * Biquad filter coefficients
+ *
+ * The coefficients fully describe the filter but cannot
+ * really be operated on without the rest of the filter state.
+ */
+typedef struct {
+	ttspl_t x[3];
+	ttspl_t y[2];
+} tt_biquad_coeff_t;
+
 typedef struct {
 	tt_context_t *ctx;
 
-	ttspl_t x[3];
-	ttspl_t y[2];
+	tt_biquad_coeff_t coeff;
 
 	ttspl_t zx[2];
 	ttspl_t zy[2];

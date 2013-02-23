@@ -50,11 +50,11 @@ inline ttspl_t tt_biquad_step(tt_biquad_t *bq, ttspl_t spl)
 
 	int nextzi = !bq->zi;
 
-	TTMAC(acc, bq->x[0], spl);
-	TTMAC(acc, bq->x[1], bq->zx[bq->zi]);
-	TTMAC(acc, bq->x[2], bq->zx[nextzi]);
-	TTMAC(acc, bq->y[0], bq->zy[bq->zi]);
-	TTMAC(acc, bq->y[1], bq->zy[nextzi]);
+	TTMAC(acc, bq->coeff.x[0], spl);
+	TTMAC(acc, bq->coeff.x[1], bq->zx[bq->zi]);
+	TTMAC(acc, bq->coeff.x[2], bq->zx[nextzi]);
+	TTMAC(acc, bq->coeff.y[0], bq->zy[bq->zi]);
+	TTMAC(acc, bq->coeff.y[1], bq->zy[nextzi]);
 
 	ttspl_t y = TLLOWER(acc);
 	
@@ -92,12 +92,14 @@ typedef struct biquad_design {
 	ttspl_t b[3];
 	ttspl_t a[3];
 
-	ttspl_t x[3];
-	ttspl_t y[2];
+	tt_biquad_coeff_t coeff;
 } biquad_design_t;
 
 /*!
  * Pre-compute a few intermediate variables common to all filters.
+ *
+ * \todo See the HACK... this only really affect f.p. builds (24-bit mantissa)
+ *       Can't we use doubles?
  */
 static void biquad_predesign(tt_biquad_t *bq, biquad_design_t *bd, int freq, int dbgain, ttspl_t q)
 {
@@ -130,11 +132,11 @@ static void biquad_predesign(tt_biquad_t *bq, biquad_design_t *bd, int freq, int
 
 static void biquad_applydesign(tt_biquad_t *bq, biquad_design_t *bd)
 {
-	bq->x[0] = TTRAD(bd->b[0], bd->a[0]);
-	bq->x[1] = TTRAD(bd->b[1], bd->a[0]);
-	bq->x[2] = TTRAD(bd->b[2], bd->a[0]);
-	bq->y[0] = TTNEGATE(TTRAD(bd->a[1], bd->a[0]));
-	bq->y[1] = TTNEGATE(TTRAD(bd->a[2], bd->a[0]));
+	bq->coeff.x[0] = TTRAD(bd->b[0], bd->a[0]);
+	bq->coeff.x[1] = TTRAD(bd->b[1], bd->a[0]);
+	bq->coeff.x[2] = TTRAD(bd->b[2], bd->a[0]);
+	bq->coeff.y[0] = TTNEGATE(TTRAD(bd->a[1], bd->a[0]));
+	bq->coeff.y[1] = TTNEGATE(TTRAD(bd->a[2], bd->a[0]));
 
 #ifdef BIQUAD_DEBUG
 #define P(x) printf("%s = %12.6f\n", #x, (double) TTASFLOAT(x))
@@ -344,9 +346,9 @@ char *tt_biquad_tostring(tt_biquad_t *bq)
 {
 	return strdup_printf(
 		"y[n] = %9.6f x[n]  + %9.6f x[n-1]  + %9.6f x[n-2]  + %9.6f y[n-1]  + %9.6f y[n-2]\n",
-		TTASFLOAT(bq->x[0]),
-		TTASFLOAT(bq->x[1]),
-		TTASFLOAT(bq->x[2]),
-		TTASFLOAT(bq->y[0]),
-		TTASFLOAT(bq->y[1]));
+		TTASFLOAT(bq->coeff.x[0]),
+		TTASFLOAT(bq->coeff.x[1]),
+		TTASFLOAT(bq->coeff.x[2]),
+		TTASFLOAT(bq->coeff.y[0]),
+		TTASFLOAT(bq->coeff.y[1]));
 }
