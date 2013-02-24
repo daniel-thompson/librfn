@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 	//
 
 	rf_benchmark_t bm;
-	rf_benchmark_results_t results;
+	rf_benchmark_results_t amp_results, drum_results;
 	double us_per_loop = (1000000.0 * ctx->grain_size) / ctx->sampling_frequency;
 	double us;
 
@@ -58,8 +58,8 @@ int main(int argc, char **argv)
 		rf_benchmark_init(&bm, 2*1000000);
 		for (us=0; rf_benchmark_running(&bm); us+=us_per_loop)
 			tt_tintamp_process(tt, inbuf, outbuf);
-		rf_benchmark_finalize(&bm, us, &results);
-		rf_benchmark_results_show(&results, "tt_tintamp_process");
+		rf_benchmark_finalize(&bm, us, &amp_results);
+		rf_benchmark_results_show(&amp_results, "tt_tintamp_process");
 	}
 
 	//
@@ -70,8 +70,8 @@ int main(int argc, char **argv)
 		rf_benchmark_init(&bm, 2*1000000);
 		for (us=0; rf_benchmark_running(&bm); us+=us_per_loop)
 			tt_drummachine_process(dm, outbuf);
-		rf_benchmark_finalize(&bm, us, &results);
-		rf_benchmark_results_show(&results, "tt_drummachine_process");
+		rf_benchmark_finalize(&bm, us, &drum_results);
+		rf_benchmark_results_show(&drum_results, "tt_drummachine_process");
 	}
 
 	// TIDY
@@ -81,6 +81,19 @@ int main(int argc, char **argv)
 	tt_sbuf_delete(outbuf);
 	tt_sbuf_delete(inbuf);
 	tt_context_delete(ctx);
+
+	//
+	// Issue the results as a CSV file
+	//
+
+	char *prefix = getenv("BENCHMARK_PREFIX");
+	char *fname = xstrdup_printf("%sbenchmark.csv", prefix ? prefix : "");
+	FILE *csvfile = fopen(fname, "w");
+	free(fname);
+	assert(csvfile); // no resources is a legitimate reason to fail test...
+	fprintf(csvfile, "tintamp,tintdrum\n");
+	fprintf(csvfile, "%1.3f,%1.3f\n", amp_results.cpu_usage, drum_results.cpu_usage);
+	fclose(csvfile);
 
 	return 0;
 }
