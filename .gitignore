@@ -53,6 +53,7 @@ src/libtt/tests/tubestagetest
 src/libtt/tests/waveshapertest
 src/libtt/tests/wavreadertest
 
+benchmark.csv
 drummachinetest.wav
 presettest.pre
 wavreadertest.wav

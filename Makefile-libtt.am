@@ -143,4 +143,5 @@ src_libtt_tests_presettest_LDADD = $(LIBTT_LIBS)
 src_libtt_tests_benchmark_SOURCES = src/libtt/tests/benchmark.c
 src_libtt_tests_benchmark_CPPFLAGS = $(LIBTT_CFLAGS)
 src_libtt_tests_benchmark_LDADD = $(LIBTT_LIBS)
+CLEANFILES += benchmark.csv
 

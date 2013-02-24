@@ -41,6 +41,13 @@ int main(int argc, char **argv)
 	tt_siggen_process(sg, inbuf);
 	tt_drummachine_setup(dm);
 
+	// Log file
+	char *prefix = getenv("BENCHMARK_PREFIX");
+	char *fname = xstrdup_printf("%sbenchmark.csv", prefix ? prefix : "");
+	FILE *logfile = fopen(fname, "w");
+	free(fname);
+	assert(logfile); // test is allowed to fail if no resources
+
 	//
 	// variables needed to gather a benchmark
 	//
@@ -60,6 +67,7 @@ int main(int argc, char **argv)
 			tt_tintamp_process(tt, inbuf, outbuf);
 		rf_benchmark_finalize(&bm, us, &results);
 		rf_benchmark_results_show(&results, "tt_tintamp_process");
+		rf_benchmark_results_as_csv(&results, "tt_tintamp_process", logfile);
 	}
 
 	//
@@ -72,9 +80,11 @@ int main(int argc, char **argv)
 			tt_drummachine_process(dm, outbuf);
 		rf_benchmark_finalize(&bm, us, &results);
 		rf_benchmark_results_show(&results, "tt_drummachine_process");
+		rf_benchmark_results_as_csv(&results, "tt_drummachine_process", logfile);
 	}
 
 	// TIDY
+	fclose(logfile);
 	tt_drummachine_delete(dm);
 	tt_tintamp_delete(tt);
 	tt_siggen_delete(sg);

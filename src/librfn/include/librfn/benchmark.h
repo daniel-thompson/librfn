@@ -15,6 +15,7 @@
 #define RF_BENCHMARK_H_
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdint.h>
 
 typedef struct {
@@ -46,5 +47,6 @@ bool rf_benchmark_running(rf_benchmark_t *b);
 void rf_benchmark_finalize(rf_benchmark_t *b, uint64_t nominal, rf_benchmark_results_t *r);
 
 void rf_benchmark_results_show(rf_benchmark_results_t *r, const char *tag);
+void rf_benchmark_results_as_csv(rf_benchmark_results_t *r, const char *tag, FILE *f);
 
 #endif // RF_BENCHMARK_H_
