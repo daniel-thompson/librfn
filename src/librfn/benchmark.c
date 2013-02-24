@@ -57,12 +57,3 @@ void rf_benchmark_results_show(rf_benchmark_results_t *r, const char *tag)
 			(prefix ? prefix : ""),
 			tag, r->ratio, r->cpu_usage);
 }
-
-void rf_benchmark_results_as_csv(rf_benchmark_results_t *r, const char *tag, FILE *f)
-{
-	char *prefix = getenv("BENCHMARK_PREFIX");
-
-	fprintf(f, "\"%s%s\",%1.2f,%1.3f\n",
-		(prefix ? prefix : ""),
-		tag, r->ratio, r->cpu_usage);
-}
