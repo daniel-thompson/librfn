@@ -27,6 +27,12 @@ int main(int argc, char **argv)
 	if (argc >= 2)
 		test_cycles = strtol(argv[1], (char **) NULL, 10);
 
+	// handle invalid arguments
+	if (test_cycles < 1) {
+		printf("Usage: benchmark [<num_test_cycles>]\n");
+		return 1;
+	}
+
 	// INIT
 	tt_context_t *ctx = tt_context_new();
 	ctx->sampling_frequency = 48000;
