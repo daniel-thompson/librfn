@@ -5,6 +5,7 @@
 Makefile
 Makefile.in
 aclocal.m4
+ar-lib
 autom4te.cache/
 compile
 config.guess
@@ -58,6 +59,7 @@ presettest.pre
 wavreadertest.wav
 wavwritertest.wav
 
+src/libtt/controls.h
 src/jacklab/jacklab
 src/jacklua/tintamp_jacklua
 src/tintamp/tintamp_gresource.c

@@ -58,6 +58,11 @@ pulsewriter_SOURCES = src/libtt/pulsewriter.c
 endif
 
 
+CLEANFILES += src/libtt/controls.h
+src/libtt/controls.h : $(top_srcdir)/src/libtt/extract_controls.sh
+	@echo "  GEN      $@"
+	@sh $(top_srcdir)/src/libtt/extract_controls.sh $(top_srcdir)/src/libtt/include/libtt > $@
+
 #
 # libtt test suite
 #
@@ -107,7 +112,7 @@ src_libtt_tests_wavreadertest_LDADD = $(LIBTT_LIBS)
 BUILT_SOURCES += wavreadertest.wav
 CLEANFILES += wavreadertest.wav wavwritertest.wav
 wavreadertest.wav : $(top_srcdir)/src/libtt/tests/wavreadertest.wav
-	@echo "  CP     $@"
+	@echo "  CP       $@"
 	@cp $< $@
 
 src_libtt_tests_tubestagetest_SOURCES = src/libtt/tests/tubestagetest.c
