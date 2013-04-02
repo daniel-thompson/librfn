@@ -43,6 +43,7 @@ src/libtt/tests/analysetest
 src/libtt/tests/biquadtest
 src/libtt/tests/benchmark
 src/libtt/tests/cabsimtest
+src/libtt/tests/delaytest
 src/libtt/tests/drummachinetest
 src/libtt/tests/preamptest
 src/libtt/tests/presettest

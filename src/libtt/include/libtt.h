@@ -26,6 +26,7 @@
 #include "libtt/audiowriter.h"
 #include "libtt/biquad.h"
 #include "libtt/dcblocker.h"
+#include "libtt/delay.h"
 #include "libtt/firstorder.h"
 #ifdef HAVE_PULSE
 #include "libtt/pulsewriter.h"

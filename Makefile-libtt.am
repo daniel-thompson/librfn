@@ -32,6 +32,7 @@ src_libtt_libtt_a_SOURCES=\
 	src/libtt/audiowriter.c \
 	src/libtt/biquad.c \
 	src/libtt/dcblocker.c \
+	src/libtt/delay.c \
 	src/libtt/firstorder.c \
 	src/libtt/jackcommon.c \
 	src/libtt/jackwriter.c \
@@ -72,6 +73,7 @@ src_libtt_tests = \
 	src/libtt/tests/analysetest \
 	src/libtt/tests/siggentest \
 	src/libtt/tests/biquadtest \
+	src/libtt/tests/delaytest \
 	src/libtt/tests/waveshapertest \
 	src/libtt/tests/wavreadertest \
 	src/libtt/tests/tubestagetest \
@@ -101,6 +103,10 @@ src_libtt_tests_siggentest_LDADD = $(LIBTT_LIBS)
 src_libtt_tests_biquadtest_SOURCES = src/libtt/tests/biquadtest.c
 src_libtt_tests_biquadtest_CPPFLAGS = $(LIBTT_CFLAGS)
 src_libtt_tests_biquadtest_LDADD = $(LIBTT_LIBS)
+
+src_libtt_tests_delaytest_SOURCES = src/libtt/tests/delaytest.c
+src_libtt_tests_delaytest_CPPFLAGS = $(LIBTT_CFLAGS)
+src_libtt_tests_delaytest_LDADD = $(LIBTT_LIBS)
 
 src_libtt_tests_waveshapertest_SOURCES = src/libtt/tests/waveshapertest.c
 src_libtt_tests_waveshapertest_CPPFLAGS = $(LIBTT_CFLAGS)

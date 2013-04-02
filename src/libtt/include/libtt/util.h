@@ -25,7 +25,8 @@
  * composition easier.
  */
 typedef enum {
-	TT_TUBESTAGE_BASE = 1,
+	TT_DELAY_BASE = 1,
+	TT_TUBESTAGE_BASE,
 	TT_PREAMP_BASE,
 	TT_TONESTACK_BASE,
 	TT_CABSIM_BASE,
