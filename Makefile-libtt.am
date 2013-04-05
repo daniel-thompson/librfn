@@ -39,6 +39,7 @@ src_libtt_libtt_a_SOURCES=\
 	$(pulsewriter_SOURCES) \
 	src/libtt/siggen.c \
 	src/libtt/quantizer.c \
+	src/libtt/reverb.c \
 	src/libtt/waveshaper.c \
 	src/libtt/wavreader.c \
 	src/libtt/wavwriter.c \

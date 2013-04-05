@@ -33,6 +33,7 @@
 #endif
 #include "libtt/siggen.h"
 #include "libtt/quantizer.h"
+#include "libtt/reverb.h"
 #include "libtt/waveshaper.h"
 #include "libtt/wavreader.h"
 #include "libtt/wavwriter.h"
