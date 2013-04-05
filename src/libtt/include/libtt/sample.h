@@ -32,6 +32,8 @@
 
 #define TSQ 15			//!< Fractional bits for "short" precision (Q15)
 
+#define TTENCODEINT(x) ((ttspl_t)(x)) //!< Store a large integer (for get/set control)
+#define TTDECODEINT(x) ((int32_t)(x)) //!< Extract a large integer (for get/set/control)
 
 #ifdef HAVE_FPU
 

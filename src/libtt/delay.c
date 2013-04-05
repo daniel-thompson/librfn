@@ -26,8 +26,7 @@ void tt_delay_init(tt_delay_t *p, tt_context_t *ctx, ttspl_t *buf, unsigned int 
 
 	// the delay is set using the _set_control() interface (meaning
 	// the ceiling is fairly low)
-	assert(len < TTSPL_MAX);
-	p->controls[TT_TAG2ID(TT_DELAY_CONTROL_NUM_SAMPLES)] = TTINT(len);
+	p->controls[TT_TAG2ID(TT_DELAY_CONTROL_NUM_SAMPLES)] = TTENCODEINT(len);
 }
 
 void tt_delay_finalize(tt_delay_t *p)
@@ -47,25 +46,18 @@ tt_generic_delete(delay);
 
 void tt_delay_setup(tt_delay_t *p)
 {
-
-	ttspl_t delay = p->controls[TT_TAG2ID(TT_DELAY_CONTROL_NUM_SAMPLES)];
+	int32_t delay = TTDECODEINT(p->controls[TT_TAG2ID(TT_DELAY_CONTROL_NUM_SAMPLES)]);
 
 	// ensure the delay is not out of range
-	if (TTASINT(delay) > p->buflen) {
+	if (delay > p->buflen) {
 		delay = p->buflen;
-		p->controls[TT_TAG2ID(TT_DELAY_CONTROL_NUM_SAMPLES)] = TTINT(delay);
+		p->controls[TT_TAG2ID(TT_DELAY_CONTROL_NUM_SAMPLES)] = TTENCODEINT(delay);
 	}
 
-	// calculate the new buffer end
-	ttspl_t *bufend = p->buf + TTASINT(delay);
-
-	// lazily update the filter state
-	if (p->bufend != bufend) {
-		memset(p->buf, 0, TTASINT(delay) * sizeof(ttspl_t));
-
-		p->p = p->buf;
-		p->bufend = bufend;
-	}
+	// update the filter state
+	memset(p->buf, 0, delay * sizeof(ttspl_t));
+	p->p = p->buf;
+	p->bufend = p->buf + delay;
 }
 
 tt_generic_get_control(delay, TT_DELAY_CONTROL_MIN, TT_DELAY_CONTROL_MAX);
@@ -80,7 +72,6 @@ void tt_delay_set_control(tt_delay_t *p, tt_delay_control_t ctrl, ttspl_t val)
 }
 
 tt_generic_enum_control(delay, TT_DELAY_CONTROL_MIN, TT_DELAY_CONTROL_MAX);
-
 
 /*!
  * \todo Does not to fractional delay...

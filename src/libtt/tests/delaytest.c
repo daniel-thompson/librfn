@@ -49,7 +49,7 @@ int main()
 				TTAT(outbuf, i));
 
 	// half the delay size
-	tt_delay_set_control(delay, TT_DELAY_CONTROL_NUM_SAMPLES, TTINT(ctx->grain_size/8));
+	tt_delay_set_control(delay, TT_DELAY_CONTROL_NUM_SAMPLES, TTENCODEINT(ctx->grain_size/8));
 	tt_siggen_process(sg, inbuf);
 	tt_delay_process(delay, inbuf, outbuf);
 	for (int i=0; i<ctx->grain_size/8; i++)
@@ -59,9 +59,9 @@ int main()
 				TTAT(outbuf, i));
 
 	// set an overlarge delay size
-	tt_delay_set_control(delay, TT_DELAY_CONTROL_NUM_SAMPLES, TTINT(ctx->grain_size));
+	tt_delay_set_control(delay, TT_DELAY_CONTROL_NUM_SAMPLES, TTENCODEINT(ctx->grain_size));
 	ttspl_t num_samples = tt_delay_get_control(delay, TT_DELAY_CONTROL_NUM_SAMPLES);
-	verify(TTASINT(num_samples) == ctx->grain_size/4);
+	verify(TTDECODEINT(num_samples) == ctx->grain_size/4);
 
 	// TIDY
 	tt_delay_delete(delay);

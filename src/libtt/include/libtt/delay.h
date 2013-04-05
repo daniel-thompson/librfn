@@ -45,6 +45,11 @@ ttspl_t tt_delay_get_control(tt_delay_t *p, tt_delay_control_t ctrl);
 void tt_delay_set_control(tt_delay_t *p, tt_delay_control_t ctrl, ttspl_t val);
 tt_delay_control_t tt_delay_enum_control(tt_delay_control_t ctrl);
 
+static inline ttspl_t tt_delay_peek(tt_delay_t *p)
+{
+	return *(p->p);
+}
+
 ttspl_t tt_delay_step(tt_delay_t *p, ttspl_t spl);
 void tt_delay_process(tt_delay_t *p, tt_sbuf_t *inbuf, tt_sbuf_t *outbuf);
 
