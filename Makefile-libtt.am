@@ -48,6 +48,7 @@ src_libtt_libtt_a_SOURCES=\
 	src/libtt/tonestack.c \
 	src/libtt/cabsim.c \
 	src/libtt/tintamp.c \
+	src/libtt/tintdrum.c \
 	src/libtt/drummachine.c \
 	src/libtt/preset.c \
 	src/libtt/presetio.c

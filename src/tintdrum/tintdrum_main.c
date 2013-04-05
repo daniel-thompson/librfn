@@ -25,10 +25,10 @@
 
 typedef struct {
 	tt_context_t tt_ctx;
-	tt_drummachine_t drummachine;
+	tt_tintdrum_t tintdrum;
 	tt_audiowriter_t writer;
 
-	tt_sbuf_t *output_buf;
+	tt_sbuf_t *buf;
 } appctx_t;
 
 appctx_t appctx;
@@ -44,8 +44,8 @@ void main_loop(appctx_t *ctx)
 
 	// main loop handler
 	while (0 == sigpending(&sigset) && !sigismember(&sigset, SIGINT)) {
-		tt_drummachine_process(&ctx->drummachine, ctx->output_buf);
-		tt_audiowriter_process(&ctx->writer, ctx->output_buf);
+		tt_tintdrum_process(&ctx->tintdrum, ctx->buf);
+		tt_audiowriter_process(&ctx->writer, ctx->buf);
 	}
 
 	// re-enable SIGINT
@@ -65,14 +65,14 @@ int main (int argc, char *argv[])
 
 	// setup tintamp
 	tt_context_init(&ctx->tt_ctx);
-	tt_drummachine_init(&ctx->drummachine, &ctx->tt_ctx);
+	tt_tintdrum_init(&ctx->tintdrum, &ctx->tt_ctx);
 	tt_audiowriter_init(&ctx->writer, &ctx->tt_ctx);
 
-	tt_drummachine_setup(&ctx->drummachine);
+	// tintdrum has no setup function
 	tt_audiowriter_setup(&ctx->writer);
 
 	// load the previous settings from file
-	tt_preset_init(&settings, &tt_preset_ops_drummachine);
+	tt_preset_init(&settings, &tt_preset_ops_tintdrum);
 	settings_fname = getenv("HOME");
 	if (settings_fname)
 		settings_fname = xstrdup_join(settings_fname, "/.tindrum.settings");
@@ -81,11 +81,11 @@ int main (int argc, char *argv[])
 	settings_file = fopen(settings_fname, "r");
 	if (settings_file) {
 		tt_presetio_deserialize(settings_file, &settings);
-		tt_preset_restore(&settings, &ctx->drummachine);
+		tt_preset_restore(&settings, &ctx->tintdrum);
 		fclose(settings_file);
 	}
 
-	ctx->output_buf = tt_sbuf_new(ctx->tt_ctx.grain_size);
+	ctx->buf = tt_sbuf_new(ctx->tt_ctx.grain_size);
 
 	main_loop(ctx);
 
@@ -93,12 +93,12 @@ int main (int argc, char *argv[])
 	settings_file = fopen(settings_fname, "w");
 	free(settings_fname);
 	if (settings_file) {
-		tt_preset_save(&settings, &ctx->drummachine);
+		tt_preset_save(&settings, &ctx->tintdrum);
 		tt_presetio_serialize(settings_file, &settings);
 		fclose(settings_file);
 	}
 
-	tt_drummachine_finalize(&ctx->drummachine);
+	tt_tintdrum_finalize(&ctx->tintdrum);
 	tt_preset_finalize(&settings);
 
 	return 0;

@@ -15,6 +15,11 @@
 
 #include "libtt.h"
 
+const tt_preset_ops_t tt_preset_ops_drummachine = TT_PRESET_OPS_INITIALIZER(
+		tt_drummachine_get_control,
+		tt_drummachine_set_control,
+		tt_drummachine_enum_control
+);
 
 const tt_preset_ops_t tt_preset_ops_tintamp = TT_PRESET_OPS_INITIALIZER(
 		tt_tintamp_get_control,
@@ -22,10 +27,10 @@ const tt_preset_ops_t tt_preset_ops_tintamp = TT_PRESET_OPS_INITIALIZER(
 		tt_tintamp_enum_control
 );
 
-const tt_preset_ops_t tt_preset_ops_drummachine = TT_PRESET_OPS_INITIALIZER(
-		tt_drummachine_get_control,
-		tt_drummachine_set_control,
-		tt_drummachine_enum_control
+const tt_preset_ops_t tt_preset_ops_tintdrum = TT_PRESET_OPS_INITIALIZER(
+		tt_tintdrum_get_control,
+		tt_tintdrum_set_control,
+		tt_tintdrum_enum_control
 );
 
 void tt_preset_init(tt_preset_t *p, const tt_preset_ops_t *ops)

@@ -36,8 +36,9 @@ typedef struct {
 	(tt_preset_enum_control_t *) enumerate \
 }
 
-extern const tt_preset_ops_t tt_preset_ops_tintamp;
 extern const tt_preset_ops_t tt_preset_ops_drummachine;
+extern const tt_preset_ops_t tt_preset_ops_tintamp;
+extern const tt_preset_ops_t tt_preset_ops_tintdrum;
 
 typedef struct {
 	const tt_preset_ops_t *ops;

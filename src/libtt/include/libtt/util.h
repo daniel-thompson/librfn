@@ -33,6 +33,7 @@ typedef enum {
 	TT_CABSIM_BASE,
 	TT_DRUMMACHINE_BASE,
 	TT_TINTAMP_BASE,
+	TT_TINTDRUM_BASE,
 } tt_base_t;
 
 #define TT_BASE2TAG(x) ((x) << 16)

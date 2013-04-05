@@ -44,6 +44,7 @@
 #include "libtt/tonestack.h"
 #include "libtt/cabsim.h"
 #include "libtt/tintamp.h"
+#include "libtt/tintdrum.h"
 
 // high level utilities
 #include "libtt/drummachine.h"
