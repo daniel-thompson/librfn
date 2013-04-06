@@ -40,12 +40,11 @@ int main(int argc, char **argv)
 	tt_sbuf_t *outbuf = tt_sbuf_new(ctx->grain_size);
 	tt_siggen_t *sg = tt_siggen_new(ctx);
 	tt_tintamp_t *tt = tt_tintamp_new(ctx);
-	tt_drummachine_t *dm = tt_drummachine_new(ctx);
+	tt_tintdrum_t *dm = tt_tintdrum_new(ctx);
 
 	// generate an input buffer
 	tt_siggen_setup(sg, 0, TTFLOAT(0.8), TT_SIGGEN_WHITE_NOISE);
 	tt_siggen_process(sg, inbuf);
-	tt_drummachine_setup(dm);
 
 	//
 	// variables needed to gather a benchmark
@@ -69,19 +68,19 @@ int main(int argc, char **argv)
 	}
 
 	//
-	// drummachine benchmark
+	// tintdrum benchmark
 	//
 
 	for (int i=0; i<test_cycles; i++) {
 		rf_benchmark_init(&bm, 2*1000000);
 		for (us=0; rf_benchmark_running(&bm); us+=us_per_loop)
-			tt_drummachine_process(dm, outbuf);
+			tt_tintdrum_process(dm, outbuf);
 		rf_benchmark_finalize(&bm, us, &drum_results);
-		rf_benchmark_results_show(&drum_results, "tt_drummachine_process");
+		rf_benchmark_results_show(&drum_results, "tt_tintdrum_process");
 	}
 
 	// TIDY
-	tt_drummachine_delete(dm);
+	tt_tintdrum_delete(dm);
 	tt_tintamp_delete(tt);
 	tt_siggen_delete(sg);
 	tt_sbuf_delete(outbuf);
