@@ -1,0 +1,42 @@
+#!/bin/sh
+
+#
+# Get the current time of day and run the fibredemo with a one second timeout.
+# Fail if the pipeline (deme and grep) is not successful.
+#
+start=`date '+%s'`
+src/fibredemo 0:01 | grep "Time is up" > /dev/null
+if [ $? -ne 0 ]
+then
+	exit 1
+fi
+
+#
+# Find out how long it took to run
+#
+end=`date '+%s'`
+delta=$(($end - $start))
+
+#
+# Fail if the demo completed in less than one second (i.e. if the timer
+# does not sleep for the required time)
+#
+if [ $delta -lt 1 ]
+then
+	exit 2
+fi
+
+#
+# Fail if the demo completed in three or more seconds (due to the quantization
+# on our observation of time it is legitimate for the test to appear to take
+# two seconds to execute).
+#
+if [ $delta -gt 2 ]
+then
+	exit 3
+fi
+
+#
+# Success
+#
+exit 0

@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(tintamp, 1.0)
+AC_INIT(librfn, 1.0)
 
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE([1.11 silent-rules foreign subdir-objects -Wall])
@@ -18,49 +18,6 @@ AC_SEARCH_LIBS([clock_gettime], [rt],
 	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, true)
           AC_DEFINE(HAVE_CLOCK_GETTIME,1,[Have clock_gettime]),
 	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, false))
-
-dnl The GTK+ tools are on by default
-AC_ARG_WITH([gtk],
-    AS_HELP_STRING([--without-gtk], [Disable GTK+ based tools]))
-AM_CONDITIONAL(GTK, [test "x$with_gtk" != "xno"])
-
-dnl The floating point build is on by default.
-AC_ARG_WITH([fpu],
-    AS_HELP_STRING([--without-fpu], [Disable FPU support (operate critical paths in fixed point)]))
-dnl change to = "xyes" to disable by default FPU by default
-AS_IF([test "x$with_fpu" != "xno"], [
-	AC_DEFINE([HAVE_FPU])
-])
-
-dnl Range checking is off by default.
-AC_ARG_ENABLE([range-check],
-    AS_HELP_STRING([--enable-range-check], [Enable range checking (check for potential fixed point overflow)]))
-AS_IF([test "x$enable_range_check" == "xyes"], [
-	AC_DEFINE([ENABLE_RANGE_CHECK])
-])
-
-dnl ALSA is optional (although the tools prefer pulseaudio if they can get it)
-PKG_CHECK_MODULES([ALSA], [alsa >= 1.0],
-	AM_CONDITIONAL(HAVE_ALSA, true)
-          AC_DEFINE(HAVE_ALSA,1,[Have ALSA]),
-	AM_CONDITIONAL(HAVE_ALSA, false))
-
-dnl Jack is mandatory (for now)
-PKG_CHECK_MODULES([JACK], [jack >= 0.9])
-AC_DEFINE(HAVE_JACK,1,[Have JACK])
-
-dnl Pulseaudio is optional (but tintdrum won't build without it)
-PKG_CHECK_MODULES([PULSE], [libpulse-simple >= 1.1],
-	AM_CONDITIONAL(HAVE_PULSE, true)
-          AC_DEFINE(HAVE_PULSE,1,[Have pulseaudio]),
-	AM_CONDITIONAL(HAVE_PULSE, false))
-
-AS_IF([test "x$with_gtk" != "xno"], [
-   PKG_CHECK_MODULES([GTK], [gtk+-3.0 glib-2.0])
-])
-
-dnl This flag is required for the GTK+ signal autoconnection to work
-AX_APPEND_LINK_FLAGS([-export-dynamic])
 
 dnl Keep these near the bottom - adding -Werror breaks various tests
 AX_CFLAGS_WARN_ALL

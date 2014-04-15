@@ -16,6 +16,7 @@ configure
 depcomp
 install-sh
 missing
+test-driver
 
 .dirstamp
 *~
@@ -26,47 +27,18 @@ missing
 *.o
 *#
 
-src/librfn/demos/fibredemo
+src/fibredemo
 
-src/librfn/tests/bitopstest
-src/librfn/tests/enumtest
-src/librfn/tests/fibretest
-src/librfn/tests/fuzztest
-src/librfn/tests/listtest
-src/librfn/tests/messageqtest
-src/librfn/tests/protothreadstest
-src/librfn/tests/randtest
-src/librfn/tests/wavheadertest
-src/librfn/tests/utiltest
+tests/bitopstest
+tests/enumtest
+tests/fibretest
+tests/fuzztest
+tests/listtest
+tests/messageqtest
+tests/protothreadstest
+tests/randtest
+tests/wavheadertest
+tests/utiltest
 
-src/libtt/tests/analysetest
-src/libtt/tests/biquadtest
-src/libtt/tests/benchmark
-src/libtt/tests/cabsimtest
-src/libtt/tests/delaytest
-src/libtt/tests/drummachinetest
-src/libtt/tests/preamptest
-src/libtt/tests/presettest
-src/libtt/tests/sampletest
-src/libtt/tests/siggentest
-src/libtt/tests/tintamptest
-src/libtt/tests/tonestacktest
-src/libtt/tests/tubestagetest
-src/libtt/tests/waveshapertest
-src/libtt/tests/wavreadertest
-
-drummachinetest.wav
-presettest.pre
 wavreadertest.wav
 wavwritertest.wav
-
-src/libtt/controls.h
-src/jacklab/jacklab
-src/jacklua/tintamp_jacklua
-src/tintamp/tintamp_gresource.c
-src/tintamp/tintamp
-src/tintdrum/tintdrum
-
-tests/media/
-arm-none-eabi/
-x86_64-unknown-linux-gnu/

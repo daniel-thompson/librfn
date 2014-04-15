@@ -1,13 +1,13 @@
 #
 # Makefile-librfn.am
 #
-# Part of tintamp (the integer amplifier)
+# Part of librfn (a general utility library from redfelineninja.org.uk)
 #
 # Copyright (C) 2012, 2013 Daniel Thompson <daniel@redfelineninja.org.uk> 
 #
 # This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
 
@@ -16,32 +16,32 @@
 # librfn.a
 #
 
-noinst_LIBRARIES += src/librfn/librfn.a
+noinst_LIBRARIES += lib/librfn.a
 
-LIBRFN_CFLAGS = -I$(top_srcdir)/src/librfn/include
-LIBRFN_LIBS = $(top_builddir)/src/librfn/librfn.a
+LIBRFN_CFLAGS = -I$(top_srcdir)/include
+LIBRFN_LIBS = $(top_builddir)/lib/librfn.a
 
-src_librfn_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
+lib_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
 
-src_librfn_librfn_a_SOURCES = \
-	src/librfn/benchmark.c \
-	src/librfn/bitops.c \
-	src/librfn/enum.c \
-	src/librfn/fibre.c \
-	src/librfn/fuzz.c \
-	src/librfn/hex.c \
-	src/librfn/list.c \
-	src/librfn/messageq.c \
-	src/librfn/pack.c \
-	src/librfn/rand.c \
-	src/librfn/string.c \
-	src/librfn/wavheader.c \
-	src/librfn/util.c
+lib_librfn_a_SOURCES = \
+	lib/benchmark.c \
+	lib/bitops.c \
+	lib/enum.c \
+	lib/fibre.c \
+	lib/fuzz.c \
+	lib/hex.c \
+	lib/list.c \
+	lib/messageq.c \
+	lib/pack.c \
+	lib/rand.c \
+	lib/string.c \
+	lib/wavheader.c \
+	lib/util.c
 
 if HAVE_CLOCK_GETTIME
-src_librfn_librfn_a_SOURCES += \
-	src/librfn/fibre_posix.c \
-	src/librfn/time_posix.c
+lib_librfn_a_SOURCES += \
+	lib/fibre_posix.c \
+	lib/time_posix.c
 endif
 
 #
@@ -49,72 +49,72 @@ endif
 #
 
 if HAVE_CLOCK_GETTIME
-noinst_PROGRAMS += src/librfn/demos/fibredemo
-src_librfn_demos_fibredemo_SOURCES = src/librfn/demos/fibredemo.c
-src_librfn_demos_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_demos_fibredemo_LDADD = $(LIBRFN_LIBS)
+noinst_PROGRAMS += src/fibredemo
+src_fibredemo_SOURCES = src/fibredemo.c
+src_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
+src_fibredemo_LDADD = $(LIBRFN_LIBS)
 endif
 
 #
 # librfn test suite
 #
 
-src_librfn_tests =
+tests =
 
-src_librfn_tests += src/librfn/tests/bitopstest
-src_librfn_tests_bitopstest_SOURCES = src/librfn/tests/bitopstest.c
-src_librfn_tests_bitopstest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_bitopstest_LDADD = $(LIBRFN_LIBS)
+tests += tests/bitopstest
+tests_bitopstest_SOURCES = tests/bitopstest.c
+tests_bitopstest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_bitopstest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/enumtest
-src_librfn_tests_enumtest_SOURCES = src/librfn/tests/enumtest.c
-src_librfn_tests_enumtest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_enumtest_LDADD = $(LIBRFN_LIBS)
+tests += tests/enumtest
+tests_enumtest_SOURCES = tests/enumtest.c
+tests_enumtest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_enumtest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/fibretest
-src_librfn_tests_fibretest_SOURCES = src/librfn/tests/fibretest.c
-src_librfn_tests_fibretest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_fibretest_LDADD = $(LIBRFN_LIBS)
+tests += tests/fibretest
+tests_fibretest_SOURCES = tests/fibretest.c
+tests_fibretest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_fibretest_LDADD = $(LIBRFN_LIBS)
 
-# fibredemotest must use TESTS directly. src_librfn_tests is appended
+# fibredemotest must use TESTS directly. tests is appended
 # to both noinst_PROGRAMS and TESTS but fibredemotest is a script that
 # wraps the demo program and cannot be compiled.
-TESTS += src/librfn/tests/fibredemotest
+TESTS += tests/fibredemotest
 
-src_librfn_tests += src/librfn/tests/fuzztest
-src_librfn_tests_fuzztest_SOURCES = src/librfn/tests/fuzztest.c
-src_librfn_tests_fuzztest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_fuzztest_LDADD = $(LIBRFN_LIBS)
+tests += tests/fuzztest
+tests_fuzztest_SOURCES = tests/fuzztest.c
+tests_fuzztest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_fuzztest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/listtest
-src_librfn_tests_listtest_SOURCES = src/librfn/tests/listtest.c
-src_librfn_tests_listtest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_listtest_LDADD = $(LIBRFN_LIBS)
+tests += tests/listtest
+tests_listtest_SOURCES = tests/listtest.c
+tests_listtest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_listtest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/messageqtest
-src_librfn_tests_messageqtest_SOURCES = src/librfn/tests/messageqtest.c
-src_librfn_tests_messageqtest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_messageqtest_LDADD = $(LIBRFN_LIBS)
+tests += tests/messageqtest
+tests_messageqtest_SOURCES = tests/messageqtest.c
+tests_messageqtest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_messageqtest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/protothreadstest
-src_librfn_tests_protothreadstest_SOURCES = src/librfn/tests/protothreadstest.c
-src_librfn_tests_protothreadstest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_protothreadstest_LDADD = $(LIBRFN_LIBS)
+tests += tests/protothreadstest
+tests_protothreadstest_SOURCES = tests/protothreadstest.c
+tests_protothreadstest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_protothreadstest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/randtest
-src_librfn_tests_randtest_SOURCES = src/librfn/tests/randtest.c
-src_librfn_tests_randtest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_randtest_LDADD = $(LIBRFN_LIBS)
+tests += tests/randtest
+tests_randtest_SOURCES = tests/randtest.c
+tests_randtest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_randtest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/wavheadertest
-src_librfn_tests_wavheadertest_SOURCES = src/librfn/tests/wavheadertest.c
-src_librfn_tests_wavheadertest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_wavheadertest_LDADD = $(LIBRFN_LIBS)
+tests += tests/wavheadertest
+tests_wavheadertest_SOURCES = tests/wavheadertest.c
+tests_wavheadertest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_wavheadertest_LDADD = $(LIBRFN_LIBS)
 
-src_librfn_tests += src/librfn/tests/utiltest
-src_librfn_tests_utiltest_SOURCES = src/librfn/tests/utiltest.c
-src_librfn_tests_utiltest_CFLAGS = $(LIBRFN_CFLAGS)
-src_librfn_tests_utiltest_LDADD = $(LIBRFN_LIBS)
+tests += tests/utiltest
+tests_utiltest_SOURCES = tests/utiltest.c
+tests_utiltest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_utiltest_LDADD = $(LIBRFN_LIBS)
 
-noinst_PROGRAMS += $(src_librfn_tests)
-TESTS += $(src_librfn_tests)
+noinst_PROGRAMS += $(tests)
+TESTS += $(tests)
