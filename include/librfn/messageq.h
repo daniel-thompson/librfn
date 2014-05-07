@@ -38,7 +38,10 @@ typedef struct {
 		(char *) (basep), \
 		(msg_len), \
 		((base_len) / (msg_len)), \
-		((base_len) / (msg_len)) \
+		ATOMIC_VAR_INIT(((base_len) / (msg_len))), \
+		ATOMIC_VAR_INIT(0), \
+		ATOMIC_VAR_INIT(0), \
+		0 \
 	}
 
 void messageq_init(messageq_t *mq, void *basep, size_t base_len, size_t msg_len);

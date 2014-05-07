@@ -25,7 +25,7 @@ void messageq_init(messageq_t *mq, void *basep, size_t base_len, size_t msg_len)
 	mq->basep = basep;
 	mq->msg_len = msg_len;
 	mq->queue_len = base_len / msg_len;
-	mq->num_free = base_len / msg_len;
+	atomic_store(&mq->num_free, base_len / msg_len);
 }
 
 void *messageq_claim(messageq_t *mq)
@@ -75,7 +75,8 @@ void *messageq_receive(messageq_t *mq)
 	if (0 == (full_flags & (1 << receivep)))
 		return NULL;
 
-	mq->receivep = (receivep >= (mq->queue_len-1) ? 0 : receivep+1);
+	mq->receivep =
+	    (receivep >= (unsigned int)(mq->queue_len - 1) ? 0 : receivep + 1);
 
 	return mq->basep + (receivep * mq->msg_len);
 
@@ -83,5 +84,10 @@ void *messageq_receive(messageq_t *mq)
 
 void messageq_release(messageq_t *mq, void *msg)
 {
+	/* msg is part of the API to allow automatic checking that messages are
+	 * always released (and therefore received) in strict order. However
+	 * that is not yet implemented.
+	 */
+	(void)msg;
 	atomic_fetch_add(&mq->num_free, 1);
 }
