@@ -11,13 +11,14 @@
  * (at your option) any later version.
  */
 
+#include "librfn/fibre.h"
+
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "librfn/atomic.h"
-#include "librfn/fibre.h"
 #include "librfn/list.h"
 #include "librfn/messageq.h"
 #include "librfn/util.h"
@@ -41,7 +42,7 @@ static struct {
 	.timerq = LIST_VAR_INIT
 };
 
-static void handle_atomic_runq()
+static void handle_atomic_runq(void)
 {
 	fibre_t **f;
 
@@ -51,7 +52,7 @@ static void handle_atomic_runq()
 	}
 }
 
-static void handle_timerq()
+static void handle_timerq(void)
 {
 	list_iterator_t iter;
 
@@ -66,7 +67,7 @@ static void handle_timerq()
 
 }
 
-static fibre_t *get_next_task()
+static fibre_t *get_next_task(void)
 {
 	list_node_t *node = list_extract(&kernel.runq);
 	if (!node)
@@ -97,7 +98,7 @@ static void update_current_state(fibre_state_t state)
 	// from the main loop in order to implement task accounting.
 }
 
-static uint32_t get_next_wakeup()
+static uint32_t get_next_wakeup(void)
 {
 	// TODO: list_peek()
 	list_node_t *node_runq = kernel.runq.head;

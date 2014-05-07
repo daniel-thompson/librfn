@@ -24,7 +24,7 @@
  * intervals on small micro-controller systems where 64-bit arithmetic might
  * be regarded as expensive (either in cycles or memory use).
  */
-uint32_t time_now();
+uint32_t time_now(void);
 
 /*!
  * Get the current wall time in microseconds.
@@ -32,7 +32,7 @@ uint32_t time_now();
  * On POSIX systems this is merely a wrapper around clock_gettime() but
  * is often less cumbersome to work with.
  */
-uint64_t time64_now();
+uint64_t time64_now(void);
 
 
 #endif // RF_TIME_H_

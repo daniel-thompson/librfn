@@ -57,7 +57,7 @@ typedef struct {
 
 #define PT_BEGIN_FIBRE(f) PT_BEGIN(&((f)->priv))
 
-fibre_t *fibre_self();
+fibre_t *fibre_self(void);
 uint32_t fibre_scheduler_next(uint32_t time);
 
 void fibre_init(fibre_t *f, fibre_entrypoint_t *fn);
@@ -88,6 +88,6 @@ void fibre_eventq_release(fibre_eventq_t *evtq, void *evtp);
  * POSIX environments are, however, already supported to allow the
  * demonstation programs to work.
  */
-void fibre_scheduler_main_loop();
+void fibre_scheduler_main_loop(void);
 
 #endif // RF_FIBRE_H_
