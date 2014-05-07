@@ -16,8 +16,9 @@
 
 #include <stdint.h>
 
+#ifdef __STDC_NO_ATOMICS__
+
 #define _Atomic
-//#define _Atomic(x) x
 
 #define ATOMIC_VAR_INIT(c) c
 
@@ -105,5 +106,9 @@ typedef unsigned int atomic_uint;
 	__atomic_clear(object, __ATOMIC_SEQ_CST)
 #define atomic_flag_clear_explicit(object, order) \
 	__atomic_clear(object, order)
+
+#else /* __STDC_NO_ATOMICS__ */
+#include <stdatomic.h>
+#endif /* __STDC_NO_ATOMICS__ */
 
 #endif // RF_ATOMIC_H_
