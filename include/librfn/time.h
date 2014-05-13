@@ -17,6 +17,11 @@
 #include <stdint.h>
 
 /*!
+ * Initialize the time sub-system.
+ */
+void time_init(void);
+
+/*!
  * Get the current wall time in microseconds and modulo 2^32.
  *
  * The output of this function will wrap after slightly more than one hour.

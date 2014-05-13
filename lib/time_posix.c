@@ -16,6 +16,10 @@
 
 #include "librfn/time.h"
 
+void time_init(void)
+{
+}
+
 uint32_t time_now()
 {
 	struct timespec now;
