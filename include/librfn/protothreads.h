@@ -14,6 +14,7 @@
 #ifndef RF_PROTOTHREADS_H_
 #define RF_PROTOTHREADS_H_
 
+#include <assert.h>
 #include <stdint.h>
 
 /*
