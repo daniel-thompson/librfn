@@ -14,6 +14,25 @@
 #ifndef RF_LIBRFN_H_
 #define RF_LIBRFN_H_
 
+/*!
+\mainpage
+
+librfn is a collection of small library utilities collected whilst writing
+"stuff" in C and wondering why I was writing the same type of code over and
+over again.
+
+It is neither organised nor comprehensive. Instead it is a pick 'n choose
+library. If you like the code (and the license) use it. Either by copying the
+raw C files into your application or, perhaps better, but integrating librfn
+into your git project as either a submodule or subtree.
+
+librfn is free software licensed under the GNU Lesser General Public License,
+v3 or later.
+
+Source code can be downloaded from https://github.com/daniel-thompson/librfn
+
+*/
+
 #include "librfn/atomic.h"
 #include "librfn/benchmark.h"
 #include "librfn/bitops.h"

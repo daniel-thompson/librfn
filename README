@@ -10,6 +10,8 @@ library. If you like the code (and the license) use it. Either by copying the
 raw C files into your application or, perhaps better, but integrating librfn
 into your git project as either a submodule or subtree.
 
+For library documentation see http://daniel-thompson.github.io/librfn .
+
 Building
 --------
 

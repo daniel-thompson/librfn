@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2013 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2013-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -19,6 +19,17 @@
 #include "list.h"
 #include "messageq.h"
 #include "protothreads.h"
+
+/*!
+ * \defgroup librfn_fibre Fibre
+ *
+ * \brief Lightweight run-to-completion task scheduler supporting protothreads.
+ *
+ * The fibre scheduler is an extremely lightweight run-to-completion task
+ * scheduler supporting protothreads. In addition to timer and run queue
+ * management it also provides support for per-fibre event queues.
+ * @{
+ */
 
 typedef enum {
 	FIBRE_STATE_YIELDED = PT_YIELDED,
@@ -220,5 +231,7 @@ void fibre_eventq_release(fibre_eventq_t *evtq, void *evtp);
  * demonstation programs to work.
  */
 void fibre_scheduler_main_loop(void);
+
+/*! @} */
 
 #endif // RF_FIBRE_H_
