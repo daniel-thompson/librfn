@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['benchmark_5fget_5fresult',['benchmark_get_result',['../libbench_8c.html#ae56b65a831bb1703a353f0b93a7ae13f',1,'benchmark_get_result(benchmark_results_t *results, int n, stats_t *s):&#160;libbench.c'],['../libbench_8h.html#ae56b65a831bb1703a353f0b93a7ae13f',1,'benchmark_get_result(benchmark_results_t *results, int n, stats_t *s):&#160;libbench.c']]],
+  ['benchmark_5finit',['benchmark_init',['../libbench_8c.html#a61c473755696e5f8393b6d8e9a95175c',1,'benchmark_init(benchmark_results_t *results, fibre_t *wakeup):&#160;libbench.c'],['../libbench_8h.html#a61c473755696e5f8393b6d8e9a95175c',1,'benchmark_init(benchmark_results_t *results, fibre_t *wakeup):&#160;libbench.c']]],
+  ['benchmark_5frun_5fonce',['benchmark_run_once',['../libbench_8c.html#a29bcc5b9220440a2a870f2f9253e4e11',1,'benchmark_run_once(benchmark_results_t *results):&#160;libbench.c'],['../libbench_8h.html#a29bcc5b9220440a2a870f2f9253e4e11',1,'benchmark_run_once(benchmark_results_t *results):&#160;libbench.c']]],
+  ['benchmark_5fshow_5fcsv',['benchmark_show_csv',['../libbench_8c.html#af4fb88cc3800814798d77dbdd430f89b',1,'benchmark_show_csv(benchmark_results_t *results, FILE *f):&#160;libbench.c'],['../libbench_8h.html#af4fb88cc3800814798d77dbdd430f89b',1,'benchmark_show_csv(benchmark_results_t *results, FILE *f):&#160;libbench.c']]],
+  ['benchmark_5fshow_5fresults',['benchmark_show_results',['../libbench_8c.html#abd8ab8c49369d201da926174892ff43b',1,'benchmark_show_results(benchmark_results_t *results):&#160;libbench.c'],['../libbench_8h.html#abd8ab8c49369d201da926174892ff43b',1,'benchmark_show_results(benchmark_results_t *results):&#160;libbench.c']]],
+  ['bitcnt',['bitcnt',['../group__librfn__bitops.html#ga8cee9650e921082e99ba94bea00e55b8',1,'bitcnt(uint32_t x):&#160;bitops.c'],['../group__librfn__bitops.html#ga8cee9650e921082e99ba94bea00e55b8',1,'bitcnt(uint32_t x):&#160;bitops.c']]]
+];
