@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
+ * Copyright (C) 2012-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -16,6 +16,17 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
+
+/*!
+ * \defgroup librfn_string String manipulation
+ *
+ * \brief Various string manipulation routines.
+ *
+ * This module places a heavy emphasis on strdup() and xstrdup() based
+ * dynamic memory management techniques.
+ *
+ * @{
+ */
 
 char *xstrdup(const char *s);
 
@@ -35,4 +46,5 @@ char *strdup_vprintf(const char *format, va_list ap);
 char *xstrdup_printf(const char *format, ...);
 char *xstrdup_vprintf(const char *format, va_list ap);
 
-#endif // RF_UTIL_H_
+/*! @} */
+#endif // RF_STRING_H_
