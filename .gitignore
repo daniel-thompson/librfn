@@ -43,3 +43,4 @@ tests/utiltest
 wavreadertest.wav
 wavwritertest.wav
 html
+update_docs.sh
