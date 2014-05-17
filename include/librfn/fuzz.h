@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk> 
+ * Copyright (C) 2012-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -15,6 +15,17 @@
 #define RF_FUZZ_H_
 
 #include <assert.h>
+
+/*!
+ * \defgroup librfn_fuzz Fuzzy comparisions
+ *
+ * \brief Compare floating point numbers match within a tolerance.
+ *
+ * The tolerance can be specified in absolute terms or it can be relative
+ * to the magnitude of the numbers being compared.
+ *
+ * @{
+ */
 
 /*! Test whether two values are equal to within a relative tolerance.
  *
@@ -53,4 +64,5 @@ int fuzzcmpbf(float a, float b, int bits);
  */
 #define asserteq(a, b) assert(fuzzcmp(a, b, 1.000010))
 
+/*! @} */
 #endif // RF_FUZZ_H_
