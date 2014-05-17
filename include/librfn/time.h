@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2013 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2013-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -15,6 +15,14 @@
 #define RF_TIME_H_
 
 #include <stdint.h>
+
+/*!
+ * \defgroup librfn_time Time management
+ *
+ * \brief Easy to use, high resolution timer functions.
+ *
+ * @{
+ */
 
 /*!
  * Initialize the time sub-system.
@@ -39,5 +47,5 @@ uint32_t time_now(void);
  */
 uint64_t time64_now(void);
 
-
+/*! @} */
 #endif // RF_TIME_H_
