@@ -58,9 +58,4 @@ void rf_internal_out_of_memory(void);
 
 void *xmalloc(size_t sz);
 
-char *strdup_printf(const char *format, ...);
-char *strdup_vprintf(const char *format, va_list ap);
-char *xstrdup_printf(const char *format, ...);
-char *xstrdup_vprintf(const char *format, va_list ap);
-
 #endif // RF_UTIL_H_

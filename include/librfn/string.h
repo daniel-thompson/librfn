@@ -30,5 +30,9 @@ char *strtoupper(char *s);
 char *strdup_toupper(const char *s);
 char *xstrdup_toupper(const char *s);
 
+char *strdup_printf(const char *format, ...);
+char *strdup_vprintf(const char *format, va_list ap);
+char *xstrdup_printf(const char *format, ...);
+char *xstrdup_vprintf(const char *format, va_list ap);
 
 #endif // RF_UTIL_H_
