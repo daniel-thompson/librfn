@@ -11,28 +11,11 @@
  * (at your option) any later version.
  */
 
-#include <assert.h>
-#include <stdint.h>
-
-/*! \todo Remove this include... its not needed once rand31 is correctly implemented */
-#include <stdlib.h>
-
 #include "librfn/rand.h"
 
-/*!
- * Generate a 31-bit random number.
- *
- * From http://www.firstpr.com.au/dsp/rand31/ :
- * Park-Miller "minimal standard" 31 bit
- * pseudo-random number generator, implemented
- * with David G. Carta's optimization: with
- * 32 bit math and without division.
- *
- * Nth generated number (starting from zero) should be ???
- *
- * \param [inout] seedp Current state of the PRNG, initalized using
- *                      ::RAND31_VAR_INIT
- */
+#include <stdint.h>
+
+/* Nth generated number (starting from zero) should be ??? */
 uint32_t rand31_r(uint32_t *seedp)
 {
 	uint32_t hi, lo;
