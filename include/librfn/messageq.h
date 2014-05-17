@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2013 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2013-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -19,6 +19,24 @@
 #include <stdint.h>
 
 #include "atomic.h"
+
+/*!
+ * \defgroup librfn_messageq Message queue
+ *
+ * \brief Lockless message queue implementation using C11's atomic operations
+ *
+ * This is a lightweight memory based message queue capable of passing
+ * arbitrarily sized messages providing the size can be specified up front
+ * and the memory pre-allocated.
+ *
+ * The message queue is thread safe for one-to-one and many-to-one messaging.
+ * It cannot be used to manage multiple receiver threads without additional
+ * external locking.
+ *
+ * \note The message queue implementation uses a bitfield to track state.
+ *       For this reasons it cannot manage queues deeper than 32 messages.
+ * @{
+ */
 
 typedef struct {
 	char *basep;
@@ -52,4 +70,5 @@ bool messageq_empty(messageq_t *mq);
 void *messageq_receive(messageq_t *mq);
 void messageq_release(messageq_t *mq, void *msg);
 
+/*! @} */
 #endif // RF_MESSAGEQ_H_
