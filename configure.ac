@@ -18,6 +18,10 @@ AC_SEARCH_LIBS([clock_gettime], [rt],
 	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, true)
           AC_DEFINE(HAVE_CLOCK_GETTIME,1,[Have clock_gettime]),
 	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, false))
+AC_CHECK_HEADERS([stdatomic.h],
+	AM_CONDITIONAL(HAVE_STDATOMIC, true),
+	AM_CONDITIONAL(HAVE_STDATOMIC, false)
+	  AC_DEFINE(__STDC_NO_ATOMICS__,1,[Have C11 atomics]))
 
 dnl Keep these near the bottom - adding -Werror breaks various tests
 AX_CFLAGS_WARN_ALL
