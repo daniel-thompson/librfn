@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2012-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -16,6 +16,34 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
+/*!
+ * \defgroup librfn_benchmark Benchmark
+ *
+ * \brief Benchmark mechanism for real-time processing modules.
+ *
+ * This module contains library routines designed to estimate the CPU load
+ * of real-time data processing.
+ *
+ * Rather than measure the CPU load directly the routine is run as fast
+ * as possible and the nominal time (number of minutes of data processed) is
+ * compared to the elapsed time.
+ *
+ * \code
+ * rf_benchmark_t bm;
+ * uint64_t nominal;
+ * rf_benchmark_results_t results;
+ *
+ * rf_benchmark_init(&m, 2000000);
+ * do {
+ *     process_1ms_of_data();
+ *     nominal += 1000;
+ * } while (rf_benchmark_running(&bm);
+ * rf_benchmark_finalize(&bm, nominal, &results);
+ * rf_benchmark_results_show(&results, "process_1ms_of_data:");
+ * \endcode
+ * @{
+ */
 
 typedef struct {
 	uint64_t start;
@@ -47,4 +75,5 @@ void rf_benchmark_finalize(rf_benchmark_t *b, uint64_t nominal, rf_benchmark_res
 
 void rf_benchmark_results_show(rf_benchmark_results_t *r, const char *tag);
 
+/*! @} */
 #endif // RF_BENCHMARK_H_
