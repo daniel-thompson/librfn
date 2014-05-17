@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2012-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -15,6 +15,14 @@
 #define RF_BITOPS_H_
 
 #include <stdint.h>
+
+/*!
+ * \defgroup librfn_bitops Bit operations
+ *
+ * \brief Utility functions to perform bit operations.
+ *
+ * @{
+ */
 
 /*!
  * Count the number of set bits in a 32-bit word.
@@ -33,4 +41,5 @@ int clz(uint32_t x);
  */
 int ilog2(uint32_t x);
 
+/*! @} */
 #endif // RF_BITOPS_H_
