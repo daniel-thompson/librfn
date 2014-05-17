@@ -3,7 +3,7 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2013 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2013-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -16,6 +16,20 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
+/*!
+ * \defgroup librfn_list Singly linked list
+ *
+ * \brief A singly linked list with fast head/tail insertion and sorted
+ *        insert support.
+ *
+ * No form of internal locking or other thread-safety is provided.
+ *
+ * \note Fibres on uniprocessor systems do not require thread-safety support
+ *       and may freely use the list.
+ *
+ * @{
+ */
 
 typedef struct list_node {
 	struct list_node *next;
@@ -66,5 +80,5 @@ list_node_t * list_iterator_remove(list_iterator_t *iter);
 bool list_contains(list_t *list, list_node_t *node, list_iterator_t *iter);
 bool list_remove(list_t *list, list_node_t *node);
 
-
+/*! @} */
 #endif // RF_LIST_H_
