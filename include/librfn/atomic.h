@@ -11,10 +11,23 @@
  * (at your option) any later version.
  */
 
+/*!
+ * \brief Fallback implementation of C11 atomic operations.
+ *
+ * These macros a rough 'n ready implementation of C11 atomic operations based
+ * upon GNU C extensions. This is useful for gcc 4.7 which does not implement
+ * C11 atomics.
+ */
+
 #ifndef RF_ATOMIC_H_
 #define RF_ATOMIC_H_
 
 #include <stdint.h>
+
+/*
+ * Atomic is deliberately not presented as a doxygen module. It should be
+ * considered as a bit of portability glue, not a module.
+ */
 
 #ifdef __STDC_NO_ATOMICS__
 
