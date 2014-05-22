@@ -14,6 +14,7 @@ AM_PROG_AR
 AC_PROG_RANLIB
 gl_VALGRIND_TESTS
 AC_SEARCH_LIBS([cos], [m])
+AC_SEARCH_LIBS([pthread_create], [pthread])
 AC_SEARCH_LIBS([clock_gettime], [rt],
 	AM_CONDITIONAL(HAVE_CLOCK_GETTIME, true)
           AC_DEFINE(HAVE_CLOCK_GETTIME,1,[Have clock_gettime]),

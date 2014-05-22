@@ -34,6 +34,7 @@ lib_librfn_a_SOURCES = \
 	lib/messageq.c \
 	lib/pack.c \
 	lib/rand.c \
+	lib/ringbuf.c \
 	lib/string.c \
 	lib/wavheader.c \
 	lib/util.c
@@ -105,6 +106,11 @@ tests += tests/randtest
 tests_randtest_SOURCES = tests/randtest.c
 tests_randtest_CFLAGS = $(LIBRFN_CFLAGS)
 tests_randtest_LDADD = $(LIBRFN_LIBS)
+
+tests += tests/ringbuftest
+tests_ringbuftest_SOURCES = tests/ringbuftest.c
+tests_ringbuftest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_ringbuftest_LDADD = $(LIBRFN_LIBS)
 
 tests += tests/wavheadertest
 tests_wavheadertest_SOURCES = tests/wavheadertest.c
