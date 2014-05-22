@@ -16,33 +16,33 @@
 # librfn.a
 #
 
-noinst_LIBRARIES += lib/librfn.a
+noinst_LIBRARIES += librfn/librfn.a
 
 LIBRFN_CFLAGS = -I$(top_srcdir)/include
-LIBRFN_LIBS = $(top_builddir)/lib/librfn.a
+LIBRFN_LIBS = $(top_builddir)/librfn/librfn.a
 
-lib_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
+librfn_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
 
-lib_librfn_a_SOURCES = \
-	lib/benchmark.c \
-	lib/bitops.c \
-	lib/enum.c \
-	lib/fibre.c \
-	lib/fuzz.c \
-	lib/hex.c \
-	lib/list.c \
-	lib/messageq.c \
-	lib/pack.c \
-	lib/rand.c \
-	lib/ringbuf.c \
-	lib/string.c \
-	lib/wavheader.c \
-	lib/util.c
+librfn_librfn_a_SOURCES = \
+	librfn/benchmark.c \
+	librfn/bitops.c \
+	librfn/enum.c \
+	librfn/fibre.c \
+	librfn/fuzz.c \
+	librfn/hex.c \
+	librfn/list.c \
+	librfn/messageq.c \
+	librfn/pack.c \
+	librfn/rand.c \
+	librfn/ringbuf.c \
+	librfn/string.c \
+	librfn/wavheader.c \
+	librfn/util.c
 
 if HAVE_CLOCK_GETTIME
-lib_librfn_a_SOURCES += \
-	lib/fibre_posix.c \
-	lib/time_posix.c
+librfn_librfn_a_SOURCES += \
+	librfn/posix/fibre_posix.c \
+	librfn/posix/time_posix.c
 endif
 
 #
