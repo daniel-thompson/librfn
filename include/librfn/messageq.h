@@ -23,7 +23,7 @@
 /*!
  * \defgroup librfn_messageq Message queue
  *
- * \brief Lockless message queue implementation using C11's atomic operations
+ * \brief Lockless message queue implementation using C11 atomic operations
  *
  * This is a lightweight memory based message queue capable of passing
  * arbitrarily sized messages providing the size can be specified up front
