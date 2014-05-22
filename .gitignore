@@ -29,16 +29,10 @@ test-driver
 
 src/fibredemo
 
-tests/bitopstest
-tests/enumtest
-tests/fibretest
-tests/fuzztest
-tests/listtest
-tests/messageqtest
-tests/protothreadstest
-tests/randtest
-tests/wavheadertest
-tests/utiltest
+tests/*test
+tests/*test.log
+tests/*test.trs
+test-suite.log
 
 wavreadertest.wav
 wavwritertest.wav
