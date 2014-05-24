@@ -15,7 +15,11 @@
 
 #include <stdint.h>
 
-/* Nth generated number (starting from zero) should be ??? */
+/* Derived from code placed in the public domain by Robin Whittle
+ *
+ * 3rd generated number (starting from a seed of 1) should  be 1622650073,
+ * 10th is 2007237709, and 10000th is 1043618065.
+ */
 uint32_t rand31_r(uint32_t *seedp)
 {
 	uint32_t hi, lo;
