@@ -27,6 +27,7 @@ void fibre_scheduler_main_loop()
 	while (true) {
 		uint32_t sleep_until = fibre_scheduler_next(time_now());
 		int32_t sleep_interval = cyclecmp32(sleep_until, time_now());
+		sleep_interval = sleep_interval < 1000 ? sleep_interval : 50000;
 		if (sleep_interval > 0)
 			usleep(sleep_interval);
 	}
