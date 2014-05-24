@@ -26,6 +26,8 @@ librfn_librfn_a_CPPFLAGS = $(LIBRFN_CFLAGS)
 librfn_librfn_a_SOURCES = \
 	librfn/benchmark.c \
 	librfn/bitops.c \
+	librfn/console.c \
+	librfn/posix/console_posix.c \
 	librfn/enum.c \
 	librfn/fibre.c \
 	librfn/fuzz.c \
@@ -55,6 +57,11 @@ src_fibredemo_SOURCES = src/fibredemo.c
 src_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
 src_fibredemo_LDADD = $(LIBRFN_LIBS)
 endif
+
+noinst_PROGRAMS += src/consoledemo
+src_consoledemo_SOURCES = src/consoledemo.c
+src_consoledemo_CFLAGS = $(LIBRFN_CFLAGS)
+src_consoledemo_LDADD = $(LIBRFN_LIBS)
 
 #
 # librfn test suite

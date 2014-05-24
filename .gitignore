@@ -27,6 +27,7 @@ test-driver
 *.o
 *#
 
+src/consoledemo
 src/fibredemo
 
 tests/*test

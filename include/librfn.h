@@ -36,6 +36,7 @@ Source code can be downloaded from https://github.com/daniel-thompson/librfn
 #include "librfn/atomic.h"
 #include "librfn/benchmark.h"
 #include "librfn/bitops.h"
+#include "librfn/console.h"
 #include "librfn/enum.h"
 #include "librfn/fibre.h"
 #include "librfn/fixed.h"
