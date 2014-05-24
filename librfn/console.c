@@ -214,3 +214,16 @@ pt_state_t console_run(console_t *c)
 
 	PT_END();
 }
+
+void console_process(console_t *c, char d)
+{
+	pt_state_t s;
+
+	/* do *not* use console_putchar() we don't want the fibre to be run */
+	ringbuf_put(&c->ring, d);
+
+	do {
+		s = console_run(c);
+	} while (s == PT_YIELDED);
+}
+

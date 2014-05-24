@@ -173,14 +173,7 @@ pt_state_t console_run(console_t *c);
  *     console_process(console, ch);
  * \endcode
  */
-static inline void console_process(console_t *c, char d)
-{
-	console_putchar(c, d);
-	pt_state_t s;
-	do {
-		s = console_run(c);
-	} while (s == PT_YIELDED);
-}
+void console_process(console_t *c, char d);
 
 /*! @} */
 #endif // RF_CONSOLE_H_

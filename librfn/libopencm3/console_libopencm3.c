@@ -84,7 +84,11 @@ void usart1_isr(void)
 		/* Enable transmit interrupt so it repeats the character back */
 		USART_CR1(USART1) |= USART_CR1_TXEIE;
 
+#ifdef CONFIG_CONSOLE_FROM_ISR
+		console_process(console, c);
+#else
 		console_putchar(console, c);
+#endif
 	}
 
 	/* Check if we were called because of TXE. */
@@ -107,8 +111,8 @@ int _write(int file, char *ptr, int len)
 	if (file == 1 || file == 2) {
 		for (int i=0; i<len; i++) {
 			if (ptr[i] == '\n')
-				ringbuf_putchar(&outring, '\r');
-			ringbuf_putchar(&outring, ptr[i]);
+				(void) ringbuf_put(&outring, '\r');
+			(void) ringbuf_put(&outring, ptr[i]);
 			USART_CR1(USART1) |= USART_CR1_TXEIE;
 		}
 
