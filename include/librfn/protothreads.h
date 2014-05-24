@@ -73,6 +73,8 @@
  *
  * 3. The use of the provided pt_t type is optional. Any integer type large
  *    enough not to overflow when __LINE__ is assigned to it is sufficient.
+ *
+ * @{
  */
 
 typedef enum {
