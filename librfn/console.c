@@ -178,7 +178,7 @@ void console_putchar(console_t *c, char d)
 	 */
 	ringbuf_put(&c->ring, d);
 #ifndef CONFIG_NO_FIBRE
-	fibre_run(&c->fibre);
+	fibre_run_atomic(&c->fibre);
 #endif
 }
 
