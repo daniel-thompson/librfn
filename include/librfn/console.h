@@ -27,8 +27,11 @@
  * The use of protothreads means this command interpreter can be used effectively
  * on run-to-completion schedulers and comes with out of the box support for fibres.
  *
- * The use of the fibre scheduler is optional (although the fibre header file is
- * needed to compile source without modification).
+ * \note The use of the fibre scheduler is optional (although the fibre header file
+ *       is needed to compile source without modification).
+ *
+ * No dynamic memory allocation is required by the console handling (although
+ * currently it uses stdio.
  *
  * @{
  */
@@ -38,6 +41,12 @@ typedef pt_state_t console_cmd_t(struct console *c);
 
 #define SCRATCH_SIZE 80
 
+/*!
+ * \brief Console descriptor.
+ *
+ * This is a relatively large structure (164 bytes on a 32-bit machine) due
+ * to the integrated scratch array.
+ */
 typedef struct console {
 	fibre_t fibre;
 
@@ -69,18 +78,109 @@ typedef struct console {
 	pt_t pt;
 } console_t;
 
+/*!
+ * \brief Initialized the console handler.
+ *
+ * \param c Pointer to console descriptor
+ * \param f File pointer to be used for all console output
+ */
 void console_init(console_t *c, FILE *f);
 
 /*!
  * \brief Platform dependant function that will be called during console_init().
+ *
+ * librfn provides example implementations of this function but, in some cases,
+ * this function must be provided by the application.
  */
 void console_hwinit(console_t *c);
 
+/*!
+ * \brief Register a new command.
+ *
+ * The following example shows a simple protothreaded command to list the command's
+ * arguments:
+ *
+ * \code
+ * pt_state_t listargs(console_t *c)
+ * {
+ *     PT_BEGIN(&c->pt);
+ *     for (i=0; i<c->argc; i++) {
+ *         fprintf(c->out, "%d: %s\n", i, c->argv[i]);
+ *         PT_YIELD();
+ *     }
+ *     PT_END();
+ * }
+ *
+ * (void) console_register("listargs", listargs);
+ * \endcode
+ *
+ * The use of protothreading is optional. The following command is functionally
+ * equivalent although may causes a run-to-completion scheduler may run poorly if
+ * fprintf() is slow (for example if it synchronously sends characters to a serial
+ * port):
+ *
+ * \code
+ * pt_state_t listargs(console_t *c)
+ * {
+ *     for (i=0; i<c->argc; i++)
+ *         fprintf(c->out, "%d: %s\n", i, c->argv[i]);
+ *     return PT_EXITED;
+ * }
+ * \endcode
+ */
 int console_register(const char *name, console_cmd_t cmd);
 
+/*!
+ * \brief Asynchronously send a character to the command processor.
+ *
+ * This function is safe to call from interrupt. It will insert a character into
+ * the command processors ring buffer and will, optionally, schedule the console
+ * fibre.
+ */
 void console_putchar(console_t *c, char d);
 
+/*!
+ * \brief Console protothread entrypoint.
+ *
+ * This function can be used to integrate the command processor into simple
+ * polling loops or to "alien" run-to-completion schedulers.
+ *
+ * The return code can be used to realize power saving modes. However a simple
+ * polling loop without support for power saving can simply ignore it.
+ *
+ * \code
+ * while (true) {
+ *     poll_something();
+ *     (void) console_run(console); // poll console
+ *     poll_something_else();
+ * }
+ * \endcode
+ */
 pt_state_t console_run(console_t *c);
+
+/*!
+ * \brief Synchronous console function for use in threaded environments.
+ *
+ * This function can also be used to implement a command console that executes
+ * from an interrupt handler. Such a command interpreter would be extremely robust
+ * although potentially at the cost of poor interrupt latencies.
+ *
+ * To use this function console_hwinit() may have to altered to remove code that
+ * asynchronously delivers characters.
+ *
+ * \code
+ * while ((ch = getchar()) != -1)
+ *     console_process(console, ch);
+ * \endcode
+ */
+static inline void console_process(console_t *c, char d)
+{
+	console_putchar(c, d);
+	pt_state_t s;
+	do {
+		s = console_run(c);
+	} while (s == PT_YIELDED);
+}
 
 /*! @} */
 #endif // RF_CONSOLE_H_
