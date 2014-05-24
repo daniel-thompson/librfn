@@ -195,9 +195,7 @@ pt_state_t console_run(console_t *c)
 
 	while (1) {
 		int ch;
-		while ((ch = ringbuf_get(&c->ring)) == -1) {
-			PT_YIELD();
-		}
+		PT_WAIT_UNTIL((ch = ringbuf_get(&c->ring)) != -1);
 
 		if (ch == '\b') {
 			if (c->bufp > c->scratch.buf)
