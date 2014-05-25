@@ -81,7 +81,7 @@ static void do_tokenize(console_t *c)
 	size_t len = strlen(c->scratch.buf);
 	char quote = '\0';
 	for (size_t i = 1; i < len; i++) {
-		if (isspace(c->scratch.buf[i]) && !quote) {
+		if (isspace((int) c->scratch.buf[i]) && !quote) {
 			c->scratch.buf[i] = '\0';
 			continue;
 		}
@@ -99,7 +99,7 @@ static void do_tokenize(console_t *c)
 				c->scratch.buf[i] = '\0';
 			} else {
 				c->argv[c->argc] = c->scratch.buf + i;
-				if (++c->argc >= lengthof(c->argv))
+				if (++c->argc >= (int) lengthof(c->argv))
 					break;
 			}
 		}
@@ -108,7 +108,7 @@ static void do_tokenize(console_t *c)
 	/* ensure all arguments are NULL terminated so we can
 	 * avoid error checking in the commands themselves
 	 */
-	for (int i = c->argc; i < lengthof(c->argv); i++)
+	for (size_t i = c->argc; i < lengthof(c->argv); i++)
 		c->argv[i] = c->scratch.buf + len;
 }
 
@@ -150,7 +150,7 @@ void console_init(console_t *c, FILE *f)
 
 int console_register(const char *name, console_cmd_t cmd)
 {
-	int i, j;
+	size_t i, j;
 
 	/* fail if the last command slot is already full */
 	if (cmd_table[lengthof(cmd_table)-1].cmd)
