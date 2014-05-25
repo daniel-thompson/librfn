@@ -1,5 +1,5 @@
 /*
- * console_libopencm3.c
+ * console_stm32f1.c
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
