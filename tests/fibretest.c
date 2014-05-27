@@ -60,6 +60,37 @@ int yield_fibre(fibre_t *f)
 	PT_END();
 }
 
+/* identical behaviour as a yield_fibre but differently realized */
+int exit_fibre(fibre_t *f)
+{
+	yield_fibre_t *s = containerof(f, yield_fibre_t, fibre);
+
+	PT_BEGIN_FIBRE(f);
+
+	if (s->count < s->max_count) {
+		s->count++;
+		fibre_run(f);
+	}
+
+	PT_END();
+}
+
+/* identical behaviour as a yield_fibre but differently realized */
+int atomic_fibre(fibre_t *f)
+{
+	yield_fibre_t *s = containerof(f, yield_fibre_t, fibre);
+
+	PT_BEGIN_FIBRE(f);
+
+	if (s->count < s->max_count) {
+		s->count++;
+		fibre_run_atomic(f);
+	}
+
+	PT_END();
+}
+
+
 typedef struct {
 	int id;
 } event_descriptor_t;
@@ -241,10 +272,85 @@ static void sleep_test()
 		   == fibre_scheduler_next( 60) && fibre_self() == NULL);
 }
 
+static yield_test()
+{
+	static yield_fibre_t yielder[3] = {
+		{
+			.max_count = 10,
+			.fibre = FIBRE_VAR_INIT(atomic_fibre) // <--
+		},
+		{
+			.max_count = 15,
+			.fibre = FIBRE_VAR_INIT(yield_fibre) // <--
+		},
+		{
+			.max_count = 10,
+			.fibre = FIBRE_VAR_INIT(exit_fibre) // <--
+		}
+	};
+
+	/* Launch the fibres */
+	fibre_run(&yielder[0].fibre);
+	fibre_run(&yielder[1].fibre);
+	fibre_run(&yielder[2].fibre);
+
+	for (int i=0; i<10; i++) {
+		/* no change to run count */
+		verify(yielder[0].count == i);
+		verify(yielder[1].count == i);
+		verify(yielder[2].count == i);
+
+		/* schedule yielder 0 */
+		verify(i == fibre_scheduler_next(i) &&
+		       fibre_self() == &yielder[0].fibre);
+		verify(yielder[0].count == i+1);
+		verify(yielder[1].count == i);
+		verify(yielder[2].count == i);
+
+		/* schedule yielder 1 */
+		verify(i == fibre_scheduler_next(i) &&
+		       fibre_self() == &yielder[1].fibre);
+		verify(yielder[0].count == i+1);
+		verify(yielder[1].count == i+1);
+		verify(yielder[2].count == i);
+
+		/* schedule yielder 2 */
+		verify(i == fibre_scheduler_next(i) &&
+		       fibre_self() == &yielder[2].fibre);
+		verify(yielder[0].count == i+1);
+		verify(yielder[1].count == i+1);
+		verify(yielder[2].count == i+1);
+	}
+
+	verify(10 == fibre_scheduler_next(10) &&
+	       fibre_self() == &yielder[0].fibre); // exits
+	verify(10 == fibre_scheduler_next(10) &&
+	       fibre_self() == &yielder[1].fibre);
+	verify(10 == fibre_scheduler_next(10) &&
+	       fibre_self() == &yielder[2].fibre); // exits
+
+	for (int i=11; i<15; i++) {
+		/* no change to run count */
+		verify(yielder[0].count == 10);
+		verify(yielder[1].count ==  i);
+		verify(yielder[2].count == 10);
+
+		verify(i == fibre_scheduler_next(i) &&
+		       fibre_self() == &yielder[1].fibre);
+		verify(yielder[1].count ==  i+1);
+	}
+
+	verify(15+FIBRE_UNBOUNDED_SLEEP == fibre_scheduler_next(15) &&
+	       fibre_self() == &yielder[1].fibre); // exits
+	verify(15+FIBRE_UNBOUNDED_SLEEP == fibre_scheduler_next(15) &&
+	       fibre_self() == NULL);
+}
+
 int main()
 {
 	basic_test();
 	sleep_test();
+	yield_test();
 
 	return 0;
 }
