@@ -100,18 +100,13 @@ static void update_current_state(fibre_state_t state)
 
 static uint32_t get_next_wakeup(void)
 {
-	// TODO: list_peek()
-	list_node_t *node_runq = kernel.runq.head;
-	if (node_runq)
+	if (!list_empty(&kernel.runq))
 		return kernel.now;
 
-	// TODO: list_peek()
-	list_node_t *node_timerq = kernel.timerq.head;
-	if (!node_timerq) {
+	if (list_empty(&kernel.timerq))
 		return kernel.now + FIBRE_UNBOUNDED_SLEEP;
-	}
 
-	fibre_t *fibre = containerof(node_timerq, fibre_t, link);
+	fibre_t *fibre = containerof(list_peek(&kernel.timerq), fibre_t, link);
 	return fibre->duetime;
 }
 
