@@ -77,6 +77,14 @@ list_node_t * list_iterator_remove(list_iterator_t *iter);
  * search operations
  */
 
+static inline bool list_empty(list_t *list) {
+	return !list->head;
+}
+
+static inline list_node_t * list_peek(list_t *list) {
+	return list->head;
+}
+
 bool list_contains(list_t *list, list_node_t *node, list_iterator_t *iter);
 bool list_remove(list_t *list, list_node_t *node);
 
