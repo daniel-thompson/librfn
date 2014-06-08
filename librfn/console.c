@@ -21,14 +21,6 @@
 
 #include <librfn/util.h>
 
-typedef struct console_symtab {
-	const char *name;
-	console_cmd_t *cmd;
-} console_symtab_t;
-
-static pt_state_t console_unknown(console_t *c);
-static pt_state_t console_help(console_t *c);
-
 static pt_state_t console_echo(console_t *c)
 {
 	for (int i=1; i<c->argc; i++)
@@ -36,6 +28,12 @@ static pt_state_t console_echo(console_t *c)
 	fprintf(c->out, "\n");
 	return PT_EXITED;
 }
+static const console_cmd_t cmd_echo =
+    CONSOLE_CMD_VAR_INIT("echo", console_echo);
+
+static pt_state_t console_help(console_t *c);
+static const console_cmd_t cmd_help =
+    CONSOLE_CMD_VAR_INIT("help", console_help);
 
 static pt_state_t console_unknown(console_t *c)
 {
@@ -43,11 +41,13 @@ static pt_state_t console_unknown(console_t *c)
 		fprintf(c->out, "Unknown/bad command\n");
 	return PT_EXITED;
 }
+static const console_cmd_t cmd_unknown =
+    CONSOLE_CMD_VAR_INIT(NULL, console_unknown);
 
-static console_symtab_t cmd_table[32] = {
-	{ "echo", console_echo },
-	{ "help", console_help },
-	{ NULL, console_unknown }
+static const console_cmd_t *cmd_table[32] = {
+	&cmd_echo,
+	&cmd_help,
+	&cmd_unknown
 };
 
 static pt_state_t console_help(console_t *c)
@@ -61,10 +61,10 @@ static pt_state_t console_help(console_t *c)
 	PT_WAIT_UNTIL(!locked);
 	locked = true;
 
-	static console_symtab_t *cmd;
+	static const console_cmd_t **cmd;
 
-	for (cmd=cmd_table; cmd->name; cmd++) {
-		fprintf(c->out, "  %s\n", cmd->name);
+	for (cmd=cmd_table; (*cmd)->name; cmd++) {
+		fprintf(c->out, "  %s\n", (*cmd)->name);
 		PT_YIELD();
 	}
 
@@ -114,12 +114,12 @@ static void do_tokenize(console_t *c)
 
 static void find_command(console_t *c)
 {
-	console_symtab_t *cmd = cmd_table;
-	for (cmd = cmd_table; cmd->name; cmd++) {
-		if (0 == strcmp(c->argv[0], cmd->name))
+	const console_cmd_t **cmd = cmd_table;
+	for (cmd = cmd_table; (*cmd)->name; cmd++) {
+		if (0 == strcmp(c->argv[0], (*cmd)->name))
 			break;
 	}
-	c->cmd = cmd->cmd;
+	c->cmd = *cmd;
 }
 
 static void do_prompt(console_t *c)
@@ -148,24 +148,23 @@ void console_init(console_t *c, FILE *f)
 #endif
 }
 
-int console_register(const char *name, console_cmd_t cmd)
+int console_register(const console_cmd_t *cmd)
 {
 	size_t i, j;
 
 	/* fail if the last command slot is already full */
-	if (cmd_table[lengthof(cmd_table)-1].cmd)
+	if (cmd_table[lengthof(cmd_table)-1])
 		return -1;
 
 	for (i = 0; i < lengthof(cmd_table); i++)
-		if (NULL == cmd_table[i].name ||
-		    strcmp(cmd_table[i].name, name) > 0)
+		if (NULL == cmd_table[i]->name ||
+		    strcmp(cmd_table[i]->name, cmd->name) > 0)
 			break;
 
 	for (j = lengthof(cmd_table) - 1; j > i; j--)
 		cmd_table[j] = cmd_table[j-1];
 
-	cmd_table[i].name = name;
-	cmd_table[i].cmd = cmd;
+	cmd_table[i] = cmd;
 
 	return 0;
 }
@@ -207,7 +206,7 @@ pt_state_t console_run(console_t *c)
 		if (ch == '\n' || c->bufp >= &c->scratch.buf[79]) {
 			do_tokenize(c);
 			find_command(c);
-			PT_SPAWN(&c->pt, c->cmd(c));
+			PT_SPAWN(&c->pt, c->cmd->fn(c));
 			do_prompt(c);
 		}
 	}

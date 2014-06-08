@@ -37,7 +37,23 @@
  */
 
 struct console;
-typedef pt_state_t console_cmd_t(struct console *c);
+
+/*!
+ * \brief Console command descriptor.
+ *
+ * Tip: If you register many commands with the same function pointer you can
+ * parameterize them using containerof().
+ */
+typedef struct {
+	const char *name;
+	pt_state_t (*fn)(struct console *c);
+} console_cmd_t;
+
+#define CONSOLE_CMD_VAR_INIT(n, f)                                             \
+	{                                                                      \
+		.name = (n),                                                   \
+		.fn = (f)                                                      \
+	}
 
 #define SCRATCH_SIZE 80
 
@@ -74,7 +90,7 @@ typedef struct console {
 	int argc;
 	char *argv[4];
 
-	console_cmd_t *cmd;
+	const console_cmd_t *cmd;
 	pt_t pt;
 } console_t;
 
@@ -101,34 +117,39 @@ void console_hwinit(console_t *c);
  * arguments:
  *
  * \code
- * pt_state_t listargs(console_t *c)
+ * static pt_state_t listargs(console_t *c)
  * {
+ *     static int i;
  *     PT_BEGIN(&c->pt);
+ *
  *     for (i=0; i<c->argc; i++) {
  *         fprintf(c->out, "%d: %s\n", i, c->argv[i]);
  *         PT_YIELD();
  *     }
+ *
  *     PT_END();
  * }
+ * static const console_cmd_t cmd_listagrs =
+ *     CONSOLE_CMD_VAR_INIT("listargs", listargs);
  *
- * (void) console_register("listargs", listargs);
+ * (void) console_register(cmd_listargs);
  * \endcode
  *
  * The use of protothreading is optional. The following command is functionally
- * equivalent although may causes a run-to-completion scheduler may run poorly if
+ * equivalent although may cause a run-to-completion scheduler to run poorly if
  * fprintf() is slow (for example if it synchronously sends characters to a serial
  * port):
  *
  * \code
  * pt_state_t listargs(console_t *c)
  * {
- *     for (i=0; i<c->argc; i++)
+ *     for (int i=0; i<c->argc; i++)
  *         fprintf(c->out, "%d: %s\n", i, c->argv[i]);
  *     return PT_EXITED;
  * }
  * \endcode
  */
-int console_register(const char *name, console_cmd_t cmd);
+int console_register(const console_cmd_t *cmd);
 
 /*!
  * \brief Asynchronously send a character to the command processor.
