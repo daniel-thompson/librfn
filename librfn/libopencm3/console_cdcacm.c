@@ -222,10 +222,24 @@ static struct output_task output_task = {
 	.fibre = FIBRE_VAR_INIT(output_fibre)
 };
 
-static int usb_fibre(fibre_t *fibre)
+#if defined(STM32F1)
+static void usb_hwinit(void)
 {
-	PT_BEGIN_FIBRE(fibre);
+	rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_periph_clock_enable(RCC_GPIOB);
 
+	usbd_dev =
+	    usbd_init(&stm32f103_usb_driver, &desc, &config, usb_strings, 2,
+		      usbd_control_buffer, sizeof(usbd_control_buffer));
+
+	/* assert hotplug */
+	gpio_set(GPIOB, GPIO8);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
+		      GPIO8);
+}
+#elif defined(STM32F4)
+static void usb_hwinit(void)
+{
 	rcc_periph_clock_enable(RCC_GPIOA);
 	rcc_periph_clock_enable(RCC_OTGFS);
 
@@ -236,6 +250,16 @@ static int usb_fibre(fibre_t *fibre)
 	usbd_dev = usbd_init(&otgfs_usb_driver, &desc, &config,
 			usb_strings, 2,
 			usbd_control_buffer, sizeof(usbd_control_buffer));
+}
+#else
+#error Unsupported part
+#endif
+
+static int usb_fibre(fibre_t *fibre)
+{
+	PT_BEGIN_FIBRE(fibre);
+
+	usb_hwinit();
 
 	usbd_register_set_config_callback(usbd_dev, cdcacm_set_config);
 
