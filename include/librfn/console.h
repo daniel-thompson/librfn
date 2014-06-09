@@ -196,5 +196,43 @@ pt_state_t console_run(console_t *c);
  */
 void console_process(console_t *c, char d);
 
+/*!
+ * \brief Request special features from the GPIO command.
+ */
+typedef enum {
+	console_gpio_active_low = 0x01,
+	console_gpio_default_on = 0x02,
+	console_gpio_open_drain = 0x04
+} console_gpio_flags_t;
+
+/*!
+ * \brief GPIO command descriptor.
+ *
+ * This is a normal command descriptor augmented with details of the
+ * GPIO port and pin to be targetted together with various flags.
+ */
+typedef struct {
+	console_cmd_t cmd;
+	uintptr_t port;
+	uint32_t pin;
+	int flags;
+} console_gpio_t;
+
+/*!
+ * \private
+ */
+pt_state_t console_gpio_do_cmd(console_t *c);
+
+#define CONSOLE_GPIO_VAR_INIT(name, port_, pin_, flags_)                       \
+	{                                                                      \
+		.cmd = CONSOLE_CMD_VAR_INIT(name, console_gpio_do_cmd),        \
+		.port = port_, .pin = pin_, .flags = flags_                    \
+	}
+
+/*!
+ * \brief Register a new GPIO command.
+ */
+int console_gpio_register(const console_gpio_t *gpio);
+
 /*! @} */
 #endif // RF_CONSOLE_H_
