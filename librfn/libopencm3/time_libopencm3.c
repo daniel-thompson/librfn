@@ -16,21 +16,21 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
 
+#ifndef F_CPU
+#error F_CPU is not defined
+#endif
+
 
 static uint64_t sys_tick_counter;
 
 void time_init()
 {
-	/* 72MHz / 8 => 9000000 counts per second */
+	/* Set the systick to interrupt once each millisecond */
 	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
-
-	/* 9000000/9000 = 1000 overflows per second - every 1ms one interrupt */
-	/* SysTick interrupt every N clock pulses: set reload to N-1 */
-	systick_set_reload(8999);
-
-	systick_interrupt_enable();
+	systick_set_reload((F_CPU / (8 * 1000))-1);
 
 	/* Start counting. */
+	systick_interrupt_enable();
 	systick_counter_enable();
 }
 
