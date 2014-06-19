@@ -30,6 +30,9 @@ static pt_state_t console_add(console_t *c)
 
 	return PT_EXITED;
 }
+static const console_cmd_t cmd_add =
+    CONSOLE_CMD_VAR_INIT("add", console_add);
+
 
 /*
  * console_udelay is a busy-wait (scheduler cannot go idle) that yields to other
@@ -59,6 +62,8 @@ static pt_state_t console_udelay(console_t *c)
 
 	PT_END();
 }
+static const console_cmd_t cmd_udelay =
+    CONSOLE_CMD_VAR_INIT("udelay", console_udelay);
 
 /*
  * console_usleep is a fully fledged sleeping wait based upon the librfn fibre
@@ -87,15 +92,17 @@ static pt_state_t console_usleep(console_t *c)
 
 	PT_END();
 }
+static const console_cmd_t cmd_usleep =
+    CONSOLE_CMD_VAR_INIT("usleep", console_usleep);
 
 int main(int argc, char *argv[])
 {
 	console_t console;
 
 	console_init(&console, stdout);
-	console_register("usleep", console_usleep);
-	console_register("add", console_add);
-	console_register("udelay", console_udelay);
+	console_register(&cmd_usleep);
+	console_register(&cmd_add);
+	console_register(&cmd_udelay);
 
 	fibre_scheduler_main_loop();
 

@@ -39,6 +39,8 @@ static pt_state_t console_exit(console_t *c)
 {
 	exit(0);
 }
+static const console_cmd_t cmd_exit =
+    CONSOLE_CMD_VAR_INIT("exit", console_exit);
 
 void console_hwinit(console_t *c)
 {
@@ -47,5 +49,5 @@ void console_hwinit(console_t *c)
 		perror("Cannot start injector");
 	}
 
-	console_register("exit", console_exit);
+	console_register(&cmd_exit);
 }
