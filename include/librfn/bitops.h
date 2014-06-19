@@ -3,7 +3,8 @@
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
- * Copyright (C) 2012-2014 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2012 Daniel Thompson <daniel@redfelineninja.org.uk>
+ * Copyright (C) 2014 Daniel Thompson <daniel@redfelineninja.org.uk>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -35,6 +36,11 @@ int bitcnt(uint32_t x);
  * Count leading zeros.
  */
 int clz(uint32_t x);
+
+/*!
+ * Count trailing zeros.
+ */
+int ctz(uint32_t x);
 
 /*!
  * Integer logarithm in base 2.
