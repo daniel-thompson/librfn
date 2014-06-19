@@ -47,6 +47,7 @@ Source code can be downloaded from https://github.com/daniel-thompson/librfn
 #include "librfn/pack.h"
 #include "librfn/protothreads.h"
 #include "librfn/rand.h"
+#include "librfn/regdump.h"
 #include "librfn/ringbuf.h"
 #include "librfn/string.h"
 #include "librfn/time.h"

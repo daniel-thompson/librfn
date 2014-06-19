@@ -29,6 +29,7 @@ test-driver
 
 src/consoledemo
 src/fibredemo
+src/regdumpdemo
 
 tests/*test
 tests/*test.log

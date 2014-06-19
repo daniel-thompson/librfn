@@ -36,6 +36,7 @@ librfn_librfn_a_SOURCES = \
 	librfn/messageq.c \
 	librfn/pack.c \
 	librfn/rand.c \
+	librfn/regdump.c \
 	librfn/ringbuf.c \
 	librfn/string.c \
 	librfn/wavheader.c \
@@ -51,6 +52,11 @@ endif
 # librfn demos
 #
 
+noinst_PROGRAMS += src/consoledemo
+src_consoledemo_SOURCES = src/consoledemo.c
+src_consoledemo_CFLAGS = $(LIBRFN_CFLAGS)
+src_consoledemo_LDADD = $(LIBRFN_LIBS)
+
 if HAVE_CLOCK_GETTIME
 noinst_PROGRAMS += src/fibredemo
 src_fibredemo_SOURCES = src/fibredemo.c
@@ -58,10 +64,10 @@ src_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
 src_fibredemo_LDADD = $(LIBRFN_LIBS)
 endif
 
-noinst_PROGRAMS += src/consoledemo
-src_consoledemo_SOURCES = src/consoledemo.c
-src_consoledemo_CFLAGS = $(LIBRFN_CFLAGS)
-src_consoledemo_LDADD = $(LIBRFN_LIBS)
+noinst_PROGRAMS += src/regdumpdemo
+src_regdumpdemo_SOURCES = src/regdumpdemo.c
+src_regdumpdemo_CFLAGS = $(LIBRFN_CFLAGS)
+src_regdumpdemo_LDADD = $(LIBRFN_LIBS)
 
 #
 # librfn test suite
