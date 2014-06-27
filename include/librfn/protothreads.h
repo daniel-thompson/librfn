@@ -123,6 +123,12 @@ typedef uint16_t pt_t;
 #define PT_EXIT() \
 	return PT_EXITED
 
+#define PT_EXIT_ON(x)                                                          \
+	do {                                                                   \
+		if (x)                                                         \
+			return PT_EXITED;                                      \
+	} while (0)
+
 #define PT_SPAWN(child, thread) \
 	do { \
 		pt_state_t ptres; \
