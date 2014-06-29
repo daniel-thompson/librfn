@@ -55,7 +55,7 @@
  *       must be passed in as an argument (usually as part of a context
  *       structure) rather than being static variables.
  *
- * Like all protothreads implementations this work is inspired by the paper
+ * Like all protothread implementations this work is inspired by the paper
  * "Protothreads: Simplifying Event-Driven Programming of Memory-Constrained
  * Embedded Systems" by Dunkels et al.
  *
@@ -124,12 +124,20 @@ typedef uint16_t pt_t;
 #define PT_EXIT() \
 	return PT_EXITED
 
+/*!
+ * \brief Conditional exit.
+ *
+ * Mostly used to simplify error paths.
+ */
 #define PT_EXIT_ON(x)                                                          \
 	do {                                                                   \
 		if (x)                                                         \
 			return PT_EXITED;                                      \
 	} while (0)
 
+/*!
+ * \brief Call a child thread.
+ */
 #define PT_SPAWN(child, thread)                                                \
 	do {                                                                   \
 		pt_state_t ptres;                                              \
