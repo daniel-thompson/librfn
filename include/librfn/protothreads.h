@@ -149,5 +149,19 @@ typedef uint16_t pt_t;
 			return ptres;                                          \
 	} while (0)
 
+/*!
+ * \brief Call a child thread synchronously.
+ *
+ * Run a protothread without ever yielding. This macro is intended to allow
+ * protothread library code to be executed in a non-protothreaded environment
+ * (for example during initialization routines).
+ */
+#define PT_CALL(child, thread)                                                 \
+	do {                                                                   \
+		PT_INIT(child);                                                \
+		while (PT_EXITED != (thread))                                  \
+			;                                                      \
+	} while (0)
+
 /*! @} */
 #endif // RF_PROTOTHREADS_H_
