@@ -85,39 +85,40 @@ typedef enum {
 
 typedef uint16_t pt_t;
 
-#define PT_INIT(pt) \
-	do { \
-		*(pt) = 0; \
+#define PT_INIT(pt)                                                            \
+	do {                                                                   \
+		*(pt) = 0;                                                     \
 	} while (0)
 
-#define PT_BEGIN(pt) \
-	{ \
-		pt_t *protothread_pointer_is_not_defined_missing_PT_BEGIN = pt; \
-		(void) protothread_pointer_is_not_defined_missing_PT_BEGIN; \
-		switch (*protothread_pointer_is_not_defined_missing_PT_BEGIN) { \
+#define PT_BEGIN(pt)                                                           \
+	{                                                                      \
+		pt_t *missing_PT_BEGIN = pt;                                   \
+		(void) missing_PT_BEGIN;                                       \
+		switch (*missing_PT_BEGIN) {                                   \
 		case 0:
 
-#define PT_END() \
-			break; \
-		default: \
-			assert(0); \
-		} \
-        } \
+#define PT_END()                                                               \
+			break;                                                 \
+		default:                                                       \
+			assert(0);                                             \
+		}                                                              \
+	}                                                                      \
 	return PT_EXITED
 
-#define PT_WAIT_UNTIL(c) \
-	do { \
-		*protothread_pointer_is_not_defined_missing_PT_BEGIN = __LINE__; \
-                case __LINE__: \
-		if (!(c)) \
-			return PT_WAITING; \
+#define PT_WAIT_UNTIL(c)                                                       \
+	do {                                                                   \
+		*missing_PT_BEGIN = __LINE__;                                  \
+	case __LINE__:                                                         \
+		if (!(c))                                                      \
+			return PT_WAITING;                                     \
 	} while (0)
 
-#define PT_YIELD() \
-	do { \
-		*protothread_pointer_is_not_defined_missing_PT_BEGIN = __LINE__; \
-		return PT_YIELDED; \
-		case __LINE__: ;\
+#define PT_YIELD()                                                             \
+	do {                                                                   \
+		*missing_PT_BEGIN = __LINE__;                                  \
+		return PT_YIELDED;                                             \
+	case __LINE__:                                                         \
+		;                                                              \
 	} while (0)
 
 #define PT_EXIT() \
@@ -129,15 +130,15 @@ typedef uint16_t pt_t;
 			return PT_EXITED;                                      \
 	} while (0)
 
-#define PT_SPAWN(child, thread) \
-	do { \
-		pt_state_t ptres; \
-		PT_INIT(child); \
-		*protothread_pointer_is_not_defined_missing_PT_BEGIN = __LINE__; \
-                case __LINE__: \
-                ptres = (thread); \
-                if (ptres != PT_EXITED) \
-                	return ptres; \
+#define PT_SPAWN(child, thread)                                                \
+	do {                                                                   \
+		pt_state_t ptres;                                              \
+		PT_INIT(child);                                                \
+		*missing_PT_BEGIN = __LINE__;                                  \
+	case __LINE__:                                                         \
+		ptres = (thread);                                              \
+		if (ptres != PT_EXITED)                                        \
+			return ptres;                                          \
 	} while (0)
 
 /*! @} */
