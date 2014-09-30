@@ -46,11 +46,11 @@ void console_hwinit(console_t *c)
 	/* Enable the USART1 interrupt. */
 	nvic_enable_irq(NVIC_USART1_IRQ);
 
-	/* Setup GPIO pin GPIO_USART1_RE_TX on GPIO port B for transmit. */
+	/* Setup GPIO pin GPIO_USART1_RE_TX on PA9 */
 	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
 		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_TX);
 
-	/* Setup GPIO pin GPIO_USART1_RE_RX on GPIO port B for receive. */
+	/* Setup GPIO pin GPIO_USART1_RE_RX on PA10 */
 	gpio_set_mode(GPIOA, GPIO_MODE_INPUT,
 		      GPIO_CNF_INPUT_FLOAT, GPIO_USART1_RX);
 
