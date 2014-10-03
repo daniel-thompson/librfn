@@ -15,6 +15,7 @@
 #define RF_UTIL_H_
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -66,6 +67,43 @@
  * @returns <0 if a < b
  */
 int32_t cyclecmp32(uint32_t a, uint32_t b);
+
+/*!
+ * \brief Control structure used for rate limiting.
+ *
+ * To avoid false triggering, the structure should be zeroed before use.
+ */
+typedef struct {
+	uint32_t time;
+	uint32_t count;
+} ratelimit_state_t;
+
+/*!
+ * \brief Check that the rate limiter has not triggered.
+ *
+ * The rate limiter will trigger if there are more than n events each window.
+ *
+ * @returns true, if the ratelimited activity should be performed; false
+ *          otherwise.
+ */
+bool ratelimit_check(ratelimit_state_t *rs, uint32_t n, uint32_t window);
+
+/*!
+ * \brief Ratelimit a single expression.
+ *
+ * The expression will automatically be provides a private ::ratelimit_state_t;
+ */
+#define RATELIMIT_TO(n, window, fn)                                            \
+	{                                                                      \
+		static ratelimit_state_t rs_;                                  \
+		if (ratelimit_check(&rs_, n, window))                          \
+			(fn);                                                  \
+	}
+
+/*!
+ * \brief Ratelimit a single expression using default ratelimiter values.
+ */
+#define RATELIMIT(fn) RATELIMIT_TO(3, 10, fn)
 
 void rf_internal_out_of_memory(void);
 void *xmalloc(size_t sz);
