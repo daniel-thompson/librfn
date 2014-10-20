@@ -24,7 +24,7 @@ int32_t cyclecmp32(uint32_t a, uint32_t b)
 bool ratelimit_check(ratelimit_state_t *rs, uint32_t n, uint32_t window)
 {
 	int32_t delta = (int32_t) (rs->time - time_now());
-	if (delta < 0 || delta > (window * 1000000)) {
+	if (delta < 0 || delta > (signed) (window * 1000000)) {
 		rs->time = time_now() + (window * 1000000);
 		rs->count = 1;
 		return true;
