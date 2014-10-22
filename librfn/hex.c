@@ -68,7 +68,7 @@ int hex_get_byte(const char *s, const char **p)
 			return -1;
 	}
 
-	while (isspace(*s))
+	while (isspace((int) *s))
 		if (*s++ == '\n')
 			goto next_line;
 
@@ -76,7 +76,7 @@ int hex_get_byte(const char *s, const char **p)
 	if ('0' == s[0] && 'x' == s[1])
 		s += 2;
 
-	if (isxdigit(s[0]) && isxdigit(s[1])) {
+	if (isxdigit((int) s[0]) && isxdigit((int) s[1])) {
 		*p = s + 2;
 		return 16 * nibble(s[0]) | nibble(s[1]);
 	}
