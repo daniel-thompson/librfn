@@ -100,6 +100,11 @@ tests_fuzztest_SOURCES = tests/fuzztest.c
 tests_fuzztest_CFLAGS = $(LIBRFN_CFLAGS)
 tests_fuzztest_LDADD = $(LIBRFN_LIBS)
 
+tests += tests/hextest
+tests_hextest_SOURCES = tests/hextest.c
+tests_hextest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_hextest_LDADD = $(LIBRFN_LIBS)
+
 tests += tests/listtest
 tests_listtest_SOURCES = tests/listtest.c
 tests_listtest_CFLAGS = $(LIBRFN_CFLAGS)

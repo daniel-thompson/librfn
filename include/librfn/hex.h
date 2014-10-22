@@ -28,5 +28,7 @@
 int hex_dump(unsigned char *p, size_t sz);
 int hex_dump_to_file(FILE *f, unsigned char *p, size_t sz);
 
+int hex_get_byte(const char *s, const char **p);
+
 /*! @} */
 #endif // RF_HEX_H_

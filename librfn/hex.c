@@ -11,8 +11,10 @@
  * (at your option) any later version.
  */
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "librfn.h"
 
@@ -42,4 +44,47 @@ int hex_dump_to_file(FILE *f, unsigned char *p, size_t sz)
 int hex_dump(unsigned char *p, size_t sz)
 {
 	return hex_dump_to_file(stdout, p, sz);
+}
+
+static inline int nibble(char h)
+{
+	if (h <= '9')
+		return h - '0';
+
+	return (h & ~('a' - 'A')) - 'A' + 10;
+}
+
+
+int hex_get_byte(const char *s, const char **p)
+{
+    next_line:
+	if (s) {
+		char *q = strchr(s, ':');
+		if (q)
+			s = q+1;
+	} else {
+		s = *p;
+		if (!s)
+			return -1;
+	}
+
+	while (isspace(*s))
+		if (*s++ == '\n')
+			goto next_line;
+
+	/* lazy evaluation ensures we don't read past end of string */
+	if ('0' == s[0] && 'x' == s[1])
+		s += 2;
+
+	if (isxdigit(s[0]) && isxdigit(s[1])) {
+		*p = s + 2;
+		return 16 * nibble(s[0]) | nibble(s[1]);
+	}
+
+	/* jump to the next line (if there is one) */
+	s = *p = strchr(s, '\n');
+	if (s++)
+		goto next_line;
+
+	return -1;
 }
