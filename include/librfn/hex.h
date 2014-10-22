@@ -25,8 +25,8 @@
  * @{
  */
 
-int rf_hexdump(unsigned char *p, size_t sz);
-int rf_fhexdump(FILE *f, unsigned char *p, size_t sz);
+int hex_dump(unsigned char *p, size_t sz);
+int hex_dump_to_file(FILE *f, unsigned char *p, size_t sz);
 
 /*! @} */
 #endif // RF_HEX_H_

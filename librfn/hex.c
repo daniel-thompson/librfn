@@ -24,12 +24,7 @@ static inline char hexchar(char h)
 	return 'a' - 10 + h;
 }
 
-int rf_hexdump(unsigned char *p, size_t sz)
-{
-	return rf_fhexdump(stdout, p, sz);
-}
-
-int rf_fhexdump(FILE *f, unsigned char *p, size_t sz)
+int hex_dump_to_file(FILE *f, unsigned char *p, size_t sz)
 {
 	size_t oldsz = sz;
 
@@ -42,4 +37,9 @@ int rf_fhexdump(FILE *f, unsigned char *p, size_t sz)
 	}
 
 	return oldsz;
+}
+
+int hex_dump(unsigned char *p, size_t sz)
+{
+	return hex_dump_to_file(stdout, p, sz);
 }
