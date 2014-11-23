@@ -225,17 +225,25 @@ static struct output_task output_task = {
 #if defined(STM32F1)
 static void usb_hwinit(void)
 {
+	uint32_t t;
+
 	rcc_periph_clock_enable(RCC_GPIOA);
 	rcc_periph_clock_enable(RCC_GPIOB);
 
+	/* lower hotplug and leave enough time for the host to notice */
+	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
+		      GPIO11 | GPIO12);
+	gpio_clear(GPIOA, GPIO11 | GPIO12);
+	t = time_now() + 10000;
+	while (cyclecmp32(time_now(), t) < 0)
+		;
+
+	/* hotplug will automatically be unasserted as the usb cell takes
+	 * command of the pins.
+	 */
 	usbd_dev =
 	    usbd_init(&stm32f103_usb_driver, &desc, &config, usb_strings, 2,
 		      usbd_control_buffer, sizeof(usbd_control_buffer));
-
-	/* assert hotplug */
-	gpio_set(GPIOB, GPIO8);
-	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
-		      GPIO8);
 }
 #elif defined(STM32F4)
 static void usb_hwinit(void)
