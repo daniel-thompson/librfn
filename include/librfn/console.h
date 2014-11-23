@@ -111,6 +111,13 @@ void console_init(console_t *c, FILE *f);
 void console_hwinit(console_t *c);
 
 /*!
+ * \brief Make the console silent at boot.
+ *
+ * Causes the command interpreter to issue no prompt when it boots.
+ */
+static inline void console_silent(console_t *c) { c->argc = 1; }
+
+/*!
  * \brief Register a new command.
  *
  * The following example shows a simple protothreaded command to list the command's

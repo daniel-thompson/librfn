@@ -190,7 +190,10 @@ pt_state_t console_run(console_t *c)
 {
 	PT_BEGIN_FIBRE(&c->fibre);
 
-	do_prompt(c);
+	if (!c->argc)
+		do_prompt(c);
+	else
+		c->bufp = c->scratch.buf;
 
 	while (1) {
 		int ch;

@@ -290,8 +290,7 @@ static int cdcacm_control_request(usbd_device *dev,
 
 	switch (req->bRequest) {
 	case USB_CDC_REQ_SET_CONTROL_LINE_STATE: {
-		/*
-		 * This Linux cdc_acm driver requires this to be implemented
+		/* The Linux cdc_acm driver requires this to be implemented
 		 * even though it's optional in the CDC spec, and we don't
 		 * advertise it in the ACM functional descriptor.
 		 */
@@ -360,4 +359,10 @@ void console_hwinit(console_t *c)
 {
 	console = c;
 	fibre_run(&usb_task);
+
+	/* Going silent, which in this case means not speaking until spoken to,
+	 * ensures the console doesn't send output until USB is fully settled
+	 * (as proved because the host can send us data)
+	 */
+	console_silent(c);
 }
