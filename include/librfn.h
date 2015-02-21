@@ -33,6 +33,10 @@ Source code can be downloaded from https://github.com/daniel-thompson/librfn
 
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "librfn/atomic.h"
 #include "librfn/benchmark.h"
 #include "librfn/bitops.h"
@@ -53,5 +57,9 @@ Source code can be downloaded from https://github.com/daniel-thompson/librfn
 #include "librfn/time.h"
 #include "librfn/wavheader.h"
 #include "librfn/util.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // RF_LIBRFN_H_

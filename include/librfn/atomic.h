@@ -121,7 +121,21 @@ typedef unsigned int atomic_uint;
 	__atomic_clear(object, order)
 
 #else /* __STDC_NO_ATOMICS__ */
+
+#ifndef __cplusplus
 #include <stdatomic.h>
+#else
+/*
+ * libgcc's stdatomic.h (as of 4.9) doesn't work from C++. This workaround is a
+ * hack and isn't anything like as portable as it looks (because it confuses
+ * size and alignment). However for most systems it is enough to allow C++ to
+ * pack structures containing atomics the same way as the C compiler.  This
+ * makes it possible to use APIs linked to the structures from C++.
+ */
+typedef char atomic_uchar __attribute__((aligned(SIZEOF_ATOMIC_UCHAR)));
+typedef unsigned int atomic_uint __attribute__((aligned(SIZEOF_ATOMIC_UINT)));
+#endif /* __cplusplus */
+
 #endif /* __STDC_NO_ATOMICS__ */
 
 #endif // RF_ATOMIC_H_
