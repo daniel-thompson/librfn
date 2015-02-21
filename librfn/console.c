@@ -169,6 +169,11 @@ int console_register(const console_cmd_t *cmd)
 	return 0;
 }
 
+int console_getch(console_t *c)
+{
+	return ringbuf_get(&c->ring);
+}
+
 void console_putchar(console_t *c, char d)
 {
 	/* this deliberately does not use ringbuf_putchar() because in most
@@ -179,6 +184,29 @@ void console_putchar(console_t *c, char d)
 #ifndef CONFIG_NO_FIBRE
 	fibre_run_atomic(&c->fibre);
 #endif
+}
+
+pt_state_t console_eval(pt_t *pt, console_t *c, const char *cmd)
+{
+	uint16_t *i = &c->scratch.u16[sizeof(c->scratch.u16)-1];
+
+	PT_BEGIN(pt);
+
+	for (*i=0; cmd[*i]; ) {
+		if (ringbuf_put(&c->ring, cmd[*i])) {
+			*i += 1;
+		} else {
+#ifndef CONFIG_NO_FIBRE
+			fibre_run(&c->fibre);
+#endif
+			PT_YIELD();
+		}
+	}
+
+#ifndef CONFIG_NO_FIBRE
+	fibre_run(&c->fibre);
+#endif
+	PT_END();
 }
 
 /* This function must remain safe to cast to fibre_entrypoint_t in order to
@@ -194,7 +222,7 @@ pt_state_t console_run(console_t *c)
 
 	while (1) {
 		int ch;
-		PT_WAIT_UNTIL((ch = ringbuf_get(&c->ring)) != -1);
+		PT_WAIT_UNTIL((ch = console_getch(c)) != -1);
 
 		if (ch == '\b') {
 			if (c->bufp > c->scratch.buf)

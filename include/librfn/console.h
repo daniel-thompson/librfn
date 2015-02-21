@@ -160,6 +160,35 @@ int console_register(const console_cmd_t *cmd);
  */
 void console_putchar(console_t *c, char d);
 
+/*! \brief Proto-thread to inject a string into the command parser.
+ *
+ * When buffering is already happening somewhere else in the system then this
+ * is a safe alternative to console_putchar() since it will yield rather than
+ * dropping input during overflow conditions.
+ */
+pt_state_t console_eval(pt_t *pt, console_t *c, const char *cmd);
+
+/*!  \brief Fetch a character from the command processors queue.
+ *
+ * This function is used internally by the command processor and may
+ * also be used by console commands to read character input from the
+ * user. It must not be called outside of console command handling
+ * (because it will race with the command processor to handle the
+ * character).
+ *
+ * It is safe to use PT_WAIT_UNTIL() to wait until a character is
+ * received because the console fibre, which is used to execute console
+ * commands, will be woken up for each new character received.
+ *
+ * \code
+ * // ch need not be static unless the it is used after another wait.
+ * int ch;
+ * PT_WAIT_UNTIL((ch = console_getchar(c)) != -1);
+ * \endcode
+ *
+ */
+int console_getch(console_t *c);
+
 /*!
  * \brief Console protothread entrypoint.
  *
