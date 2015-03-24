@@ -38,6 +38,7 @@ librfn_librfn_a_SOURCES = \
 	librfn/rand.c \
 	librfn/regdump.c \
 	librfn/ringbuf.c \
+	librfn/stats.c \
 	librfn/string.c \
 	librfn/wavheader.c \
 	librfn/util.c
@@ -129,6 +130,11 @@ tests += tests/ringbuftest
 tests_ringbuftest_SOURCES = tests/ringbuftest.c
 tests_ringbuftest_CFLAGS = $(LIBRFN_CFLAGS)
 tests_ringbuftest_LDADD = $(LIBRFN_LIBS)
+
+tests += tests/statstest
+tests_statstest_SOURCES = tests/statstest.c
+tests_statstest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_statstest_LDADD = $(LIBRFN_LIBS)
 
 tests += tests/wavheadertest
 tests_wavheadertest_SOURCES = tests/wavheadertest.c
