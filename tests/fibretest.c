@@ -272,7 +272,7 @@ static void sleep_test()
 		   == fibre_scheduler_next( 60) && fibre_self() == NULL);
 }
 
-static yield_test()
+static void yield_test()
 {
 	static yield_fibre_t yielder[3] = {
 		{
