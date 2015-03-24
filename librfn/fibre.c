@@ -27,6 +27,7 @@ static fibre_t *atomic_runq_buf[8];
 
 static struct {
 	fibre_t *current;
+	fibre_state_t state;
 	uint32_t now;
 
 	list_t runq;
@@ -76,11 +77,11 @@ static fibre_t *get_next_task(void)
 	return containerof(node, fibre_t, link);
 }
 
-static void update_current_state(fibre_state_t state)
+static void update_current_state(void)
 {
-	kernel.current->state = state;
+	kernel.current->state = kernel.state;
 
-	switch (state) {
+	switch (kernel.state) {
 	case FIBRE_STATE_YIELDED:
 		fibre_run(kernel.current);
 		break;
@@ -134,14 +135,27 @@ uint32_t fibre_scheduler_next(uint32_t time)
 {
 	kernel.now = time;
 
-	handle_atomic_runq();
-	handle_timerq();
-
-	kernel.current = get_next_task();
-	if (kernel.current) {
-		fibre_state_t state = kernel.current->fn(kernel.current);
+	/*
+	 * When we have a single fibre yielding to itself we can create a
+	 * fast path by skipping scheduler updates. This allows processor
+	 * intensive work to be harmed as little as possible even when the
+	 * fibre they run in seeks to cooperate with other fibres.
+	 */
+	if (kernel.state != FIBRE_STATE_YIELDED ||
+	    !list_empty(&kernel.runq) ||
+	    !list_empty(&kernel.timerq) ||
+	    !messageq_empty(&kernel.atomic_runq)) {
 		handle_atomic_runq();
-		update_current_state(state);
+		if (kernel.current)
+			update_current_state();
+		handle_timerq();
+		kernel.current = get_next_task();
+	}
+
+	if (kernel.current) {
+		kernel.state = kernel.current->fn(kernel.current);
+		if (kernel.state == FIBRE_STATE_YIELDED)
+			return kernel.now;
 	}
 
 	return get_next_wakeup();
