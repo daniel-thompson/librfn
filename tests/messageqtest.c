@@ -98,5 +98,35 @@ int main()
         messageq_release(&queue, queue_buf+2);
         verify(NULL == messageq_receive(&queue));
 
+	/* emptyness tests */
+	verify(true == messageq_empty(&queue));
+
+	verify(queue_buf+0 == messageq_claim(&queue));
+	verify(true == messageq_empty(&queue));
+	verify(queue_buf+1 == messageq_claim(&queue));
+	verify(true == messageq_empty(&queue));
+	verify(queue_buf+2 == messageq_claim(&queue));
+	verify(true == messageq_empty(&queue));
+
+	messageq_send(&queue, queue_buf+0);
+	verify(false == messageq_empty(&queue));
+	messageq_send(&queue, queue_buf+1);
+	verify(false == messageq_empty(&queue));
+	messageq_send(&queue, queue_buf+2);
+	verify(false == messageq_empty(&queue));
+
+        verify(queue_buf+0 == messageq_receive(&queue));
+	verify(false == messageq_empty(&queue));
+        messageq_release(&queue, queue_buf+0);
+	verify(false == messageq_empty(&queue));
+        verify(queue_buf+1 == messageq_receive(&queue));
+	verify(false == messageq_empty(&queue));
+        messageq_release(&queue, queue_buf+1);
+	verify(false == messageq_empty(&queue));
+        verify(queue_buf+2 == messageq_receive(&queue));
+	verify(true == messageq_empty(&queue));
+        messageq_release(&queue, queue_buf+2);
+	verify(true == messageq_empty(&queue));
+
 	return 0;
 }
