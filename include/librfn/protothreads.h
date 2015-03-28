@@ -105,6 +105,14 @@ typedef uint16_t pt_t;
 	}                                                                      \
 	return PT_EXITED
 
+#define PT_WAIT()                                                              \
+	do {                                                                   \
+		*missing_PT_BEGIN = __LINE__;                                  \
+		return PT_WAITING;                                             \
+	case __LINE__:                                                         \
+		;                                                              \
+	} while (0)
+
 #define PT_WAIT_UNTIL(c)                                                       \
 	do {                                                                   \
 		*missing_PT_BEGIN = __LINE__;                                  \
