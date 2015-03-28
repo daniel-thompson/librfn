@@ -63,6 +63,11 @@ noinst_PROGRAMS += src/fibredemo
 src_fibredemo_SOURCES = src/fibredemo.c
 src_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
 src_fibredemo_LDADD = $(LIBRFN_LIBS)
+
+noinst_PROGRAMS += src/benchmark
+src_benchmark_SOURCES = src/benchmark.c
+src_benchmark_CFLAGS = $(LIBRFN_CFLAGS)
+src_benchmark_LDADD = $(LIBRFN_LIBS)
 endif
 
 noinst_PROGRAMS += src/regdumpdemo

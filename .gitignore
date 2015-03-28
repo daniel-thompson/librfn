@@ -27,6 +27,7 @@ test-driver
 *.o
 *#
 
+src/benchmark
 src/consoledemo
 src/fibredemo
 src/regdumpdemo
