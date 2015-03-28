@@ -13,6 +13,20 @@
 
 #include "librfn/stats.h"
 
+void stats_init(stats_t *s)
+{
+	memset(s, 0, sizeof(*s));
+#ifdef STATS_USE_FLOAT
+	s->min = FLT_MIN;
+	s->max = FLT_MAX;
+#elif defined STATS_USE_DOUBLE
+	s->min = DBL_MIN;
+	s->max = DBL_MAX;
+#else
+	s->min = (statval_t) -1ull;
+#endif
+
+}
 void stats_add(stats_t *s, statval_t d)
 {
 	if (d < s->min)

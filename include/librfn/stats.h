@@ -45,11 +45,7 @@ typedef struct stats {
 	statval_t count;
 } stats_t;
  
-inline void stats_init(stats_t *s)
-{
-	memset(s, 0, sizeof(*s));
-}
-
+void stats_init(stats_t *s);
 void stats_add(stats_t *s, statval_t d);
 
 statval_t stats_mean(stats_t *s);
