@@ -16,6 +16,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 bin_PROGRAMS =
 lib_LIBRARIES =
+noinst_HEADERS =
 noinst_LIBRARIES =
 noinst_PROGRAMS =
 BUILT_SOURCES =

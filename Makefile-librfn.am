@@ -16,7 +16,36 @@
 # librfn.a
 #
 
+# librfn is (at this point in time) too informally managed to make system
+# wide installations wide. Instead the library is recommended for use as
+# a good source for copy and paste ideas or as a git submodule. This
+# autotools build system is only really provided to support building the
+# demos and test suite. For that reasons we currently mark both the
+# library and the headers as noinst (i.e. no system-wide installation).
 noinst_LIBRARIES += librfn/librfn.a
+noinst_HEADERS += \
+	include/librfn/hex.h \
+	include/librfn/fuzz.h \
+	include/librfn/rand.h \
+	include/librfn/benchmark.h \
+	include/librfn/ringbuf.h \
+	include/librfn/string.h \
+	include/librfn/fibre.h \
+	include/librfn/time.h \
+	include/librfn/messageq.h \
+	include/librfn/bitops.h \
+	include/librfn/stats.h \
+	include/librfn/protothreads.h \
+	include/librfn/console.h \
+	include/librfn/wavheader.h \
+	include/librfn/list.h \
+	include/librfn/regdump.h \
+	include/librfn/atomic.h \
+	include/librfn/pack.h \
+	include/librfn/fixed.h \
+	include/librfn/enum.h \
+	include/librfn/util.h \
+	include/librfn.h
 
 LIBRFN_CFLAGS = -I$(top_srcdir)/include
 LIBRFN_LIBS = $(top_builddir)/librfn/librfn.a
