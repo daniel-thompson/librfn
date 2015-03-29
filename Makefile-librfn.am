@@ -65,7 +65,7 @@ src_fibredemo_CFLAGS = $(LIBRFN_CFLAGS)
 src_fibredemo_LDADD = $(LIBRFN_LIBS)
 
 noinst_PROGRAMS += src/benchmark
-src_benchmark_SOURCES = src/benchmark.c
+src_benchmark_SOURCES = src/benchmark.c src/libbench.c src/libbench.h
 src_benchmark_CFLAGS = $(LIBRFN_CFLAGS)
 src_benchmark_LDADD = $(LIBRFN_LIBS)
 endif
