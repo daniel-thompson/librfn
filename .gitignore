@@ -37,6 +37,7 @@ tests/*test.log
 tests/*test.trs
 test-suite.log
 
+benchmark-results.csv
 wavreadertest.wav
 wavwritertest.wav
 html

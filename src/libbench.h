@@ -41,4 +41,5 @@ int benchmark_run_once(benchmark_results_t *results);
 const char *benchmark_get_result(benchmark_results_t *results, int n,
 				 stats_t *s);
 void benchmark_show_results(benchmark_results_t *results);
+void benchmark_show_csv(benchmark_results_t *results, FILE *f);
 

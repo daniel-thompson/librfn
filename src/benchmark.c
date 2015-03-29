@@ -54,6 +54,10 @@ int conductor_fibre(fibre_t *fibre)
 
 	benchmark_show_results(&c->results);
 
+	FILE *f = fopen("benchmark-results.csv", "w");
+	benchmark_show_csv(&c->results, f);
+	fclose(f);
+
 	exit(0);
 	PT_END();
 }

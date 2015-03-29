@@ -117,6 +117,17 @@ void benchmark_show_results(benchmark_results_t *results)
 	printf("----------------------------------------------\n");
 
 	for (int i = 0; (name = benchmark_get_result(results, i, &result)); i++)
-		printf("%-16s%10d%10d%10d\n", name, result.min,
-		       stats_mean(&result), result.max);
+		printf("%-16s%10d%10d%10d\n", name,
+		       result.min, stats_mean(&result), result.max);
 }	
+
+void benchmark_show_csv(benchmark_results_t *results, FILE *f)
+{
+	const char *name;
+	stats_t result;
+
+	fprintf(f,"\"Test\",\"Min\",\"Mean\",\"Max\"\n");
+	for (int i = 0; (name = benchmark_get_result(results, i, &result)); i++)
+		fprintf(f, "\"%s\",%d,%d,%d\n", name,
+		        result.min, stats_mean(&result), result.max);
+}
