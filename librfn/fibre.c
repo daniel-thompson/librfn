@@ -101,7 +101,7 @@ static void update_current_state(void)
 
 static uint32_t get_next_wakeup(void)
 {
-	if (!list_empty(&kernel.runq))
+	if (!messageq_empty(&kernel.atomic_runq) || !list_empty(&kernel.runq))
 		return kernel.now;
 
 	if (list_empty(&kernel.timerq))
