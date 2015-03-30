@@ -26,6 +26,7 @@ typedef struct {
 	unsigned int cycles;
 	unsigned int count;
 	fibre_t fibre;
+	fibre_t *friend;
 } benchmark_fibre_t;
 
 static int yield_fibre(fibre_t *fibre)
@@ -39,6 +40,52 @@ static int yield_fibre(fibre_t *fibre)
 
 	while (bm->count++ < bm->cycles)
 		PT_YIELD();
+
+	bm->end_time = time_now();
+	fibre_run(next_action);
+	PT_END();
+}
+
+static int run_fibre(fibre_t *fibre)
+{
+	benchmark_fibre_t *bm = containerof(fibre, benchmark_fibre_t, fibre);
+
+	PT_BEGIN_FIBRE(fibre);
+
+	bm->start_time = time_now();
+	bm->count = 0;
+
+	while (bm->count++ < bm->cycles) {
+		fibre_run(bm->friend);
+		PT_WAIT();
+	}
+
+	/* if we are fibre[0] we need to poke fibre[1] one last time */
+	if (bm->friend > fibre)
+		fibre_run(bm->friend);
+
+	bm->end_time = time_now();
+	fibre_run(next_action);
+	PT_END();
+}
+
+static int atomic_run_fibre(fibre_t *fibre)
+{
+	benchmark_fibre_t *bm = containerof(fibre, benchmark_fibre_t, fibre);
+
+	PT_BEGIN_FIBRE(fibre);
+
+	bm->start_time = time_now();
+	bm->count = 0;
+
+	while (bm->count++ < bm->cycles) {
+		fibre_run_atomic(bm->friend);
+		PT_WAIT();
+	}
+
+	/* if we are fibre[0] we need to poke fibre[1] one last time */
+	if (bm->friend > fibre)
+		fibre_run_atomic(bm->friend);
 
 	bm->end_time = time_now();
 	fibre_run(next_action);
@@ -61,11 +108,40 @@ static benchmark_fibre_t paired_yield[2] = {
 	}
 };
 
+static benchmark_fibre_t simple_run[2] = {
+	{
+		.cycles = 500000,
+		.fibre = FIBRE_VAR_INIT(run_fibre),
+		.friend = &simple_run[1].fibre,
+	},
+	{
+		.cycles = 500000,
+		.fibre = FIBRE_VAR_INIT(run_fibre),
+		.friend = &simple_run[0].fibre,
+	},
+};
+
+static benchmark_fibre_t atomic_run[2] = {
+	{
+		.cycles = 500000,
+		.fibre = FIBRE_VAR_INIT(atomic_run_fibre),
+		.friend = &atomic_run[1].fibre,
+	},
+	{
+		.cycles = 500000,
+		.fibre = FIBRE_VAR_INIT(atomic_run_fibre),
+		.friend = &atomic_run[0].fibre,
+	},
+};
+
+
 void benchmark_init(benchmark_results_t *results, fibre_t *wakeup)
 {
 	memset(results, 0, sizeof(*results));
 	stats_init(&results->single);
 	stats_init(&results->paired);
+	stats_init(&results->simple_run);
+	stats_init(&results->atomic_run);
 	results->wakeup = wakeup;
 }	
 
@@ -90,6 +166,16 @@ int benchmark_run_once(benchmark_results_t *results)
 	stats_add(&results->paired,
 		  paired_yield[1].end_time - paired_yield[0].start_time);
 
+	fibre_run(&simple_run[0].fibre);
+	PT_WAIT();
+	stats_add(&results->simple_run,
+		  simple_run[1].end_time - simple_run[0].start_time);
+
+	fibre_run(&atomic_run[0].fibre);
+	PT_WAIT();
+	stats_add(&results->atomic_run,
+		  atomic_run[1].end_time - atomic_run[0].start_time);
+
 	PT_END();
 }
 
@@ -103,6 +189,12 @@ const char *benchmark_get_result(benchmark_results_t *results, int n,
 	case 1:
 		memcpy(s, &results->paired, sizeof(*s));
 		return "Paired";
+	case 2:
+		memcpy(s, &results->simple_run, sizeof(*s));
+		return "Simple-Run";
+	case 3:
+		memcpy(s, &results->atomic_run, sizeof(*s));
+		return "Atomic-Run";
 	default:
 		return NULL;
 	}
