@@ -18,6 +18,21 @@
 #include "librfn.h"
 #include "libbench.h"
 
+#define BENCHMARK_SLOW_MACHINE
+
+/*
+ * Assuming time_now() ticks at 1MHz (microseconds) then a million cycles
+ * results in a results in picoseconds per cycle. This is great for
+ * benchmarking powerful multi-GHz desktop machines. If BENCHMARK_SLOW_MACHINE
+ * is set we reduce the number of cycles and the results will be in
+ * nanoseconds per cycle.
+ */
+#ifdef BENCHMARK_SLOW_MACHINE
+#define NUM_CYCLES 1000
+#else
+#define NUM_CYCLES 1000000
+#endif
+
 static fibre_t *next_action;
 
 typedef struct {
@@ -93,29 +108,29 @@ static int atomic_run_fibre(fibre_t *fibre)
 }
 
 static benchmark_fibre_t single_yield = {
-	.cycles = 1000000,
+	.cycles = NUM_CYCLES,
 	.fibre = FIBRE_VAR_INIT(yield_fibre)
 };
 
 static benchmark_fibre_t paired_yield[2] = {
 	{
-		.cycles = 500000,
+		.cycles = NUM_CYCLES/2,
 		.fibre = FIBRE_VAR_INIT(yield_fibre)
 	},
 	{
-		.cycles = 500000,
+		.cycles = NUM_CYCLES/2,
 		.fibre = FIBRE_VAR_INIT(yield_fibre)
 	}
 };
 
 static benchmark_fibre_t simple_run[2] = {
 	{
-		.cycles = 500000,
+		.cycles = NUM_CYCLES/2,
 		.fibre = FIBRE_VAR_INIT(run_fibre),
 		.friend = &simple_run[1].fibre,
 	},
 	{
-		.cycles = 500000,
+		.cycles = NUM_CYCLES/2,
 		.fibre = FIBRE_VAR_INIT(run_fibre),
 		.friend = &simple_run[0].fibre,
 	},
@@ -123,12 +138,12 @@ static benchmark_fibre_t simple_run[2] = {
 
 static benchmark_fibre_t atomic_run[2] = {
 	{
-		.cycles = 500000,
+		.cycles = NUM_CYCLES/2,
 		.fibre = FIBRE_VAR_INIT(atomic_run_fibre),
 		.friend = &atomic_run[1].fibre,
 	},
 	{
-		.cycles = 500000,
+		.cycles = NUM_CYCLES/2,
 		.fibre = FIBRE_VAR_INIT(atomic_run_fibre),
 		.friend = &atomic_run[0].fibre,
 	},
