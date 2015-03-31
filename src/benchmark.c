@@ -43,14 +43,13 @@ int conductor_fibre(fibre_t *fibre)
 
 	printf("Benchmarking ");
 	fflush(stdout);
-	for (i=0; i<100; i++) {
-		if (i%2 == 0) {
-			printf(".");
-			fflush(stdout);
-		}
+	for (i=0; i<50; i++) {
+		printf(".");
+		fflush(stdout);
 		PT_SPAWN(&c->results.pt, benchmark_run_once(&c->results));
 	}
-	printf(" done\n\n");
+	printf(" done\nBenchmark completed in %4.2f seconds\n\n",
+	       (time64_now() - end_time) / 1000000.0);
 
 	benchmark_show_results(&c->results);
 
