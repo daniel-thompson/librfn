@@ -138,10 +138,8 @@ static benchmark_fibre_t atomic_run[2] = {
 void benchmark_init(benchmark_results_t *results, fibre_t *wakeup)
 {
 	memset(results, 0, sizeof(*results));
-	stats_init(&results->single);
-	stats_init(&results->paired);
-	stats_init(&results->simple_run);
-	stats_init(&results->atomic_run);
+	for (int i=0; i<lengthof(results->stats); i++)
+		stats_init(&results->stats[i]);
 	results->wakeup = wakeup;
 }	
 
@@ -157,47 +155,56 @@ int benchmark_run_once(benchmark_results_t *results)
 
 	fibre_run(&single_yield.fibre);
 	PT_WAIT();
-	stats_add(&results->single,
+	stats_add(&results->stats[BENCHMARK_SINGLE],
 		  single_yield.end_time - single_yield.start_time);
 
 	fibre_run(&paired_yield[0].fibre);
 	fibre_run(&paired_yield[1].fibre);
 	PT_WAIT();
-	stats_add(&results->paired,
+	stats_add(&results->stats[BENCHMARK_PAIRED],
 		  paired_yield[1].end_time - paired_yield[0].start_time);
 
 	fibre_run(&simple_run[0].fibre);
 	PT_WAIT();
-	stats_add(&results->simple_run,
+	stats_add(&results->stats[BENCHMARK_SIMPLE_RUN],
 		  simple_run[1].end_time - simple_run[0].start_time);
 
 	fibre_run(&atomic_run[0].fibre);
 	PT_WAIT();
-	stats_add(&results->atomic_run,
+	stats_add(&results->stats[BENCHMARK_ATOMIC_RUN],
 		  atomic_run[1].end_time - atomic_run[0].start_time);
 
 	PT_END();
 }
 
+static const char *lookup_name(int n)
+{
+	static char lower[16];
+#define C(x) case BENCHMARK_ ## x: strncpy(lower, #x, sizeof(lower)); break
+	switch (n) {
+	C(SINGLE);
+	C(PAIRED);
+	C(SIMPLE_RUN);
+	C(ATOMIC_RUN);
+	default:
+		return NULL;
+#undef C
+	}
+
+	lower[sizeof(lower)-1] = '\0';
+	(void) strtolower(lower);
+
+	return lower;
+}
+
 const char *benchmark_get_result(benchmark_results_t *results, int n,
 				 stats_t *s)
 {
-	switch (n) {
-	case 0:
-		memcpy(s, &results->single, sizeof(*s));
-		return "Single";
-	case 1:
-		memcpy(s, &results->paired, sizeof(*s));
-		return "Paired";
-	case 2:
-		memcpy(s, &results->simple_run, sizeof(*s));
-		return "Simple-Run";
-	case 3:
-		memcpy(s, &results->atomic_run, sizeof(*s));
-		return "Atomic-Run";
-	default:
-		return NULL;
-	}
+	const char *retval = lookup_name(n);
+	if (retval)
+		memcpy(s, &results->stats[n], sizeof(*s));
+
+	return retval;
 }
 
 void benchmark_show_results(benchmark_results_t *results)

@@ -29,13 +29,18 @@
 
 #include "librfn.h"
 
+enum {
+	BENCHMARK_SINGLE,
+	BENCHMARK_PAIRED,
+	BENCHMARK_SIMPLE_RUN,
+	BENCHMARK_ATOMIC_RUN,
+	BENCHMARK_MAX
+};
+
 typedef struct {
 	pt_t pt;
 	fibre_t *wakeup;
-	stats_t single;
-	stats_t paired;
-	stats_t simple_run;
-	stats_t atomic_run;
+	stats_t stats[BENCHMARK_MAX];
 } benchmark_results_t;
 
 void benchmark_init(benchmark_results_t *results, fibre_t *wakeup);
