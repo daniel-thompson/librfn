@@ -24,28 +24,28 @@
 # library and the headers as noinst (i.e. no system-wide installation).
 noinst_LIBRARIES += librfn/librfn.a
 noinst_HEADERS += \
-	include/librfn/hex.h \
-	include/librfn/fuzz.h \
-	include/librfn/rand.h \
-	include/librfn/benchmark.h \
-	include/librfn/ringbuf.h \
-	include/librfn/string.h \
-	include/librfn/fibre.h \
-	include/librfn/time.h \
-	include/librfn/messageq.h \
-	include/librfn/bitops.h \
-	include/librfn/stats.h \
-	include/librfn/protothreads.h \
-	include/librfn/console.h \
-	include/librfn/wavheader.h \
-	include/librfn/list.h \
-	include/librfn/regdump.h \
+	include/librfn.h \
 	include/librfn/atomic.h \
-	include/librfn/pack.h \
-	include/librfn/fixed.h \
+	include/librfn/benchmark.h \
+	include/librfn/bitops.h \
+	include/librfn/console.h \
 	include/librfn/enum.h \
+	include/librfn/fibre.h \
+	include/librfn/fixed.h \
+	include/librfn/list.h \
+	include/librfn/rand.h \
+	include/librfn/fuzz.h \
+	include/librfn/hex.h \
+	include/librfn/messageq.h \
+	include/librfn/pack.h \
+	include/librfn/protothreads.h \
+	include/librfn/regdump.h \
+	include/librfn/ringbuf.h \
+	include/librfn/stats.h \
+	include/librfn/string.h \
+	include/librfn/time.h \
 	include/librfn/util.h \
-	include/librfn.h
+	include/librfn/wavheader.h
 
 LIBRFN_CFLAGS = -I$(top_srcdir)/include
 LIBRFN_LIBS = $(top_builddir)/librfn/librfn.a
