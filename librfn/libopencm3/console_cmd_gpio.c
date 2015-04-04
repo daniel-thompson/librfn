@@ -30,7 +30,13 @@ enum {
 	off,
 	toggle,
 	pulse,
-	usage
+	usage,
+	read_state,
+	hiz,
+	pullup,
+	opendrain,
+	pushpull,
+	detect,
 };
 
 static int parse_args(console_t *c, console_gpio_t *gpio)
@@ -46,15 +52,53 @@ static int parse_args(console_t *c, console_gpio_t *gpio)
 		action = toggle;
 	else if (0 == strcmp(c->argv[1], "pulse"))
 		action = pulse;
+	else if (0 == strcmp(c->argv[1], "read"))
+		action = read_state;
+	else if (0 == strcmp(c->argv[1], "float"))
+		action = hiz;
+	else if (0 == strcmp(c->argv[1], "pullupdown"))
+		action = pullup;
+	else if (0 == strcmp(c->argv[1], "opendrain"))
+		action = opendrain;
+	else if (0 == strcmp(c->argv[1], "pushpull"))
+		action = pushpull;
+	else if (0 == strcmp(c->argv[1], "detect"))
+		action = detect;
 	else
 		action = usage;
 
 	/* update any flags */
 	if ((action <= off) && (gpio->flags & console_gpio_active_low))
 		action = !action;
+	if ((action > usage) && !(gpio->flags & console_gpio_explore))
+		action = usage;
 
 	return action;
 }
+
+/*
+ * Returns true is there is something connected to the pin (including
+ * a large capacitance) that can defeat the weak pull up/downs.
+ */
+static bool gpio_is_connected(uint32_t gpioport, uint16_t gpio)
+{
+	int i;
+	uint32_t readings = 0;
+
+	gpio_set_mode(gpioport, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN,
+		      gpio);
+	gpio_set(gpioport, gpio);
+        for (i = 0; i < 8; i++)
+		readings = (readings << 1) | !gpio_get(gpioport, gpio);
+	gpio_clear(gpioport, gpio);
+	for (i = 0; i < 8; i++)
+		readings = (readings << 1) | !!gpio_get(gpioport, gpio);
+	gpio_set_mode(gpioport, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, gpio);
+
+	return readings;
+}
+
+
 
 /* This section is a rather nasty workaround until I figure out how to get
  * open drain pins to work correctly on STM32F4.
@@ -128,6 +172,25 @@ pt_state_t console_gpio_do_cmd(console_t *c)
 		*t = time_now() + 1000000;
 		PT_WAIT_UNTIL(fibre_timeout(*t));
 		gpio_toggle(gpio->port, gpio->pin);
+	} else if (action == read_state) {
+		fprintf(c->out, "%s %d\n", gpio->cmd.name,
+			(int) gpio_get(gpio->port, gpio->pin));
+	} else if (action == hiz) {
+		gpio_set_mode(gpio->port, GPIO_MODE_INPUT,
+			      GPIO_CNF_INPUT_FLOAT, gpio->pin);
+	} else if (action == pullup) {
+		gpio_set_mode(gpio->port, GPIO_MODE_INPUT,
+			      GPIO_CNF_INPUT_PULL_UPDOWN, gpio->pin);
+	} else if (action == opendrain) {
+		gpio_set_mode(gpio->port, GPIO_MODE_OUTPUT_2_MHZ,
+			      GPIO_CNF_OUTPUT_OPENDRAIN, gpio->pin);
+	} else if (action == pushpull) {
+		gpio_set_mode(gpio->port, GPIO_MODE_OUTPUT_2_MHZ,
+			      GPIO_CNF_OUTPUT_PUSHPULL, gpio->pin);
+	} else if (action == detect) {
+		fprintf(c->out, "%s is %s\n", gpio->cmd.name,
+			gpio_is_connected(gpio->port, gpio->pin) ? "connected"
+								 : "floating");
 	} else {
 		fprintf(c->out, "Usage: %s on|off|toggle|pulse\n",
 			c->cmd->name);
@@ -182,6 +245,10 @@ int console_gpio_register(const console_gpio_t *gpio)
 	int cnf = GPIO_CNF_OUTPUT_PUSHPULL;
 	if (gpio->flags & console_gpio_open_drain)
 		cnf = GPIO_CNF_OUTPUT_OPENDRAIN;
+	if (gpio->flags & console_gpio_explore) {
+		mode = GPIO_MODE_INPUT;
+		cnf = GPIO_CNF_INPUT_FLOAT;
+	}
 	gpio_set_mode(gpio->port, mode, cnf, gpio->pin);
 #elif defined(STM32F4)
 	int mode = GPIO_MODE_OUTPUT;

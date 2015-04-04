@@ -238,7 +238,8 @@ void console_process(console_t *c, char d);
 typedef enum {
 	console_gpio_active_low = 0x01,
 	console_gpio_default_on = 0x02,
-	console_gpio_open_drain = 0x04
+	console_gpio_open_drain = 0x04,
+	console_gpio_explore = 0x08
 } console_gpio_flags_t;
 
 /*!
