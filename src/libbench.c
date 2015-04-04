@@ -229,7 +229,7 @@ void benchmark_show_results(benchmark_results_t *results)
 	printf("----------------------------------------------\n");
 
 	for (int i = 0; (name = benchmark_get_result(results, i, &result)); i++)
-		printf("%-16s%10d%10d%10d\n", name,
+		printf("%-16s%11d%11d%11d\n", name,
 		       result.min, stats_mean(&result), result.max);
 }	
 
