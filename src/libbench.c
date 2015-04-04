@@ -18,8 +18,6 @@
 #include "librfn.h"
 #include "libbench.h"
 
-#define BENCHMARK_SLOW_MACHINE
-
 /*
  * Assuming time_now() ticks at 1MHz (microseconds) then a million cycles
  * results in a results in picoseconds per cycle. This is great for
