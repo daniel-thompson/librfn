@@ -37,6 +37,7 @@ noinst_HEADERS += \
 	include/librfn/fuzz.h \
 	include/librfn/hex.h \
 	include/librfn/messageq.h \
+	include/librfn/mlog.h \
 	include/librfn/pack.h \
 	include/librfn/protothreads.h \
 	include/librfn/regdump.h \
@@ -63,6 +64,7 @@ librfn_librfn_a_SOURCES = \
 	librfn/hex.c \
 	librfn/list.c \
 	librfn/messageq.c \
+	librfn/mlog.c \
 	librfn/pack.c \
 	librfn/rand.c \
 	librfn/regdump.c \
@@ -149,6 +151,11 @@ tests += tests/messageqtest
 tests_messageqtest_SOURCES = tests/messageqtest.c
 tests_messageqtest_CFLAGS = $(LIBRFN_CFLAGS)
 tests_messageqtest_LDADD = $(LIBRFN_LIBS)
+
+tests += tests/mlogtest
+tests_mlogtest_SOURCES = tests/mlogtest.c
+tests_mlogtest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_mlogtest_LDADD = $(LIBRFN_LIBS)
 
 tests += tests/protothreadstest
 tests_protothreadstest_SOURCES = tests/protothreadstest.c

@@ -48,6 +48,7 @@ extern "C" {
 #include "librfn/hex.h"
 #include "librfn/list.h"
 #include "librfn/messageq.h"
+#include "librfn/mlog.h"
 #include "librfn/pack.h"
 #include "librfn/protothreads.h"
 #include "librfn/rand.h"
