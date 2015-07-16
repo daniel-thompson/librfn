@@ -24,8 +24,9 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/desig.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/cm3/scb.h>
@@ -48,7 +49,7 @@ static const struct usb_device_descriptor desc = {
 	.bcdDevice = 0x0200,
 	.iManufacturer = 1,
 	.iProduct = 2,
-	.iSerialNumber = 0,
+	.iSerialNumber = 3,
 	.bNumConfigurations = 1,
 };
 
@@ -169,9 +170,12 @@ static const struct usb_config_descriptor config = {
 	.interface = ifaces,
 };
 
+static char serial_no[25];
+
 static const char * usb_strings[] = {
 	"redfelineninja.org.uk",
 	"CDC-ADM command console",
+	serial_no
 };
 
 static console_t *console;
@@ -238,11 +242,14 @@ static void usb_hwinit(void)
 	while (cyclecmp32(time_now(), t) < 0)
 		;
 
+	/* use the device signature as the serial number */
+	desig_get_unique_id_as_string(serial_no, sizeof(serial_no));
+
 	/* hotplug will automatically be unasserted as the usb cell takes
 	 * command of the pins.
 	 */
 	usbd_dev =
-	    usbd_init(&stm32f103_usb_driver, &desc, &config, usb_strings, 2,
+	    usbd_init(&stm32f103_usb_driver, &desc, &config, usb_strings, 3,
 		      usbd_control_buffer, sizeof(usbd_control_buffer));
 }
 #elif defined(STM32F4)
