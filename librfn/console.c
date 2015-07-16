@@ -227,18 +227,24 @@ pt_state_t console_run(console_t *c)
 		int ch;
 		PT_WAIT_UNTIL((ch = console_getch(c)) != -1);
 
-		if (ch == '\b') {
-			if (c->bufp > c->scratch.buf)
-				c->bufp--;
-		} else if (ch != '\n') {
-			*c->bufp++ = ch;
-		}
-
 		if (ch == '\n' || c->bufp >= &c->scratch.buf[79]) {
 			do_tokenize(c);
 			find_command(c);
 			PT_SPAWN(&c->pt, c->cmd->fn(c));
 			do_prompt(c);
+		} else if (ch == '\b') {
+			if (c->bufp > c->scratch.buf) {
+				c->bufp--;
+				fprintf(c->out, " \b");
+			} else {
+				fprintf(c->out, " ");
+			}
+			fflush(c->out);
+		} else if (ch == 3) { /* Ctrl-C */
+			fprintf(c->out, "\n");
+			do_prompt(c);
+		} else if (ch != '\n') {
+			*c->bufp++ = ch;
 		}
 	}
 
