@@ -36,6 +36,10 @@
 #include <librfn/time.h>
 #include <librfn/util.h>
 
+#ifndef CONFIG_USB_MAX_POWER
+#define CONFIG_USB_MAX_POWER 100
+#endif
+
 static const struct usb_device_descriptor desc = {
 	.bLength = USB_DT_DEVICE_SIZE,
 	.bDescriptorType = USB_DT_DEVICE,
@@ -165,7 +169,7 @@ static const struct usb_config_descriptor config = {
 	.bConfigurationValue = 1,
 	.iConfiguration = 0,
 	.bmAttributes = 0x80,
-	.bMaxPower = 0x32,
+	.bMaxPower = (CONFIG_USB_MAX_POWER+1) / 2,
 
 	.interface = ifaces,
 };
