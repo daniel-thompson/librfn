@@ -80,6 +80,7 @@ static int parse_args(console_t *c, console_gpio_t *gpio)
  * Returns true is there is something connected to the pin (including
  * a large capacitance) that can defeat the weak pull up/downs.
  */
+#ifdef STM32F1
 static bool gpio_is_connected(uint32_t gpioport, uint16_t gpio)
 {
 	int i;
@@ -97,8 +98,7 @@ static bool gpio_is_connected(uint32_t gpioport, uint16_t gpio)
 
 	return readings;
 }
-
-
+#endif
 
 /* This section is a rather nasty workaround until I figure out how to get
  * open drain pins to work correctly on STM32F4.
@@ -175,6 +175,7 @@ pt_state_t console_gpio_do_cmd(console_t *c)
 	} else if (action == read_state) {
 		fprintf(c->out, "%s %d\n", gpio->cmd.name,
 			(int) gpio_get(gpio->port, gpio->pin));
+#ifdef STM32F1
 	} else if (action == hiz) {
 		gpio_set_mode(gpio->port, GPIO_MODE_INPUT,
 			      GPIO_CNF_INPUT_FLOAT, gpio->pin);
@@ -192,9 +193,17 @@ pt_state_t console_gpio_do_cmd(console_t *c)
 			gpio_is_connected(gpio->port, gpio->pin) ? "connected"
 								 : "floating");
 	} else {
+		fprintf(c->out, "Usage: %s "
+				"on|off|toggle|pulse|hiz|pullup|opendrain|"
+				"pushpull|detect\n",
+			c->cmd->name);
+	}
+#else
+	} else {
 		fprintf(c->out, "Usage: %s on|off|toggle|pulse\n",
 			c->cmd->name);
 	}
+#endif
 
 	PT_END();
 }
