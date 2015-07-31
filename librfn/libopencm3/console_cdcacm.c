@@ -48,8 +48,8 @@ static const struct usb_device_descriptor desc = {
 	.bDeviceSubClass = 0,
 	.bDeviceProtocol = 0,
 	.bMaxPacketSize0 = 64,
-	.idVendor = 0x0483,
-	.idProduct = 0x5740,
+	.idVendor = 0x6666,  /* Prototype product vendor ID */
+	.idProduct = 0x9637, /* dd if=/dev/random bs=2 count=1 | hexdump */
 	.bcdDevice = 0x0200,
 	.iManufacturer = 1,
 	.iProduct = 2,
