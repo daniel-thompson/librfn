@@ -25,7 +25,7 @@ int fregdump_single(FILE *f, uintreg_t reg, const regdump_desc_t *desc,
 		fprintf(f, "Register: %s\n", desc[0].name);
 	} else {
 		int shift = ctz(desc[i].mask);
-		fprintf(f, "\t%-16s: 0x%x\n", desc[i].name,
+		fprintf(f, "\t%-16s: 0x%" PRIxreg "\n", desc[i].name,
 			(reg & desc[i].mask) >> shift);
 	}
 

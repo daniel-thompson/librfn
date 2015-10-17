@@ -14,6 +14,7 @@
 #ifndef RF_REGDUMP_H_
 #define RF_REGDUMP_H_
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdint.h>
 
@@ -27,8 +28,10 @@
 
 #ifdef CONFIG_REGDUMP64
 typedef uint64_t uintreg_t;
+#define PRIxreg PRIx64
 #else
 typedef uint32_t uintreg_t;
+#define PRIxreg PRIx32
 #endif
 
 /*!
