@@ -253,7 +253,7 @@ static void usb_hwinit(void)
 	 * command of the pins.
 	 */
 	usbd_dev =
-	    usbd_init(&stm32f103_usb_driver, &desc, &config, usb_strings, 3,
+	    usbd_init(&st_usbfs_v1_usb_driver, &desc, &config, usb_strings, 3,
 		      usbd_control_buffer, sizeof(usbd_control_buffer));
 }
 #elif defined(STM32F4)
