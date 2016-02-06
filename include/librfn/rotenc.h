@@ -17,7 +17,7 @@
 #include <stdint.h>
 
 /*!
- * \defgroup librfn_rotenc Decode of rotary encoder signals
+ * \defgroup librfn_rotenc Rotary encoder
  *
  * \brief Utility functions to decode signals from a 2-bit rotary encoder.
  *
@@ -39,7 +39,7 @@ typedef struct rotenc {
 #define ROTENC_VAR_INIT { 0 }
 
 /*!
- * Handle a state update.
+ * \brief Handle a state update.
  *
  * It is safe to call this function when there has not actually been a
  * change of state, this allows it to be used as a polling function.
@@ -50,14 +50,14 @@ void rotenc_decode(rotenc_t *r, uint8_t state);
 
 
 /*!
- * Read a 14-bit count of the current knob position.
+ * \brief Read a 14-bit count of the current knob position.
  *
  * Suitable for higher resolution devices.
  */
 uint16_t rotenc_count14(rotenc_t *r);
 
 /*!
- * Read an 8-bit count of the current knob position.
+ * \brief Read an 8-bit count of the current knob position.
  *
  * Often 8-bit counts are sufficient (>10 turns at 24 clicks per turn).
  */
