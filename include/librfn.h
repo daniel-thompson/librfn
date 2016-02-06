@@ -54,6 +54,7 @@ extern "C" {
 #include "librfn/rand.h"
 #include "librfn/regdump.h"
 #include "librfn/ringbuf.h"
+#include "librfn/rotenc.h"
 #include "librfn/stats.h"
 #include "librfn/string.h"
 #include "librfn/time.h"

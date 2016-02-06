@@ -42,6 +42,7 @@ noinst_HEADERS += \
 	include/librfn/protothreads.h \
 	include/librfn/regdump.h \
 	include/librfn/ringbuf.h \
+	include/librfn/rotenc.h \
 	include/librfn/stats.h \
 	include/librfn/string.h \
 	include/librfn/time.h \
@@ -69,6 +70,7 @@ librfn_librfn_a_SOURCES = \
 	librfn/rand.c \
 	librfn/regdump.c \
 	librfn/ringbuf.c \
+	librfn/rotenc.c \
 	librfn/stats.c \
 	librfn/string.c \
 	librfn/wavheader.c \
@@ -171,6 +173,11 @@ tests += tests/ringbuftest
 tests_ringbuftest_SOURCES = tests/ringbuftest.c
 tests_ringbuftest_CFLAGS = $(LIBRFN_CFLAGS)
 tests_ringbuftest_LDADD = $(LIBRFN_LIBS)
+
+tests += tests/rotenctest
+tests_rotenctest_SOURCES = tests/rotenctest.c
+tests_rotenctest_CFLAGS = $(LIBRFN_CFLAGS)
+tests_rotenctest_LDADD = $(LIBRFN_LIBS)
 
 tests += tests/statstest
 tests_statstest_SOURCES = tests/statstest.c
