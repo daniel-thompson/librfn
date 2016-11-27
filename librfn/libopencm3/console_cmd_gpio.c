@@ -54,7 +54,7 @@ static int parse_args(console_t *c, console_gpio_t *gpio)
 		action = pulse;
 	else if (0 == strcmp(c->argv[1], "read"))
 		action = read_state;
-	else if (0 == strcmp(c->argv[1], "float"))
+	else if (0 == strcmp(c->argv[1], "hiz"))
 		action = hiz;
 	else if (0 == strcmp(c->argv[1], "pullupdown"))
 		action = pullup;
@@ -192,18 +192,14 @@ pt_state_t console_gpio_do_cmd(console_t *c)
 		fprintf(c->out, "%s is %s\n", gpio->cmd.name,
 			gpio_is_connected(gpio->port, gpio->pin) ? "connected"
 								 : "floating");
-	} else {
-		fprintf(c->out, "Usage: %s "
-				"on|off|toggle|pulse|hiz|pullup|opendrain|"
-				"pushpull|detect\n",
-			c->cmd->name);
-	}
-#else
-	} else {
-		fprintf(c->out, "Usage: %s on|off|toggle|pulse\n",
-			c->cmd->name);
-	}
 #endif
+	} else {
+		fprintf(c->out, "Usage: %s on|off|toggle|pulse", c->cmd->name);
+		if (gpio->flags & console_gpio_explore)
+			fprintf(c->out,
+				"read|hiz|pullup|opendrain|pushpull|detect");
+		fprintf(c->out, "\n");
+	}
 
 	PT_END();
 }
