@@ -1,5 +1,5 @@
 /*
- * console_stm32f1.c
+ * console_stm32.c
  *
  * Part of librfn (a general utility library from redfelineninja.org.uk)
  *
@@ -40,11 +40,20 @@ void console_hwinit(console_t *c)
 
 	/* Enable clocks for GPIO port A (for GPIO_USART1_TX) and USART1. */
 	rcc_periph_clock_enable(RCC_GPIOA);
-	rcc_periph_clock_enable(RCC_AFIO);
 	rcc_periph_clock_enable(RCC_USART1);
 
 	/* Enable the USART1 interrupt. */
 	nvic_enable_irq(NVIC_USART1_IRQ);
+
+#ifdef STM32F4
+	/* The F4 series have a completely new GPIO peripheral */
+	/* PA9 and PA10 for Tx and Rx respectively */
+	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO9 | GPIO10);
+
+	/* Actual Alternate function number (in this case 7) */
+	gpio_set_af(GPIOA, GPIO_AF7, GPIO9 | GPIO10);
+#else
+	rcc_periph_clock_enable(RCC_AFIO);
 
 	/* Setup GPIO pin GPIO_USART1_RE_TX on PA9 */
 	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
@@ -53,6 +62,7 @@ void console_hwinit(console_t *c)
 	/* Setup GPIO pin GPIO_USART1_RE_RX on PA10 */
 	gpio_set_mode(GPIOA, GPIO_MODE_INPUT,
 		      GPIO_CNF_INPUT_FLOAT, GPIO_USART1_RX);
+#endif
 
 	/* Setup UART parameters. */
 	usart_set_baudrate(USART1, 38400);
