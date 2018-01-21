@@ -66,6 +66,7 @@ typedef struct {
 typedef struct console {
 	fibre_t fibre;
 
+	const char *prompt;
 	FILE *out;
 
 	char ringbuf[16];

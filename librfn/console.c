@@ -129,7 +129,7 @@ static void do_prompt(console_t *c)
 	c->bufp = c->scratch.buf;
 
 	/* show the prompt */
-	fprintf(c->out, "> ");
+	fprintf(c->out, "%s", c->prompt);
 	fflush(c->out);
 }
 
@@ -137,6 +137,7 @@ void console_init(console_t *c, FILE *f)
 {
 	memset(c, 0, sizeof(console_t));
 
+	c->prompt = "> ";
 	c->out = f;
 	ringbuf_init(&c->ring, c->ringbuf, sizeof(c->ringbuf));
 
@@ -231,6 +232,8 @@ pt_state_t console_run(console_t *c)
 			do_tokenize(c);
 			find_command(c);
 			PT_SPAWN(&c->pt, c->cmd->fn(c));
+			if (!PT_CHILD_OK())
+				fprintf(c->out, "Command failed\n");
 			do_prompt(c);
 		} else if (ch == '\b') {
 			if (c->bufp > c->scratch.buf) {
