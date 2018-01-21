@@ -43,6 +43,13 @@ static struct {
 	.timerq = LIST_VAR_INIT
 };
 
+static void add_taint(char id)
+{
+	id -= 'A';
+	assert(id < 8*sizeof(kernel.taint_flags));
+	atomic_fetch_or(&kernel.taint_flags, 1 << id);
+}
+
 static void handle_atomic_runq(void)
 {
 	fibre_t **f;
@@ -85,6 +92,9 @@ static void update_current_state(void)
 	case FIBRE_STATE_YIELDED:
 		fibre_run(kernel.current);
 		break;
+	case FIBRE_STATE_FAILED:
+		add_taint('F');
+		// fallthru - failed is treated like exited
 	case FIBRE_STATE_EXITED:
 		PT_INIT(&kernel.current->priv);
 		break;
@@ -109,13 +119,6 @@ static uint32_t get_next_wakeup(void)
 
 	fibre_t *fibre = containerof(list_peek(&kernel.timerq), fibre_t, link);
 	return fibre->duetime;
-}
-
-static void add_taint(char id)
-{
-	id -= 'A';
-	assert(id < 8*sizeof(kernel.taint_flags));
-	atomic_fetch_or(&kernel.taint_flags, 1 << id);
 }
 
 static int duetime_cmp(list_node_t *n1, list_node_t *n2)

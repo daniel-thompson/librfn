@@ -68,10 +68,12 @@
  *    continuation macros concept allowing an implementation of PT_YIELD()
  *    with no state variable.
  *
- * 2. PT_INIT() saves the protothread pointer to simplify the usage of the other
+ * 2. Allows spawned sub-thread to indicate success/failure.
+ *
+ * 3. PT_INIT() saves the protothread pointer to simplify the usage of the other
  *    macros.
  *
- * 3. The use of the provided pt_t type is optional. Any integer type large
+ * 4. The use of the provided pt_t type is optional. Any integer type large
  *    enough not to overflow when __LINE__ is assigned to it is sufficient.
  *
  * @{
@@ -80,7 +82,8 @@
 typedef enum {
 	PT_YIELDED,
 	PT_WAITING,
-	PT_EXITED
+	PT_EXITED, /* any return code > PT_EXITED indicates failure */
+	PT_FAILED
 } pt_state_t;
 
 typedef uint16_t pt_t;
@@ -93,7 +96,8 @@ typedef uint16_t pt_t;
 #define PT_BEGIN(pt)                                                           \
 	{                                                                      \
 		pt_t *missing_PT_BEGIN = pt;                                   \
-		(void) missing_PT_BEGIN;                                       \
+		pt_state_t pt_spawn_res = 0;                                   \
+		(void)(missing_PT_BEGIN + pt_spawn_res);                       \
 		switch (*missing_PT_BEGIN) {                                   \
 		case 0:
 
@@ -135,12 +139,37 @@ typedef uint16_t pt_t;
 /*!
  * \brief Conditional exit.
  *
- * Mostly used to simplify error paths.
+ * Mostly used to simplify early exit cases.
  */
 #define PT_EXIT_ON(x)                                                          \
 	do {                                                                   \
 		if (x)                                                         \
-			return PT_EXITED;                                      \
+			PT_EXIT();                                             \
+	} while (0)
+
+#ifdef CONFIG_PT_UNWIND
+#include <stdio.h>
+#define PT_UNWIND_MSG(...) printf(__VA_ARGS__)
+#else
+#define PT_UNWIND_MSG(...) do {} while(0)
+#endif
+
+#define PT_FAIL()                                                              \
+	do {                                                                   \
+		PT_UNWIND_MSG("%s: Failed at %s:%d\n", __func__, __FILE__,     \
+			      __LINE__);                                       \
+		return PT_FAILED;                                              \
+	} while (0)
+
+/*!
+ * \brief Conditional failure.
+ *
+ * Mostly used to simplify error paths.
+ */
+#define PT_FAIL_ON(x)                                                          \
+	do {                                                                   \
+		if (x)                                                         \
+			PT_FAIL();                                             \
 	} while (0)
 
 /*!
@@ -148,14 +177,27 @@ typedef uint16_t pt_t;
  */
 #define PT_SPAWN(child, thread)                                                \
 	do {                                                                   \
-		pt_state_t ptres;                                              \
 		PT_INIT(child);                                                \
 		*missing_PT_BEGIN = __LINE__;                                  \
 	case __LINE__:                                                         \
-		ptres = (thread);                                              \
-		if (ptres != PT_EXITED)                                        \
-			return ptres;                                          \
+		pt_spawn_res = (thread);                                       \
+		if (pt_spawn_res < PT_EXITED)                                 \
+			return pt_spawn_res;                                          \
 	} while (0)
+
+/*!
+ * \brief Check for child success.
+ */
+#define PT_CHILD_OK() (pt_spawn_res != PT_FAILED)
+
+/*!
+ * \brief Call a child thread and propagate any failure to the caller.
+ */
+#define PT_SPAWN_AND_CHECK(child, thread)                                      \
+	do {                                                                   \
+		PT_SPAWN(child, thread);                                       \
+		PT_FAIL_ON(!PT_CHILD_OK());                                    \
+	} while(0)
 
 /*!
  * \brief Call a child thread synchronously.
@@ -167,7 +209,7 @@ typedef uint16_t pt_t;
 #define PT_CALL(child, thread)                                                 \
 	do {                                                                   \
 		PT_INIT(child);                                                \
-		while (PT_EXITED != (thread))                                  \
+		while ((thread) < PT_EXITED)                                   \
 			;                                                      \
 	} while (0)
 
