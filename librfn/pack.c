@@ -25,6 +25,11 @@ void rf_pack_init(rf_pack_t *pack, void *p, unsigned int sz)
 	pack->endp = pack->basep + sz;
 }
 
+int rf_pack_consumed(rf_pack_t *pack)
+{
+	return pack->p - pack->basep;
+}
+
 int rf_pack_remaining(rf_pack_t *pack)
 {
 	return pack->endp - pack->p;
