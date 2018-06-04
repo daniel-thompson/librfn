@@ -291,9 +291,9 @@ static int usb_fibre(fibre_t *fibre)
 }
 static fibre_t usb_task = FIBRE_VAR_INIT(usb_fibre);
 
-static int cdcacm_control_request(usbd_device *dev,
+static enum usbd_request_return_codes cdcacm_control_request(usbd_device *dev,
 	struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
-	void (**complete)(usbd_device *dev, struct usb_setup_data *req))
+	usbd_control_complete_callback *complete)
 {
 	(void)complete;
 	(void)buf;
@@ -305,16 +305,16 @@ static int cdcacm_control_request(usbd_device *dev,
 		 * even though it's optional in the CDC spec, and we don't
 		 * advertise it in the ACM functional descriptor.
 		 */
-		return 1;
+		return USBD_REQ_HANDLED;
 		}
 	case USB_CDC_REQ_SET_LINE_CODING:
 		if (*len < sizeof(struct usb_cdc_line_coding)) {
-			return 0;
+			return USBD_REQ_NOTSUPP;
 		}
 
-		return 1;
+		return USBD_REQ_HANDLED;
 	}
-	return 0;
+	return USBD_REQ_NOTSUPP;
 }
 
 static void cdcacm_data_rx_cb(usbd_device *dev, uint8_t ep)
