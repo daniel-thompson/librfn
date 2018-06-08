@@ -133,6 +133,12 @@ static void do_prompt(console_t *c)
 	fflush(c->out);
 }
 
+#ifndef CONFIG_NO_FIBRE
+static int console_fibre_endpoint(struct fibre *fibre) {
+	return console_run((console_t *)fibre);
+}
+#endif
+
 void console_init(console_t *c, FILE *f)
 {
 	memset(c, 0, sizeof(console_t));
@@ -144,7 +150,7 @@ void console_init(console_t *c, FILE *f)
 	console_hwinit(c);
 
 #ifndef CONFIG_NO_FIBRE
-	fibre_init(&c->fibre, (fibre_entrypoint_t *) console_run);
+	fibre_init(&c->fibre, console_fibre_endpoint);
 	fibre_run(&c->fibre);
 #endif
 }
@@ -210,11 +216,6 @@ pt_state_t console_eval(pt_t *pt, console_t *c, const char *cmd)
 	PT_END();
 }
 
-/* This function must remain safe to cast to fibre_entrypoint_t in order to
- * inter-operate with the fibre scheduler. Currently pt_state_t is a enum (and
- * therefore is ABI compatible with int) and fibre is the first member of the
- * console_t structure.
- */
 pt_state_t console_run(console_t *c)
 {
 	PT_BEGIN_FIBRE(&c->fibre);

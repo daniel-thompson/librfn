@@ -120,6 +120,7 @@ typedef uint16_t pt_t;
 #define PT_WAIT_UNTIL(c)                                                       \
 	do {                                                                   \
 		*missing_PT_BEGIN = __LINE__;                                  \
+	        /* FALLTHRU */                                              \
 	case __LINE__:                                                         \
 		if (!(c))                                                      \
 			return PT_WAITING;                                     \
