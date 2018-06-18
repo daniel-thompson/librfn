@@ -180,10 +180,11 @@ typedef uint16_t pt_t;
 	do {                                                                   \
 		PT_INIT(child);                                                \
 		*missing_PT_BEGIN = __LINE__;                                  \
+	        /* FALLTHRU */                                                 \
 	case __LINE__:                                                         \
 		pt_spawn_res = (thread);                                       \
-		if (pt_spawn_res < PT_EXITED)                                 \
-			return pt_spawn_res;                                          \
+		if (pt_spawn_res < PT_EXITED)                                  \
+			return pt_spawn_res;                                   \
 	} while (0)
 
 /*!
