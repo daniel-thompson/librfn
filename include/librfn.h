@@ -41,6 +41,7 @@ extern "C" {
 #include "librfn/benchmark.h"
 #include "librfn/bitops.h"
 #include "librfn/console.h"
+#include "librfn/constexpr.h"
 #include "librfn/enum.h"
 #include "librfn/fibre.h"
 #include "librfn/fixed.h"
