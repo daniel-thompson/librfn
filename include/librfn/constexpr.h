@@ -51,7 +51,7 @@
 /*!
  * Count the number of set bits in the argument, c.
  */
-#define const_pop(c) (const_pop64((uint64_t) c))
+#define const_pop(c) (const_pop64((uint64_t) (c)))
 
 /*! \private */
 #define const_lssb1(c)  (0x1 & c ? 0 : -64)
@@ -75,7 +75,7 @@
  *
  * Also known as count trailing zeros (ctz).
  */
-#define const_lssb(c) (const_lssb64((uint64_t) c))
+#define const_lssb(c) (const_lssb64((uint64_t) (c)))
 
 /*! @} */
 #endif /* RF_CONSTEXPR_H_ */
