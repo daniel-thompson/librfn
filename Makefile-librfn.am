@@ -42,6 +42,7 @@ noinst_HEADERS += \
 	include/librfn/pack.h \
 	include/librfn/protothreads.h \
 	include/librfn/regdump.h \
+	include/librfn/rgb.h \
 	include/librfn/ringbuf.h \
 	include/librfn/rotenc.h \
 	include/librfn/stats.h \
@@ -70,6 +71,7 @@ librfn_librfn_a_SOURCES = \
 	librfn/pack.c \
 	librfn/rand.c \
 	librfn/regdump.c \
+	librfn/rgb.c \
 	librfn/ringbuf.c \
 	librfn/rotenc.c \
 	librfn/stats.c \
@@ -108,6 +110,11 @@ noinst_PROGRAMS += src/regdumpdemo
 src_regdumpdemo_SOURCES = src/regdumpdemo.c
 src_regdumpdemo_CFLAGS = $(LIBRFN_CFLAGS)
 src_regdumpdemo_LDADD = $(LIBRFN_LIBS)
+
+noinst_PROGRAMS += src/gammademo
+src_gammademo_SOURCES = src/gammademo.c
+src_gammademo_CFLAGS = $(LIBRFN_CFLAGS)
+src_gammademo_LDADD = $(LIBRFN_LIBS)
 
 #
 # librfn test suite
