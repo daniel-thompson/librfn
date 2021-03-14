@@ -107,6 +107,7 @@ bool ratelimit_check(ratelimit_state_t *rs, uint32_t n, uint32_t window);
 
 void rf_internal_out_of_memory(void);
 void *xmalloc(size_t sz);
+void *xzalloc(size_t sz);
 
 /*! @} */
 #endif // RF_UTIL_H_

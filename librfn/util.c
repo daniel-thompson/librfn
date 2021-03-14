@@ -49,3 +49,11 @@ void *xmalloc(size_t sz)
 		rf_internal_out_of_memory();
 	return p;
 }
+
+void *xzalloc(size_t sz)
+{
+	void *p = calloc(1, sz);
+	if (!p)
+		rf_internal_out_of_memory();
+	return p;
+}
