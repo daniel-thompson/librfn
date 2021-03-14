@@ -39,6 +39,7 @@ extern "C" {
 
 #include "librfn/atomic.h"
 #include "librfn/benchmark.h"
+#include "librfn/bintree.h"
 #include "librfn/bitops.h"
 #include "librfn/console.h"
 #include "librfn/constexpr.h"
