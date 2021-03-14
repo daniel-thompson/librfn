@@ -42,7 +42,7 @@ void bintree_traverse_in_order(bintree_node_t *tree, bintree_visitor_t visitor,
 }
 
 void bintree_traverse_list(bintree_node_t *tree, bintree_is_list_t *is_list,
-			   bintree_visitor_t *visitor, void *ctx)
+			   bintree_list_visitor_t *visitor, void *ctx)
 {
 	if (!tree)
 		return;

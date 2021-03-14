@@ -37,8 +37,9 @@ typedef struct bintree_node {
 
 #define BINTREE_NODE_VAR_INIT { 0 }
 
-typedef void (bintree_free_t)(bintree_node_t *);
+typedef void(bintree_free_t)(bintree_node_t *);
 typedef char *(bintree_labeller_t)(bintree_node_t *);
+typedef bool(bintree_is_list_t)(bintree_node_t *);
 typedef void(bintree_list_visitor_t)(void *, bintree_node_t *);
 typedef void(bintree_visitor_t)(void *, bintree_node_t *, bintree_node_t *,
 				int);
