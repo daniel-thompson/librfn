@@ -26,7 +26,15 @@ static uint64_t sys_tick_counter;
 void time_init()
 {
 	/* Set the systick to interrupt once each millisecond */
+#ifdef STM32F0
+	/* On STM32F0 the div8 behaviour of previous STM32 parts is preserved
+	 * by implementing an "external" divider so there is a rename of the
+	 * bit but the behaviour is unmodified ;-)
+	 */
+	systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
+#else
 	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
+#endif
 	systick_set_reload((F_CPU / (8 * 1000))-1);
 
 	/* Start counting. */

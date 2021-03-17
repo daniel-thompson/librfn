@@ -230,7 +230,16 @@ static struct output_task output_task = {
 	.fibre = FIBRE_VAR_INIT(output_fibre)
 };
 
-#if defined(STM32F1)
+#if defined(STM32F0)
+static void usb_hwinit(void)
+{
+	rcc_periph_clock_enable(RCC_GPIOA);
+
+	usbd_dev = usbd_init(&st_usbfs_v2_usb_driver, &desc, &config,
+			     usb_strings, 2,
+			     usbd_control_buffer, sizeof(usbd_control_buffer));
+}
+#elif defined(STM32F1)
 static void usb_hwinit(void)
 {
 	uint32_t t;

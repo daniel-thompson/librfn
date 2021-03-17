@@ -103,17 +103,19 @@ static bool gpio_is_connected(uint32_t gpioport, uint16_t gpio)
 /* This section is a rather nasty workaround until I figure out how to get
  * open drain pins to work correctly on STM32F4.
  */
-#ifdef STM32F4
+#if defined(STM32F0) || defined(STM32F4)
 static void do_opendrain_toggle(uintptr_t port, uint32_t pin)
 {
 	for (int i=0; i<32; i++) {
 		if (pin & (1 << i)) {
-			if (GPIO_MODER(port) & GPIO_MODE_MASK(i))
+			if (GPIO_MODER(port) & GPIO_MODE_MASK(i)) {
 				gpio_mode_setup(port, GPIO_MODE_INPUT,
 						GPIO_PUPD_NONE, 1 << i);
-			else
+			} else {
+				gpio_clear(port, pin);
 				gpio_mode_setup(port, GPIO_MODE_OUTPUT,
 						GPIO_PUPD_NONE, 1 << i);
+			}
 		}
 	}
 }
@@ -130,6 +132,7 @@ static pt_state_t do_opendrain_cmd(console_t *c)
 		gpio_mode_setup(gpio->port, GPIO_MODE_INPUT, GPIO_PUPD_NONE,
 				gpio->pin);
 	} else if (action == off) {
+		gpio_clear(gpio->port, gpio->pin);
 		gpio_mode_setup(gpio->port, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,
 				gpio->pin);
 	} else if (action == toggle) {
@@ -153,7 +156,7 @@ pt_state_t console_gpio_do_cmd(console_t *c)
 	console_gpio_t *gpio = containerof(c->cmd, console_gpio_t, cmd);
 	uint32_t *t = &c->scratch.u32[0];
 
-#ifdef STM32F4
+#if defined(STM32F0) || defined(STM32F4)
 	if (gpio->flags & console_gpio_open_drain)
 		return do_opendrain_cmd(c);
 #endif
@@ -255,7 +258,10 @@ int console_gpio_register(const console_gpio_t *gpio)
 		cnf = GPIO_CNF_INPUT_FLOAT;
 	}
 	gpio_set_mode(gpio->port, mode, cnf, gpio->pin);
-#elif defined(STM32F4)
+#elif defined(STM32F0) || defined(STM32F4)
+	gpio_set_output_options(gpio->port, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ,
+				gpio->pin);
+
 	int mode = GPIO_MODE_OUTPUT;
 	if (gpio->flags & console_gpio_open_drain)
 		mode = GPIO_MODE_INPUT;
