@@ -44,6 +44,13 @@ typedef void(bintree_list_visitor_t)(void *, bintree_node_t *);
 typedef void(bintree_visitor_t)(void *, bintree_node_t *, bintree_node_t *,
 				int);
 
+typedef struct bintree_iterator {
+	bintree_node_t *(*next)(struct bintree_iterator *);
+	bintree_is_list_t *filter;
+	bintree_node_t *curr;
+	bintree_node_t *parent; // only valid for post-order iteration
+} bintree_iterator_t;
+
 static inline bool bintree_is_leaf(bintree_node_t *tree)
 {
 	return !tree->left && !tree->right;
@@ -76,10 +83,96 @@ void bintree_traverse_post_order(bintree_node_t *tree,
 void bintree_traverse_pre_order(bintree_node_t *tree,
 				bintree_visitor_t *visitor, void *ctx);
 void bintree_free(bintree_node_t *tree, bintree_free_t *dealloc);
+void bintree_free_left(bintree_node_t *tree, bintree_free_t *dealloc);
+void bintree_free_right(bintree_node_t *tree, bintree_free_t *dealloc);
 void bintree_visualize(bintree_node_t *tree, FILE *f,
 		       bintree_labeller_t *label);
 void bintree_graphviz(bintree_node_t *tree, FILE *f,
 		      bintree_labeller_t *labeller);
+
+
+
+bintree_node_t *bintree_iterate_in_order(bintree_iterator_t *iter,
+					 bintree_node_t *tree);
+bintree_node_t *bintree_iterate_list(bintree_iterator_t *iter,
+				     bintree_node_t *tree,
+				     bintree_is_list_t *is_list);
+bintree_node_t *bintree_iterate_post_order(bintree_iterator_t *iter,
+					   bintree_node_t *tree);
+bintree_node_t *bintree_iterate_pre_order(bintree_iterator_t *iter,
+					  bintree_node_t *tree);
+
+static inline bintree_node_t *bintree_next(bintree_iterator_t *iter)
+{
+	return iter->next(iter);
+}
+
+static inline void bintree_iterate_complete(bintree_iterator_t *iter)
+{
+	while (bintree_next(iter))
+		;
+}
+
+#define BINTREE_DECLARE_INLINE_WRAPPERS(prefix, type, from_bintree,            \
+					to_bintree, free_node)                 \
+	static inline type *prefix##_left(type *node)                          \
+	{                                                                      \
+		return from_bintree(to_bintree(node)->left);                   \
+	}                                                                      \
+                                                                               \
+	static inline type *prefix##_right(type *node)                         \
+	{                                                                      \
+		return from_bintree(to_bintree(node)->right);                  \
+	}                                                                      \
+                                                                               \
+	typedef bintree_iterator_t prefix##_iterator_t;                        \
+                                                                               \
+	static inline type *prefix##_iterate_in_order(                         \
+	    bintree_iterator_t *iter, type *tree)                              \
+	{                                                                      \
+		return from_bintree(                                           \
+		    bintree_iterate_in_order(iter, to_bintree(tree)));         \
+	}                                                                      \
+                                                                               \
+	static inline type *prefix##_iterate_post_order(                       \
+	    bintree_iterator_t *iter, type *tree)                              \
+	{                                                                      \
+		return from_bintree(                                           \
+		    bintree_iterate_post_order(iter, to_bintree(tree)));       \
+	}                                                                      \
+                                                                               \
+	static inline type *prefix##_iterate_pre_order(                        \
+	    bintree_iterator_t *iter, type *tree)                              \
+	{                                                                      \
+		return from_bintree(                                           \
+		    bintree_iterate_pre_order(iter, to_bintree(tree)));        \
+	}                                                                      \
+                                                                               \
+	static inline type *prefix##_next(bintree_iterator_t *iter)            \
+	{                                                                      \
+		return from_bintree(bintree_next(iter));                       \
+	}                                                                      \
+                                                                               \
+	static inline void prefix##_iterate_complete(bintree_iterator_t *iter) \
+	{                                                                      \
+		bintree_iterate_complete(iter);                                \
+	}                                                                      \
+                                                                               \
+	static inline void prefix##_free(type *node)                           \
+	{                                                                      \
+		bintree_free(to_bintree(node), free_node);                     \
+	}                                                                      \
+                                                                               \
+	static inline void prefix##_free_left(type *node)                      \
+	{                                                                      \
+		bintree_free_left(to_bintree(node), free_node);                \
+	}                                                                      \
+                                                                               \
+	static inline void prefix##_free_right(type *node)                     \
+	{                                                                      \
+		bintree_free_right(to_bintree(node), free_node);               \
+	}
+
 
 /*! @} */
 #endif // RF_BINTREE_H_
